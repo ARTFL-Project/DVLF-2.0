@@ -1,0 +1,9 @@
+.a-propos {
+    text-align: justify;
+}
+a.btn:hover {
+	color: #fff !important;
+}
+.btn, .panel, .panel-heading, .list-group-item:first-child, .list-group-item:last-child, .popover, .progress, .form-control, .tooltip-inner, .modal-content {
+    border-radius: 0px !important;
+}

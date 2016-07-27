@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" href="../../favicon.ico">
+
+        <title>DVLF</title>
+
+        <!-- Bootstrap core CSS -->
+        <link href="static/css/bootstrap.min.css" rel="stylesheet">
+        <link href="static/css/artfl_theme.css" rel="stylesheet">
+        <link href="static/css/style.css" rel="stylesheet">
+    </head>
+
+    <body ng-app="DVLF" ng-controller="MainController as Main" ng-cloak>
+
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Le Dictionaire Vivant de la Langue Française</a>
+                </div>
+                <div id="navbar" class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active">
+                            <a href="#">Home</a>
+                        </li>
+                        <li>
+                            <a href="" ng-click="Main.viewAPropos()">À propos du DVLF</a>
+                        </li>
+                        <li>
+                            <a href="#contact">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </nav>
+
+        <div class="container-fluid" style="margin-top: 60px;">
+
+            <div style="text-align: center;">
+                <img src="static/images/dvlf_logo_medium.gif" alt="" />
+                <h1>Le Dictionaire vivant de la langue française</h1>
+                <p class="lead">Découvrez...explorez...définissez...votre langue</p>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-offset-3 col-md-offset-4 col-sm-6 col-md-4">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Tapez un mot..." value="{{ Main.queryTerm }}" ng-model="Main.queryTerm">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">Rechercher</button>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /input-group -->
+            <apropos ng-if="Main.apropos"></apropos>
+
+        </div>
+        <!-- /.container -->
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script src="static/js/bootstrap.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-route.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-resource.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-route.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-touch.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-sanitize.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-cookies.min.js"></script>
+        <script src="app/app.js"></script>
+        <script src="app/components/apropos/aproposDirective.js"></script>
+    </body>
+</html>
