@@ -3,7 +3,7 @@ body {
 }
 
 /* Navbar colors */
-.navbar-inverse, .panel-default > .panel-heading {
+/*.navbar-inverse, .panel-default > .panel-heading {
     background:rgb(21, 67, 95) !important;
 }
 .navbar-brand:hover, .navbar-inverse .navbar-nav>li>a:hover, .panel-default > .panel-heading {
@@ -14,7 +14,7 @@ body {
 }
 .navbar-brand, .navbar-inverse a {
     color: rgb(236,237,238) !important;
-}
+}*/
 
 /* Button colors */
 .btn-primary {

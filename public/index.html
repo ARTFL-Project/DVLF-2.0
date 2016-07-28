@@ -20,10 +20,13 @@
 
     <body ng-app="DVLF" ng-controller="MainController as Main" ng-cloak>
 
-        <nav class="navbar navbar-inverse navbar-fixed-top">
+        <nav class="navbar navbar-fixed-top" style="border-bottom: 1px solid #eee;background-color: #fff;">
             <div class="container">
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <a class="navbar-brand" href="#" style="padding: 8px;">
+                        <img style="max-height: 35px" alt="Brand" src="static/images/dvlf_logo_medium.gif">
+                    </a>
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar" style="border: 1px solid #000; border-radius: 0px;">
                         <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -31,10 +34,10 @@
                     </button>
                     <a class="navbar-brand" href="#">Le Dictionaire Vivant de la Langue Française</a>
                 </div>
-                <div id="navbar" class="collapse navbar-collapse">
+                <div id="navbar" class="navbar-right collapse navbar-collapse" style="font-size: 80%; background-color: #fff;">
                     <ul class="nav navbar-nav">
                         <li class="active">
-                            <a href="/">Home</a>
+                            <a href="http://artfl-project.uchicago.edu">ARTFL Project</a>
                         </li>
                         <li>
                             <a href="" ng-click="Main.viewAPropos()">À propos du DVLF</a>
@@ -50,8 +53,8 @@
 
         <div class="container-fluid" style="margin-top: 60px;">
             <div style="text-align: center;">
-                <img src="static/images/dvlf_logo_medium.gif" alt="" />
-                <h1>Le Dictionaire vivant de la langue française</h1>
+                <!-- <img src="static/images/dvlf_logo_medium.gif" alt=""/>
+                <h1>Le Dictionaire vivant de la langue française</h1> -->
                 <p class="lead">Découvrez...explorez...définissez...votre langue</p>
             </div>
             <div class="row">

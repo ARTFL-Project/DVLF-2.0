@@ -133,6 +133,7 @@ func main() {
 	e.GET("/api/wordwheel", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, headwordList)
 	})
+	e.GET("/mot/*", index)
 
 	// Start server
 	e.Run(standard.New(":8080"))
