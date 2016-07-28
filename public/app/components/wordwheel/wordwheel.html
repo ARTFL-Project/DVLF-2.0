@@ -1,0 +1,10 @@
+<div class="hidden-xs col-sm-4 col-md-3 col-lg-2">
+    <div class="panel panel-default" style="padding: 10px; margin-top: 10px; max-height: 800px; overflow-y: scroll;">
+        <ul style="list-style: none; padding-left: 0;">
+            <li ng-repeat="word in wordwheel">
+                <a id="#current-term" href="/mot/{{ ::word }}" ng-if="word === Results.currentTerm"><b>{{ ::word }}</b></a>
+                <a href="/mot/{{ ::word }}" ng-if="word !== Results.currentTerm">{{ ::word }}</a>
+            </li>
+        </ul>
+    </div>
+</div>

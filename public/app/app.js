@@ -13,13 +13,17 @@
 
             vm.queryTerm = ""
 
+            $http.get('/api/wordwheel').then(function(response) {
+                vm.wordwheel = response.data;
+            });
+
             vm.apropos = false;
             vm.viewAPropos = function() {
-                if (vm.apropos) {
-                    vm.apropos = false;
-                } else {
-                    vm.apropos = true;
-                }
+                $location.path("/apropos")
+            }
+
+            vm.search = function(word) {
+                $location.path("/mot/" + word.trim());
             }
         }
 })();

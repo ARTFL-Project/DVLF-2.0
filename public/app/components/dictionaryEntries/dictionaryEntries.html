@@ -1,0 +1,10 @@
+<div class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
+    <div class="panel panel-default" style="padding: 10px; margin: 10px" ng-repeat="dico in dictionaries">
+        <h5 style="text-align: center">{{ dico.label }}</h5>
+        <ul>
+            <li ng-repeat="entry in dico.data">
+                <span ng-bind-html="entry | unsafe"></span>
+            </li>
+        </ul>
+    </div>
+</div>
