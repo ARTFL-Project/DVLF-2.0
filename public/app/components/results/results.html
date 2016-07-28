@@ -1,11 +1,15 @@
 <div class="panel panel-default" style="padding: 10px; margin-top: 15px;">
     <div class="row">
-        <div class="hidden-xs col-sm-4 col-md-3 col-lg-2">
+        <div class="hidden-sm col-md-3 col-lg-2">
+            <h4 style="text-align: center">Index</h4>
             <wordwheel head="{{ Results.currentTerm }}" ng-if="Main.wordwheel.length > 0"></wordwheel>
         </div>
-        <div class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
+        <div class="col-xs-12 col-sm-8 col-md-6 col-lg-8">
             <h4 style="text-align: center">Entries for {{ Results.currentTerm }}</h4>
             <dictionary-entries head="{{ Results.currentTerm }}"></dictionary-entries>
+        </div>
+        <div class="hidden-xs col-sm-4 col-md-3 col-lg-2">
+            <syn-anto-nyms ng-if="Main.wordwheel.length > 0"></syn-anto-nyms>
         </div>
     </div>
 </div>

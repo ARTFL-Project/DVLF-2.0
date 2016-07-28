@@ -11,3 +11,64 @@ a.btn:hover {
     border-radius: 0px !important;
     border: 1px solid #000;
 }
+
+/*Dictionary formatting*/
+body {
+  counter-reset: section; /* Set the section counter to 0 */
+}
+.xml-prononciation::before {
+    content: "(";
+}
+.xml-prononciation::after {
+    content: ")\A";
+}
+.xml-nature {
+    font-style: italic;
+}
+.xml-indent, .xml-variante {
+    display: block;
+}
+.xml-variante {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-indent: -1.3em;
+    padding-left: 1.3em;
+}
+.xml-variante::before {
+    counter-increment: section;
+    content: counter(section) ")\00a0";
+    font-weight: 700;
+}
+:not(.xml-rubrique) + .xml-indent {
+    padding-top: 10px;
+}
+.xml-indent {
+    padding-left: 1.3em;
+}
+.xml-cit {
+    padding-left: 2.3em;
+    display: block;
+    text-indent: -1.3em;
+}
+.xml-indent > .xml-cit {
+    padding-left: 1em;
+}
+.xml-cit::before {
+    content: '\2012\00a0\00ab\00a0';
+}
+.xml-cit::after {
+    content: '\00a0\00bb\00a0(' attr(aut) '\00a0' attr(ref) ')';
+    font-variant: small-caps;
+}
+.xml-rubrique {
+    display: block;
+    margin-top: 20px;
+}
+.xml-rubrique::before {
+    content: attr(nom);
+    font-variant: small-caps;
+    font-weight: 700;
+}
+.xml-corps + .xml-rubrique {
+    margin-top: 10px;
+}

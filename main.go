@@ -19,9 +19,9 @@ import (
 type Results struct {
 	Headword     string              `json:"headword"`
 	Dictionaries map[string][]string `json:"dictionaries"`
+	Synonyms     []string            `json:"synonyms"`
+	Antonyms     []string            `json:"antonyms"`
 	// Examples     map[string][]Examples
-	// Synonyms     []string
-	// Antonyms     []string
 	// UserSubmit   []string
 }
 
@@ -90,16 +90,18 @@ func getAllHeadwords() []string {
 
 func query(c echo.Context) error {
 	headword, _ := url.QueryUnescape(c.Param("headword"))
-	query := "SELECT dictionaries FROM headwords WHERE headword=$1"
+	query := "SELECT dictionaries, synonyms, antonyms FROM headwords WHERE headword=$1"
 	var results Results
 	var dictionaries map[string][]string
-	err := pool.QueryRow(query, headword).Scan(&dictionaries)
+	var synonyms []string
+	var antonyms []string
+	err := pool.QueryRow(query, headword).Scan(&dictionaries, &synonyms, &antonyms)
 	if err != nil {
 		fmt.Println(err)
 		var empty []string
 		return c.JSON(http.StatusOK, empty)
 	}
-	results = Results{headword, dictionaries}
+	results = Results{headword, dictionaries, synonyms, antonyms}
 	return c.JSON(http.StatusOK, results)
 }
 
@@ -129,11 +131,13 @@ func main() {
 
 	// Route => handler
 	e.GET("/", index)
+	e.GET("/mot/*", index)
+
+	// API
 	e.GET("/api/mot/:headword", query)
 	e.GET("/api/wordwheel", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, headwordList)
 	})
-	e.GET("/mot/*", index)
 
 	// Start server
 	e.Run(standard.New(":8080"))

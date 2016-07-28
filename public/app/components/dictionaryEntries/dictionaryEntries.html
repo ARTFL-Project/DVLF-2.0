@@ -1,7 +1,10 @@
-<div class="panel panel-default" style="padding: 10px; margin: 10px" ng-repeat="dico in dictionaries">
-    <h5 style="text-align: center">{{ dico.label }}</h5>
-    <ul>
-        <li ng-repeat="entry in dico.data">
+<div class="panel panel-default" style="margin: 15px" ng-repeat="dico in dictionaries">
+    <h4 style="text-align: center; margin-top: 0px; padding: 5px; border-bottom: 1px solid #eee">
+        {{ dico.label }}
+        <span class="badge pull-right">{{ dico.data.length }}</span>
+    </h4>
+    <ul style="text-align: justify">
+        <li style="padding-right: 10px" ng-repeat="entry in dico.data">
             <span ng-bind-html="entry | unsafe"></span>
         </li>
     </ul>
