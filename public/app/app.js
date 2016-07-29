@@ -15,6 +15,7 @@
 
             $http.get('/api/wordwheel').then(function(response) {
                 vm.wordwheel = response.data;
+                console.log(vm.wordwheel.length)
             });
 
             vm.apropos = false;

@@ -4,7 +4,7 @@
         .module('DVLF')
         .directive('dictionaryEntries', dictionaryEntries);
 
-    function dictionaryEntries($http, $timeout, $log) {
+    function dictionaryEntries($http, $timeout, $log, $rootScope) {
         return {
             templateUrl: "app/components/dictionaryEntries/dictionaryEntries.html",
             link: function(scope, element, attrs) {
@@ -24,6 +24,7 @@
                 var dicoOrder = ["tlfi", "acad1932", "littre", "acad1835", "acad1798", "feraud", "acad1762", "acad1694", "nicot"];
                 $http.get(query).then(function(response) {
                     scope.Main.results = response.data;
+                    $rootScope.$broadcast('resultsUpdate');
                     for (var i = 0; i < dicoOrder.length; i++) {
                         if (dicoOrder[i] in response.data.dictionaries) {
                             scope.dictionaries.push({

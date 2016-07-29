@@ -1,4 +1,4 @@
-<div class="panel panel-default" style="margin-top: 15px; max-height: 800px; overflow-y: scroll;">
+<div id="wordwheel" class="panel panel-default" style="margin-top: 15px; max-height: 800px; overflow-y: scroll;">
     <div class="list-group">
         <a class="list-group-item" href="/mot/{{ ::word }}" ng-class="{'active': word === Results.currentTerm}" ng-repeat="word in wordwheel">
             {{ ::word }}

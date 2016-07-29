@@ -5,8 +5,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"sort"
-	"strings"
+
+	"golang.org/x/text/collate"
+	"golang.org/x/text/language"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/engine/standard"
@@ -32,18 +33,6 @@ type Examples struct {
 	Score    int64
 	ID       string
 	DefSim   float32
-}
-
-type caseInsensitive []string
-
-func (s caseInsensitive) Len() int {
-	return len(s)
-}
-func (s caseInsensitive) Swap(i, j int) {
-	s[i], s[j] = s[j], s[i]
-}
-func (s caseInsensitive) Less(i, j int) bool {
-	return strings.ToLower(s[i]) < strings.ToLower(s[j])
 }
 
 var defaultConnConfig pgx.ConnConfig
@@ -84,7 +73,10 @@ func getAllHeadwords() []string {
 		}
 		headwords = append(headwords, headword)
 	}
-	sort.Sort(caseInsensitive(headwords))
+
+	cl := collate.New(language.French, collate.Loose, collate.IgnoreCase)
+
+	cl.SortStrings(headwords)
 	return headwords
 }
 
@@ -115,6 +107,7 @@ func main() {
 	// Echo instance
 	e := echo.New()
 
+	fmt.Println(len(headwordList))
 	e.SetDebug(true)
 
 	e.Static("/static", "public/static")
