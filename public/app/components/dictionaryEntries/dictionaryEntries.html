@@ -1,13 +1,20 @@
-<div class="panel panel-default" style="margin: 15px" ng-repeat="dico in dictionaries">
-    <div class="row" style="text-align: center; font-size: 110%; font-weight: 700; margin-top: 0px; padding: 5px; border-bottom: 1px solid #eee">
-        <div class="col-xs-11" style="">{{ dico.label }}</div>
-        <div class="col-xs-1">
-            <span class="badge pull-right">{{ dico.data.length }}</span>
+<div class="panel panel-default dico" style="margin: 15px" ng-repeat="dico in dictionaries">
+    <div class="row dico-title">
+        <div class="col-xs-1 arrow" ng-click="toggleEntry($event)">
+            <span class="glyphicon glyphicon-menu-down" ng-show="dico.show"></span>
+            <span class="glyphicon glyphicon-menu-right" ng-show="!dico.show"></span>
+        </div>
+        <div class="col-xs-11 dico-label" ng-click="toggleEntry($event)">
+            {{ ::dico.label }}
+            <span class="badge pull-right">{{ ::dico.data.length }}</span>
         </div>
     </div>
-    <ul style="text-align: justify">
-        <li style="padding-right: 10px" ng-repeat="entry in dico.data">
+    <ul class="dico-entries" ng-class="{show: dico.show}">
+        <li class="entry" style="padding-right: 10px" ng-repeat="entry in ::dico.data" ng-class="{'tlfi': dico.name === 'tlfi'}">
             <span ng-bind-html="entry | unsafe"></span>
         </li>
+        <span ng-if="dico.name === 'tlfi'">
+            <a ng-href="http://www.cnrtl.fr/definition/{{Results.currentTerm | encodeURIComponent}}" target="_blank">Voir la définition complète au CNRTL</a>
+        </span>
     </ul>
 </div>

@@ -4,7 +4,8 @@
     angular
         .module("DVLF")
         .filter("isEmpty", isEmpty)
-        .filter("unsafe", unSafe);
+        .filter("unsafe", unSafe)
+        .filter('encodeURIComponent', encode);
 
 
     function isEmpty() {
@@ -19,5 +20,9 @@
 
     function unSafe($sce) {
         return $sce.trustAsHtml;
+    }
+
+    function encode($window) {
+        return $window.encodeURIComponent;
     }
 })();

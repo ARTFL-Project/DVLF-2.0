@@ -6,9 +6,6 @@ import (
 	"net/http"
 	"net/url"
 
-	"golang.org/x/text/collate"
-	"golang.org/x/text/language"
-
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/engine/standard"
 	"github.com/labstack/echo/middleware"
@@ -22,17 +19,22 @@ type Results struct {
 	Dictionaries map[string][]string `json:"dictionaries"`
 	Synonyms     []string            `json:"synonyms"`
 	Antonyms     []string            `json:"antonyms"`
-	// Examples     map[string][]Examples
-	// UserSubmit   []string
+	UserSubmit   []userSubmit        `json:"userSubmit"`
+	// Examples     []Examples          `json:"examples"`
 }
 
 // Examples for headwords
 type Examples struct {
-	Headword string
-	Content  string
-	Score    int64
-	ID       string
-	DefSim   float32
+	Content string  `json:"content"`
+	Score   int64   `json:"score"`
+	ID      int32   `json:"id"`
+	DefSim  float32 `json:"defSim"`
+}
+
+type userSubmit struct {
+	Content string `json:"content"`
+	Source  string `json:"source"`
+	Link    string `json:"link"`
 }
 
 var defaultConnConfig pgx.ConnConfig
@@ -74,26 +76,24 @@ func getAllHeadwords() []string {
 		headwords = append(headwords, headword)
 	}
 
-	cl := collate.New(language.French, collate.Loose, collate.IgnoreCase)
-
-	cl.SortStrings(headwords)
 	return headwords
 }
 
 func query(c echo.Context) error {
 	headword, _ := url.QueryUnescape(c.Param("headword"))
-	query := "SELECT dictionaries, synonyms, antonyms FROM headwords WHERE headword=$1"
+	query := "SELECT user_submit, dictionaries, synonyms, antonyms FROM headwords WHERE headword=$1"
 	var results Results
 	var dictionaries map[string][]string
 	var synonyms []string
 	var antonyms []string
-	err := pool.QueryRow(query, headword).Scan(&dictionaries, &synonyms, &antonyms)
+	var userSubmission []userSubmit
+	err := pool.QueryRow(query, headword).Scan(&userSubmission, &dictionaries, &synonyms, &antonyms)
 	if err != nil {
 		fmt.Println(err)
 		var empty []string
 		return c.JSON(http.StatusOK, empty)
 	}
-	results = Results{headword, dictionaries, synonyms, antonyms}
+	results = Results{headword, dictionaries, synonyms, antonyms, userSubmission}
 	return c.JSON(http.StatusOK, results)
 }
 

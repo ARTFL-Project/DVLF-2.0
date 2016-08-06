@@ -2,7 +2,7 @@
     "use strict";
 
     angular
-        .module("DVLF", ['ngRoute', 'ngTouch', 'ngSanitize']);
+        .module("DVLF", ['ngRoute', 'ngTouch', 'ngSanitize', 'bootstrap3-typeahead']);
 
     angular
         .module("DVLF")
@@ -15,7 +15,6 @@
 
             $http.get('/api/wordwheel').then(function(response) {
                 vm.wordwheel = response.data;
-                console.log(vm.wordwheel.length)
             });
 
             vm.apropos = false;

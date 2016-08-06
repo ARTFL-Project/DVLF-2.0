@@ -1,10 +1,10 @@
 <div id="nyms">
-    <div class="panel panel-default" style="padding: 10px">
-        <h4 style="text-align: center;">Synonymes</h4>
-        <span ng-bind-html="synonyms | unsafe"></span>
+    <div class="panel panel-default">
+        <h4 class="nym-title">Synonymes</h4>
+        <p style="padding: 0 10px 10px 10px;" ng-bind-html="synonyms | unsafe"></p>
     </div>
-    <div class="panel panel-default" style="margin-top: 10px; padding: 10px" ng-if="antonyms.length > 0">
-        <h4 style="text-align: center;">Antonymes</h4>
-        <span ng-bind-html="antonyms | unsafe"></span>
+    <div class="panel panel-default" style="margin-top: 10px;" ng-if="antonyms.length > 0">
+        <h4 class="nym-title">Antonymes</h4>
+        <p style="padding: 0 10px 10px 10px" ng-bind-html="antonyms | unsafe"></p>
     </div>
 </div>

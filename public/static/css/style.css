@@ -1,74 +1,138 @@
+body {
+  margin: 0 auto;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 150%;
+}
+.badge {
+  font-family: serif;
+}
 .a-propos {
-    text-align: justify;
+  text-align: justify;
 }
 a.btn:hover {
-	color: #fff !important;
+  color: #fff !important;
 }
 .btn, .panel, .panel-heading, .list-group-item:first-child, .list-group-item:last-child, .popover, .progress, .form-control, .tooltip-inner, .modal-content {
-    border-radius: 0px !important;
+  border-radius: 0px !important;
 }
 .icon-bar {
-    border-radius: 0px !important;
-    border: 1px solid #000;
+  border-radius: 0px !important;
+  border: 1px solid #000;
 }
 
 /*Dictionary formatting*/
+
 body {
-  counter-reset: section; /* Set the section counter to 0 */
+  counter-reset: section;
+  /* Set the section counter to 0 */
 }
 .xml-prononciation::before {
-    content: "(";
+  content: "(";
 }
 .xml-prononciation::after {
-    content: ")\A";
+  content: ")\A";
 }
 .xml-nature {
-    font-style: italic;
+  font-style: italic;
 }
 .xml-indent, .xml-variante {
-    display: block;
+  display: block;
 }
 .xml-variante {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    text-indent: -1.3em;
-    padding-left: 1.3em;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-indent: -1.3em;
+  padding-left: 1.3em;
 }
 .xml-variante::before {
-    counter-increment: section;
-    content: counter(section) ")\00a0";
-    font-weight: 700;
+  counter-increment: section;
+  content: counter(section) ")\00a0";
+  font-weight: 700;
 }
-:not(.xml-rubrique) + .xml-indent {
-    padding-top: 10px;
+:not(.xml-rubrique)+ .xml-indent {
+  padding-top: 10px;
 }
 .xml-indent {
-    padding-left: 1.3em;
+  padding-left: 1.3em;
 }
 .xml-cit {
-    padding-left: 2.3em;
-    display: block;
-    text-indent: -1.3em;
+  padding-left: 2.3em;
+  display: block;
+  text-indent: -1.3em;
 }
-.xml-indent > .xml-cit {
-    padding-left: 1em;
+.xml-indent> .xml-cit {
+  padding-left: 1em;
 }
 .xml-cit::before {
-    content: '\2012\00a0\00ab\00a0';
+  content: '\2012\00a0\00ab\00a0';
 }
 .xml-cit::after {
-    content: '\00a0\00bb\00a0(' attr(aut) '\00a0' attr(ref) ')';
-    font-variant: small-caps;
+  content: '\00a0\00bb\00a0(' attr(aut) '\00a0' attr(ref) ')';
+  font-variant: small-caps;
 }
 .xml-rubrique {
-    display: block;
-    margin-top: 20px;
+  display: block;
+  margin-top: 20px;
 }
 .xml-rubrique::before {
-    content: attr(nom);
-    font-variant: small-caps;
+  content: attr(nom);
+  font-variant: small-caps;
+  font-weight: 700;
+}
+.xml-corps+ .xml-rubrique {
+  margin-top: 10px;
+}
+
+.dico {
+    overflow: hidden;
+}
+.dico-title {
+  text-align: center;
+  font-size: 110%;
+  font-weight: 700;
+  margin-top: 0px;
+  padding: 5px;
+  background-color: #fbfbfb;
+  border-bottom: 1px solid #eee;
+}
+.dico-label, .arrow {
+  cursor: pointer;
+}
+.dico-entries {
+  text-align: justify;
+  margin-top: 10px;
+  line-height: 150%;
+  display: none;
+  transition: all 200ms;
+}
+.dico-entries.show {
+    display: block;
+}
+.entry {
+    max-height: 400px;
+    overflow-y: auto;
+}
+.entry.tlfi {
+    max-height: 200px;
+    overflow: hidden;
+}
+.arrow .glyphicon {
+    vertical-align: middle;
+    font-size: 80%;
+}
+.nym-title, .index {
+    background-color: #fbfbfb;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+    margin-top: 0;
+    padding: 7px;
     font-weight: 700;
 }
-.xml-corps + .xml-rubrique {
-    margin-top: 10px;
+.navbar, #navbar {
+    border-bottom: 1px solid #eee;
+    background-color: #fbfbfb;
+}
+#wordwheel .list-group {
+    max-height: 800px;
+    overflow-y: scroll;
 }
