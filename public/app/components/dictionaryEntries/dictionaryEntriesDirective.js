@@ -51,7 +51,9 @@
                             });
                         }
                     }
-                    if (scope.Main.results.examples.length > 0) {
+                    if (scope.Main.results.userSubmit.length) {
+                        totalEntries += scope.Main.results.userSubmit.length;
+                        displayed += 1;
                         if (displayed < 3) {
                             var show = true;
                         } else {
@@ -60,7 +62,7 @@
                         scope.dictionaries.push({
                             name: "userSubmit",
                             label: "Définition(s) d'utilisateurs",
-                            data: scope.Main.results.examples.content,
+                            data: scope.Main.results.userSubmit,
                             show: show
                         })
                     }

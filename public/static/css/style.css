@@ -111,9 +111,11 @@ body {
 .entry {
     max-height: 400px;
     overflow-y: auto;
+    padding: 0 10px 10px 10px;
+    font-size: inherit !important;
 }
 .entry.tlfi {
-    max-height: 200px;
+    max-height: 130px;
     overflow: hidden;
 }
 .arrow .glyphicon {
@@ -135,4 +137,11 @@ body {
 #wordwheel .list-group {
     max-height: 800px;
     overflow-y: scroll;
+}
+.tlfi-link {
+    float: left;
+    padding: 0px 10px 10px 10px;
+}
+.tlfi-link a {
+    cursor: pointer;
 }

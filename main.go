@@ -19,7 +19,7 @@ type Results struct {
 	Dictionaries map[string][]string `json:"dictionaries"`
 	Synonyms     []string            `json:"synonyms"`
 	Antonyms     []string            `json:"antonyms"`
-	UserSubmit   []userSubmit        `json:"userSubmit"`
+	UserSubmit   []UserSubmit        `json:"userSubmit"`
 	// Examples     []Examples          `json:"examples"`
 }
 
@@ -31,11 +31,15 @@ type Examples struct {
 	DefSim  float32 `json:"defSim"`
 }
 
-type userSubmit struct {
+// UserSubmit fields
+type UserSubmit struct {
 	Content string `json:"content"`
 	Source  string `json:"source"`
 	Link    string `json:"link"`
 }
+
+// AutoCompleteList is the top 10 words
+type AutoCompleteList []string
 
 var defaultConnConfig pgx.ConnConfig
 var pool = createConnPool()
@@ -79,6 +83,29 @@ func getAllHeadwords() []string {
 	return headwords
 }
 
+func autoComplete(c echo.Context) error {
+	prefix, _ := url.QueryUnescape(c.Param("prefix"))
+	prefix += "%"
+	query := "SELECT headword FROM headwords WHERE headword LIKE $1 ORDER BY headword LIMIT 10"
+	rows, err := pool.Query(query, prefix)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	defer rows.Close()
+
+	var headwords AutoCompleteList
+	for rows.Next() {
+		var headword string
+		err := rows.Scan(&headword)
+		if err != nil {
+			fmt.Println(err)
+		}
+		headwords = append(headwords, headword)
+	}
+	return c.JSON(http.StatusOK, headwords)
+}
+
 func query(c echo.Context) error {
 	headword, _ := url.QueryUnescape(c.Param("headword"))
 	query := "SELECT user_submit, dictionaries, synonyms, antonyms FROM headwords WHERE headword=$1"
@@ -86,7 +113,7 @@ func query(c echo.Context) error {
 	var dictionaries map[string][]string
 	var synonyms []string
 	var antonyms []string
-	var userSubmission []userSubmit
+	var userSubmission []UserSubmit
 	err := pool.QueryRow(query, headword).Scan(&userSubmission, &dictionaries, &synonyms, &antonyms)
 	if err != nil {
 		fmt.Println(err)
@@ -131,6 +158,7 @@ func main() {
 	e.GET("/api/wordwheel", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, headwordList)
 	})
+	e.GET("/api/autocomplete/:prefix", autoComplete)
 
 	// Start server
 	e.Run(standard.New(":8080"))

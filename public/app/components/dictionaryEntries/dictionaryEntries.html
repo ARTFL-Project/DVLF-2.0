@@ -9,12 +9,13 @@
             <span class="badge pull-right">{{ ::dico.data.length }}</span>
         </div>
     </div>
-    <ul class="dico-entries" ng-class="{show: dico.show}">
-        <li class="entry" style="padding-right: 10px" ng-repeat="entry in ::dico.data" ng-class="{'tlfi': dico.name === 'tlfi'}">
-            <span ng-bind-html="entry | unsafe"></span>
-        </li>
-        <span ng-if="dico.name === 'tlfi'">
-            <a ng-href="http://www.cnrtl.fr/definition/{{Results.currentTerm | encodeURIComponent}}" target="_blank">Voir la définition complète au CNRTL</a>
-        </span>
-    </ul>
+    <div class="dico-entries" ng-class="{show: dico.show}">
+        <div class="entry" style="padding-right: 10px" ng-repeat="entry in ::dico.data" ng-class="{'tlfi': dico.name === 'tlfi'}">
+            <div ng-bind-html="entry | unsafe" ng-if="dico.name !== 'userSubmit'"></div>
+            <div ng-bind-html="entry.content | unsafe" ng-if="dico.name === 'userSubmit'"></div>
+        </div>
+        <div class="tlfi-link" ng-if="dico.name === 'tlfi'">
+            <a ng-href="http://www.cnrtl.fr/definition/{{Results.currentTerm | encodeURIComponent}}" target="_blank">=> Voir la définition complète au CNRTL</a>
+        </div>
+    </div>
 </div>
