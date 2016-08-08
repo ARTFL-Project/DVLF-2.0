@@ -58,7 +58,19 @@
             <div class="row">
                 <form class="col-xs-12 col-sm-offset-3 col-md-offset-4 col-sm-6 col-md-4" ng-submit="Main.search(Main.queryTerm)">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Tapez un mot..." value="{{ Main.queryTerm }}" ng-model="Main.queryTerm" bs3-typeahead bs3-promise="Main.wordwheel">
+                        <div
+                        angucomplete-alt
+                        id="search"
+                        placeholder="Tapez un mot..."
+                        value="{{ Main.queryTerm }}"
+                        remote-url="/api/autocomplete/"
+                        selected-object="autocomplete"
+                        remote-url-data-field="headwords"
+                        title-field="headword"
+                        minlength="2"
+                        input-class="form-control"
+                        match-class="highlight">
+                        </div>
                         <span class="input-group-btn">
                             <button class="btn btn-default" type="submit">Rechercher</button>
                         </span>
@@ -81,8 +93,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-touch.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-sanitize.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-cookies.min.js"></script>
-        <script src="static/js/bootstrap3-typeahead.min.js"></script>
-        <script src="static/js/angular-bootstrap3-typeahead.js"></script>
+        <script src="static/js/angucomplete-alt.min.js"></script>
         <script src="app/app.js"></script>
         <script src="app/config.js"></script>
         <script src="app/filters.js"></script>

@@ -2,16 +2,21 @@
     "use strict";
 
     angular
-        .module("DVLF", ['ngRoute', 'ngTouch', 'ngSanitize', 'bootstrap3-typeahead']);
+        .module("DVLF", ['ngRoute', 'ngTouch', 'ngSanitize', 'angucomplete-alt']);
 
     angular
         .module("DVLF")
         .controller('MainController', MainController);
 
-		function MainController($routeParams, $route, $log, $http, $location) {
+		function MainController($scope, $routeParams, $route, $log, $http, $location) {
             var vm = this;
 
-            vm.queryTerm = ""
+            if($routeParams.queryTerm !== 'undefined') {
+                vm.queryTerm = $routeParams.queryTerm;
+            } else {
+                vm.queryTerm = "";
+            }
+
 
             $http.get('/api/wordwheel').then(function(response) {
                 vm.wordwheel = response.data;
@@ -24,6 +29,12 @@
 
             vm.search = function(word) {
                 $location.path("/mot/" + word.trim());
+            }
+
+            $scope.autocomplete = function(query) {
+                if (typeof(query) !== 'undefined') {
+                    $location.path("/mot/" + query.title.trim());
+                }
             }
         }
 })();

@@ -82,9 +82,8 @@ body {
 .xml-corps+ .xml-rubrique {
   margin-top: 10px;
 }
-
 .dico {
-    overflow: hidden;
+  overflow: hidden;
 }
 .dico-title {
   text-align: center;
@@ -106,42 +105,72 @@ body {
   transition: all 200ms;
 }
 .dico-entries.show {
-    display: block;
+  display: block;
 }
 .entry {
-    max-height: 400px;
-    overflow-y: auto;
-    padding: 0 10px 10px 10px;
-    font-size: inherit !important;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 0 10px 10px 10px;
+  font-size: inherit !important;
 }
 .entry.tlfi {
-    max-height: 130px;
-    overflow: hidden;
+  max-height: 130px;
+  overflow: hidden;
 }
 .arrow .glyphicon {
-    vertical-align: middle;
-    font-size: 80%;
+  vertical-align: middle;
+  font-size: 80%;
 }
 .nym-title, .index {
-    background-color: #fbfbfb;
-    border-bottom: 1px solid #eee;
-    text-align: center;
-    margin-top: 0;
-    padding: 7px;
-    font-weight: 700;
+  background-color: #fbfbfb;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+  margin-top: 0;
+  padding: 7px;
+  font-weight: 700;
 }
 .navbar, #navbar {
-    border-bottom: 1px solid #eee;
-    background-color: #fbfbfb;
+  border-bottom: 1px solid #eee;
+  background-color: #fbfbfb;
 }
 #wordwheel .list-group {
-    max-height: 800px;
-    overflow-y: scroll;
+  max-height: 800px;
+  overflow-y: scroll;
 }
 .tlfi-link {
-    float: left;
-    padding: 0px 10px 10px 10px;
+  float: left;
+  padding: 10px 10px 10px 10px;
 }
 .tlfi-link a {
+  cursor: pointer;
+}
+.highlight {
+  color: red;
+}
+
+.angucomplete-holder {
+    position: relative;
+}
+#search_dropdown {
+  position: absolute;
+  border: 1px solid #eee;
+  background: #fff;
+  z-index: 10;
+  top: 34px;
+}
+.angucomplete-row {
+    padding: 5px 13px;
+}
+angucomplete-row:focus {
+    background-color: #f8f8f8;
+}
+.angucomplete-row:hover {
+    background-color: #f8f8f8;
     cursor: pointer;
+}
+.angucomplete-selected-row {
+    background-color: #f8f8f8;
+}
+.form-control {
+    font-size: 100%;
 }

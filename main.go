@@ -39,7 +39,12 @@ type UserSubmit struct {
 }
 
 // AutoCompleteList is the top 10 words
-type AutoCompleteList []string
+type AutoCompleteList []AutoCompleteHeadword
+
+// AutoCompleteHeadword is just the object in the AutoCompleteList
+type AutoCompleteHeadword struct {
+	Headword string `json:"headword"`
+}
 
 var defaultConnConfig pgx.ConnConfig
 var pool = createConnPool()
@@ -101,9 +106,11 @@ func autoComplete(c echo.Context) error {
 		if err != nil {
 			fmt.Println(err)
 		}
-		headwords = append(headwords, headword)
+		headwords = append(headwords, AutoCompleteHeadword{headword})
 	}
-	return c.JSON(http.StatusOK, headwords)
+	results := make(map[string]AutoCompleteList)
+	results["headwords"] = headwords
+	return c.JSON(http.StatusOK, results)
 }
 
 func query(c echo.Context) error {
