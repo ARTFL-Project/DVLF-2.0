@@ -8,6 +8,7 @@
                 <b>{{ Results.currentTerm }}</b>: {{ Results.totalEntries }} entrées dans {{ Results.totalDicos }} dictionnaires
             </h3>
             <dictionary-entries head="{{ Results.currentTerm }}"></dictionary-entries>
+            <examples></examples>
         </div>
         <div class="hidden-xs col-sm-3 col-md-3 col-lg-2" style="margin-top: 45px;">
             <syn-anto-nyms ng-if="Main.results.synonyms.length > 0"></syn-anto-nyms>

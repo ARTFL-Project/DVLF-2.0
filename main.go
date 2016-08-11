@@ -5,6 +5,12 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
+	"regexp"
+	"strings"
+
+	"golang.org/x/text/collate"
+	"golang.org/x/text/language"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/engine/standard"
@@ -20,15 +26,17 @@ type Results struct {
 	Synonyms     []string            `json:"synonyms"`
 	Antonyms     []string            `json:"antonyms"`
 	UserSubmit   []UserSubmit        `json:"userSubmit"`
-	// Examples     []Examples          `json:"examples"`
+	Examples     []Example           `json:"examples"`
 }
 
-// Examples for headwords
-type Examples struct {
+// Example for headwords
+type Example struct {
 	Content string  `json:"content"`
+	Link    string  `json:"link"`
 	Score   int64   `json:"score"`
 	ID      int32   `json:"id"`
 	DefSim  float32 `json:"defSim"`
+	Source  string  `json:"source"`
 }
 
 // UserSubmit fields
@@ -51,6 +59,10 @@ var pool = createConnPool()
 
 var headwordList = getAllHeadwords()
 
+var tokenRegex = regexp.MustCompile(`(?i)([\p{L}]+)|([\.?,;:'!\-]+)|([\s]+)`)
+
+var outputLog = createLog()
+
 func createConnPool() *pgx.ConnPool {
 	defaultConnConfig.Host = "localhost"
 	defaultConnConfig.Database = "dvlf"
@@ -64,6 +76,12 @@ func createConnPool() *pgx.ConnPool {
 		fmt.Printf("Unable to create connection pool: %v", err)
 	}
 	return poolConn
+}
+
+func createLog() *os.File {
+	f, _ := os.Create("output.log")
+	defer f.Close()
+	return f
 }
 
 func getAllHeadwords() []string {
@@ -85,11 +103,16 @@ func getAllHeadwords() []string {
 		headwords = append(headwords, headword)
 	}
 
+	cl := collate.New(language.French, collate.Loose, collate.IgnoreCase)
+
+	cl.SortStrings(headwords)
 	return headwords
 }
 
 func autoComplete(c echo.Context) error {
 	prefix, _ := url.QueryUnescape(c.Param("prefix"))
+	prefix = strings.TrimSpace(prefix)
+	prefix = strings.ToLower(prefix)
 	prefix += "%"
 	query := "SELECT headword FROM headwords WHERE headword LIKE $1 ORDER BY headword LIMIT 10"
 	rows, err := pool.Query(query, prefix)
@@ -113,21 +136,63 @@ func autoComplete(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
+func highlightExamples(examples []Example, queryTerm string) []Example {
+	query := "SELECT headword FROM word2lemma WHERE lemma=$1"
+	var forms []string
+	rows, err := pool.Query(query, queryTerm)
+
+	if err != nil {
+		fmt.Println(err)
+		return examples
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var form string
+		err := rows.Scan(&form)
+		if err != nil {
+			fmt.Println(err)
+			return examples
+		}
+		forms = append(forms, form)
+	}
+
+	formRegex := regexp.MustCompile("^(" + strings.Join(forms, "|") + ")$")
+	var newExamples []Example
+	for example := range examples {
+		var newContent []string
+		matches := tokenRegex.FindAllString(examples[example].Content, -1)
+		for match := range matches {
+			if formRegex.MatchString(matches[match]) {
+				newContent = append(newContent, fmt.Sprintf(`<span class="highlight">%s</span>`, matches[match]))
+			} else {
+				newContent = append(newContent, matches[match])
+			}
+		}
+		examples[example].Content = strings.Join(newContent, "")
+		newExamples = append(newExamples, examples[example])
+	}
+	return newExamples
+}
+
 func query(c echo.Context) error {
 	headword, _ := url.QueryUnescape(c.Param("headword"))
-	query := "SELECT user_submit, dictionaries, synonyms, antonyms FROM headwords WHERE headword=$1"
+	query := "SELECT user_submit, dictionaries, synonyms, antonyms, examples FROM headwords WHERE headword=$1"
 	var results Results
 	var dictionaries map[string][]string
 	var synonyms []string
 	var antonyms []string
 	var userSubmission []UserSubmit
-	err := pool.QueryRow(query, headword).Scan(&userSubmission, &dictionaries, &synonyms, &antonyms)
+	var examples []Example
+	err := pool.QueryRow(query, headword).Scan(&userSubmission, &dictionaries, &synonyms, &antonyms, &examples)
 	if err != nil {
 		fmt.Println(err)
 		var empty []string
 		return c.JSON(http.StatusOK, empty)
 	}
-	results = Results{headword, dictionaries, synonyms, antonyms, userSubmission}
+	highlightedExamples := highlightExamples(examples, headword)
+	results = Results{headword, dictionaries, synonyms, antonyms, userSubmission, highlightedExamples}
 	return c.JSON(http.StatusOK, results)
 }
 
@@ -155,6 +220,7 @@ func main() {
 	e.Use(middleware.GzipWithConfig(middleware.GzipConfig{
 		Level: 5,
 	}))
+	e.Use(middleware.Secure())
 
 	// Route => handler
 	e.GET("/", index)

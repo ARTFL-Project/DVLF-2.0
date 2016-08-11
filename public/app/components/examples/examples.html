@@ -1,0 +1,14 @@
+<div id="examples" class="panel panel-default">
+    <div id="examples-title">
+        Exemples d'utilisation
+    </div>
+    <div class="panel panel-default example" ng-repeat="example in Main.results.examples">
+        <div class="example-score">
+            <span class="glyphicon glyphicon-circle-arrow-up up"></span>
+            {{ example.score }}
+            <span class="glyphicon glyphicon-circle-arrow-down down"></span>
+        </div>
+        <div class="example-content" ng-bind-html="example.content | unsafe"></div>
+        <div class="example-source">Source: <a ng-href="http:/{{ example.link }}" target="_blank">{{ example.source }}</a></div>
+    </div>
+</div>
