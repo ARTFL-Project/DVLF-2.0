@@ -28,6 +28,9 @@
             }
 
             vm.search = function(word) {
+                if (typeof(word) === 'undefined') {
+                    word = angular.element("#search_value").val();
+                }
                 $location.path("/mot/" + word.trim());
             }
 
