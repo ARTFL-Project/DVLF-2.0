@@ -196,6 +196,79 @@ func query(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
+func submitDefinition(c echo.Context) error {
+	submitObj := c.formValue("submitObj")
+	var newSubmission = userSubmit{submitObj["definition"], submitObj["source"], submitObj["link"]}
+
+	if _, ok := headwordList[submitObj["headword"]]; ok {
+		query := "SELECT user_submit FROM headwords WHERE headword=$1"
+		var userSubmission []UserSubmit
+		err := pool.QueryRow(query, submitObj["headword"]).Scan(&userSubmission)
+		if err != nil {
+			message := map[string]string{"message": "error"}
+			return c.JSON(message)
+		}
+		userSubmission = append(userSubmission, newSubmission)
+
+		update := "UPDATE headwords SET user_submit=$1 WHERE headword=$2"
+		_, updateErr := pool.Exec(update, newSubmission, submitObj["headword"])
+		if updateErr != nil {
+			message := map[string]string{"message": "error"}
+			return c.JSON(http.StatusOK, message)
+		}
+	} else {
+		userSubmission = []UserSubmit{newSubmission}
+		var dictionaries map[string][]string
+		var synonyms []string
+		var antonyms []string
+		var examples []Example
+		insert := "INSERT INTO headwords (headword, dictionaries, synonyms, antonyms, user_submit, examples) VALUES ($1, $2, $3, $4, $5, $6)"
+		_, insertErr := pool.Exec(insert, submitObj["headword"], dictionaries, synonyms, antonyms, userSubmission, examples)
+		if insertErr != nil {
+			message := map[string]string{"message": "error"}
+			return c.JSON(http.StatusOK, message)
+		}
+		headwordList = append(headwordList, submitObj["headword"])
+		cl := collate.New(language.French, collate.Loose, collate.IgnoreCase)
+		cl.SortStrings(headwords)
+	}
+	message := map[string]string{"message": "success"}
+	return c.JSON(http.StatusOK, message)
+}
+
+func voteForExample(c echo.Context) error {
+	headword := c.Param("headword")
+	exampleID := int32(c.Param("id"))
+	var examples []Example
+	query := "SELECT examples FROM headwords WHERE headword=$1"
+	err := pool.QueryRow(query, headword).Scan(&examples)
+	if err != nil {
+		message := map[string]string{"message": "error"}
+		return c.JSON(message)
+	}
+	var newExamples []Example
+	var newScore int32
+	for _, example := range examples {
+		if example.ID == exampleID {
+			if c.Param("vote") == "up" {
+				example.Score++
+			} else {
+				example.Score--
+			}
+			newScore = example.Score
+		}
+		newExamples = append(newExamples, example)
+	}
+	update := fmt.Sprintf("UPDATE headwords SET examples=$1 WHERE headword=$2")
+	updateErr := pool.Exec(update, newExamples, headword)
+	if updateErr != nil {
+		message := map[string]string{"message": "error"}
+		return c.JSON(http.StatusOK, message)
+	}
+	message := map[string]string{"message": "success", "score": newScore}
+	return c.JSON(http.StatusOK, message)
+}
+
 func index(c echo.Context) error {
 	indexByte, _ := ioutil.ReadFile("public/index.html")
 	index := string(indexByte)
@@ -232,6 +305,8 @@ func main() {
 		return c.JSON(http.StatusOK, headwordList)
 	})
 	e.GET("/api/autocomplete/:prefix", autoComplete)
+	e.POST("/api/submit", submitDefinition)
+	e.GET("/api/vote/:headword/:id/:vote", voteForExample)
 
 	// Start server
 	e.Run(standard.New(":8080"))
