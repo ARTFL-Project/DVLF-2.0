@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"golang.org/x/text/collate"
@@ -33,8 +34,8 @@ type Results struct {
 type Example struct {
 	Content string  `json:"content"`
 	Link    string  `json:"link"`
-	Score   int64   `json:"score"`
-	ID      int32   `json:"id"`
+	Score   int     `json:"score"`
+	ID      int     `json:"id"`
 	DefSim  float32 `json:"defSim"`
 	Source  string  `json:"source"`
 }
@@ -57,7 +58,7 @@ type AutoCompleteHeadword struct {
 var defaultConnConfig pgx.ConnConfig
 var pool = createConnPool()
 
-var headwordList = getAllHeadwords()
+var headwordList, headwordMap = getAllHeadwords()
 
 var tokenRegex = regexp.MustCompile(`(?i)([\p{L}]+)|([\.?,;:'!\-]+)|([\s]+)`)
 
@@ -84,7 +85,7 @@ func createLog() *os.File {
 	return f
 }
 
-func getAllHeadwords() []string {
+func getAllHeadwords() ([]string, map[string]bool) {
 	query := "SELECT headword FROM headwords"
 	rows, err := pool.Query(query)
 	if err != nil {
@@ -106,7 +107,11 @@ func getAllHeadwords() []string {
 	cl := collate.New(language.French, collate.Loose, collate.IgnoreCase)
 
 	cl.SortStrings(headwords)
-	return headwords
+	var headwordHash = make(map[string]bool)
+	for _, value := range headwords {
+		headwordHash[value] = true
+	}
+	return headwords, headwordHash
 }
 
 func autoComplete(c echo.Context) error {
@@ -197,40 +202,44 @@ func query(c echo.Context) error {
 }
 
 func submitDefinition(c echo.Context) error {
-	submitObj := c.formValue("submitObj")
-	var newSubmission = userSubmit{submitObj["definition"], submitObj["source"], submitObj["link"]}
+	headword := c.FormValue("headword")
+	source := c.FormValue("source")
+	link := c.FormValue("link")
+	definition := c.FormValue("definition")
+	var newSubmission = UserSubmit{definition, source, link}
 
-	if _, ok := headwordList[submitObj["headword"]]; ok {
+	if _, ok := headwordMap[headword]; ok {
 		query := "SELECT user_submit FROM headwords WHERE headword=$1"
 		var userSubmission []UserSubmit
-		err := pool.QueryRow(query, submitObj["headword"]).Scan(&userSubmission)
+		err := pool.QueryRow(query, headword).Scan(&userSubmission)
 		if err != nil {
 			message := map[string]string{"message": "error"}
-			return c.JSON(message)
+			return c.JSON(http.StatusOK, message)
 		}
 		userSubmission = append(userSubmission, newSubmission)
 
 		update := "UPDATE headwords SET user_submit=$1 WHERE headword=$2"
-		_, updateErr := pool.Exec(update, newSubmission, submitObj["headword"])
+		_, updateErr := pool.Exec(update, newSubmission, headword)
 		if updateErr != nil {
 			message := map[string]string{"message": "error"}
 			return c.JSON(http.StatusOK, message)
 		}
 	} else {
-		userSubmission = []UserSubmit{newSubmission}
+		var userSubmission = []UserSubmit{newSubmission}
 		var dictionaries map[string][]string
 		var synonyms []string
 		var antonyms []string
 		var examples []Example
 		insert := "INSERT INTO headwords (headword, dictionaries, synonyms, antonyms, user_submit, examples) VALUES ($1, $2, $3, $4, $5, $6)"
-		_, insertErr := pool.Exec(insert, submitObj["headword"], dictionaries, synonyms, antonyms, userSubmission, examples)
+		_, insertErr := pool.Exec(insert, headword, dictionaries, synonyms, antonyms, userSubmission, examples)
 		if insertErr != nil {
 			message := map[string]string{"message": "error"}
 			return c.JSON(http.StatusOK, message)
 		}
-		headwordList = append(headwordList, submitObj["headword"])
+		headwordMap[headword] = true
+		headwordList = append(headwordList, headword)
 		cl := collate.New(language.French, collate.Loose, collate.IgnoreCase)
-		cl.SortStrings(headwords)
+		cl.SortStrings(headwordList)
 	}
 	message := map[string]string{"message": "success"}
 	return c.JSON(http.StatusOK, message)
@@ -238,16 +247,16 @@ func submitDefinition(c echo.Context) error {
 
 func voteForExample(c echo.Context) error {
 	headword := c.Param("headword")
-	exampleID := int32(c.Param("id"))
+	exampleID, _ := strconv.Atoi(c.Param("id"))
 	var examples []Example
 	query := "SELECT examples FROM headwords WHERE headword=$1"
 	err := pool.QueryRow(query, headword).Scan(&examples)
 	if err != nil {
 		message := map[string]string{"message": "error"}
-		return c.JSON(message)
+		return c.JSON(http.StatusOK, message)
 	}
 	var newExamples []Example
-	var newScore int32
+	var newScore int
 	for _, example := range examples {
 		if example.ID == exampleID {
 			if c.Param("vote") == "up" {
@@ -260,12 +269,12 @@ func voteForExample(c echo.Context) error {
 		newExamples = append(newExamples, example)
 	}
 	update := fmt.Sprintf("UPDATE headwords SET examples=$1 WHERE headword=$2")
-	updateErr := pool.Exec(update, newExamples, headword)
+	_, updateErr := pool.Exec(update, newExamples, headword)
 	if updateErr != nil {
 		message := map[string]string{"message": "error"}
 		return c.JSON(http.StatusOK, message)
 	}
-	message := map[string]string{"message": "success", "score": newScore}
+	message := map[string]interface{}{"message": "success", "score": newScore}
 	return c.JSON(http.StatusOK, message)
 }
 

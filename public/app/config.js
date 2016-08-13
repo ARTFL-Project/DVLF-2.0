@@ -14,7 +14,11 @@
         }).
         when('/apropos', {
             templateUrl: 'app/components/apropos/apropos.html'
-        }).otherwise({
+        }).
+        when('/definition', {
+            templateUrl: 'app/components/newDefinition/newDefinition.html'
+        }).
+        otherwise({
             redirectTo: '/'
         });
         $locationProvider.html5Mode({

@@ -4,11 +4,17 @@
         .module('DVLF')
         .directive('examples', examples);
 
-    function examples($http, $timeout, $log, $rootScope) {
+    function examples($http, $timeout, $log, $rootScope, $routeParams) {
         return {
             templateUrl: "app/components/examples/examples.html",
             link: function(scope, element, attrs) {
-            
+                scope.vote = function(id, vote) {
+                    var headword = $routeParams.queryTerm;
+                    var query = "/api/vote/" + headword + "/" + id + "/" + vote;
+                    $http.get(query).then(function(response) {
+                        angular.element("#" + id).text(response.data.score);
+                    });
+                }
             }
         }
     }

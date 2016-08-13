@@ -31,6 +31,7 @@
                 var dicoOrder = ["tlfi", "acad1932", "littre", "acad1835", "acad1798", "feraud", "acad1762", "acad1694", "nicot", "bob"];
                 $http.get(query).then(function(response) {
                     scope.Main.results = response.data;
+                    console.log(response)
                     $rootScope.$broadcast('resultsUpdate');
                     var displayed = 0;
                     var totalEntries = 0;

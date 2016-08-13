@@ -1,7 +1,7 @@
 body {
   margin: 0 auto;
   font-family: 'Cormorant Garamond', serif;
-  font-size: 150%;
+  font-size: 160%;
 }
 .badge {
   font-family: serif;
@@ -218,4 +218,8 @@ angucomplete-row:focus {
     display: inline-block;
     width: 100%;
     text-align: right;
+}
+
+#search_value, #search_dropdown {
+    font-size: 110%;
 }
