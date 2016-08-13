@@ -1,21 +1,45 @@
-<div class="panel panel-default new-definition" style="margin: 10px; padding: 10px">
-    <p>
-        Entrez votre mot, votre définition ou votre exemple. Puis appuyez sur "Soumettre".
-    </p>
-    <p>
-        Veuillez limiter votre contribution à 250 mots par champ.
-    </p>
+<div class="panel panel-default new-definition" style="margin: 10px; padding: 20px">
+    <h3 style="text-align:center;margin-top: -10px; margin-bottom: 10px;font-weight: 700">Définissez votre mot...</h3>
+        <p>
+            Entrez votre mot, votre définition, et vos sources. Puis appuyez sur "Soumettre".
+        </p>
+        <p>
+            Note: Par mesure de sécurité, tout lien HTML sera désactivé.
+        </p>
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-xs-12 col-sm-3 col-md-2">
+                Terme:
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-10">
+                <input class="form-control" type="text" name="name" value="{{ Main.queryTerm }}" style="max-width: 300px;">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-3 col-md-2" style="margin-top: 10px">
+                Definition:
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6" style="margin-top: 10px">
+                <textarea id="definition-area" name="name"></textarea><br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-3 col-md-2" style="margin-top: 10px">
+                Source:
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6" style="margin-top: 10px">
+                <textarea id="source-area" rows="1" name="name"></textarea><br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-3 col-md-2" style="margin-top: 10px">
+                Link:
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6" style="margin-top: 10px">
+                <textarea id="link-area" rows="1" name="name"></textarea><br>
+            </div>
+        </div>
 
-    Terme:
-    <input class="form-control" type="text" name="name" value="{{ Main.queryTerm }}">
-
-    Definition:
-    <br><textarea name="name" rows="8" cols="40"></textarea><br>
-    Source:
-    <br><textarea name="name" rows="1" cols="40"></textarea><br>
-    Link:
-    <br><textarea name="name" rows="1" cols="40"></textarea><br>
-    <div class="g-recaptcha" data-sitekey="6LfhfycTAAAAAId87HWFIW-N8cShdp6O8fpAMK8h"></div>
-    <br>
-    <button type="button" class="btn btn-default">Soumettre</button>
+        <div class="g-recaptcha" data-sitekey="6LfhfycTAAAAAId87HWFIW-N8cShdp6O8fpAMK8h" style="margin-top: 10px;"></div>
+        <br>
+        <button type="button" class="btn btn-default">Soumettre</button>
 </div>

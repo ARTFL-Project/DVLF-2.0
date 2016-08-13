@@ -223,3 +223,15 @@ angucomplete-row:focus {
 #search_value, #search_dropdown {
     font-size: 110%;
 }
+
+textarea {
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+#definition-area {
+    width: 100%;
+    min-height: 300px;
+}
+#source-area, #link-area {
+    width: 100%;
+}

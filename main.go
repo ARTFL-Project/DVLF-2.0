@@ -246,12 +246,13 @@ func submitDefinition(c echo.Context) error {
 }
 
 func voteForExample(c echo.Context) error {
-	headword := c.Param("headword")
+	headword, _ := url.QueryUnescape(c.Param("headword"))
 	exampleID, _ := strconv.Atoi(c.Param("id"))
 	var examples []Example
 	query := "SELECT examples FROM headwords WHERE headword=$1"
 	err := pool.QueryRow(query, headword).Scan(&examples)
 	if err != nil {
+		fmt.Println(err)
 		message := map[string]string{"message": "error"}
 		return c.JSON(http.StatusOK, message)
 	}
@@ -271,6 +272,7 @@ func voteForExample(c echo.Context) error {
 	update := fmt.Sprintf("UPDATE headwords SET examples=$1 WHERE headword=$2")
 	_, updateErr := pool.Exec(update, newExamples, headword)
 	if updateErr != nil {
+		fmt.Println(updateErr)
 		message := map[string]string{"message": "error"}
 		return c.JSON(http.StatusOK, message)
 	}
@@ -304,9 +306,10 @@ func main() {
 	}))
 	e.Use(middleware.Secure())
 
-	// Route => handler
 	e.GET("/", index)
 	e.GET("/mot/*", index)
+	e.GET("/apropos", index)
+	e.GET("/definition", index)
 
 	// API
 	e.GET("/api/mot/:headword", query)
