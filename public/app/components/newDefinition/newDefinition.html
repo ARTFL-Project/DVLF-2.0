@@ -1,7 +1,7 @@
 <div class="panel panel-default new-definition" style="margin: 10px; padding: 20px">
     <h3 style="text-align:center;margin-top: -10px; margin-bottom: 10px;font-weight: 700">Définissez votre mot...</h3>
         <p>
-            Entrez votre mot, votre définition, et vos sources. Puis appuyez sur "Soumettre".
+            Entrez votre mot, votre définition, et vos sources (si besoin est). Puis cliquez sur "Soumettre".
         </p>
         <p class="note-to-user">
             Par mesure de sécurité, tout lien HTML sera désactivé. <br>
@@ -41,7 +41,10 @@
             </div>
         </div>
 
-        <div class="g-recaptcha" data-sitekey="6LfhfycTAAAAAId87HWFIW-N8cShdp6O8fpAMK8h" style="margin-top: 10px;"></div>
+        <div vc-recaptcha key="NewDefinition.recaptcha.key" required="false" on-success="NewDefinition.recaptchaResponse(response)" style="margin-top: 10px;"></div>
         <br>
-        <button type="button" class="btn btn-default" ng-click="NewDefinition.submit()">Soumettre</button>
+        <button type="button" class="btn btn-default" ng-click="NewDefinition.submit()">
+            Soumettre
+            <span class="glyphicon glyphicon-repeat spinning" ng-show="NewDefinition.submitting"></span>
+        </button>
 </div>

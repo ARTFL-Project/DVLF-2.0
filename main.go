@@ -10,6 +10,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	"golang.org/x/text/collate"
 	"golang.org/x/text/language"
@@ -55,6 +56,14 @@ type AutoCompleteList []AutoCompleteHeadword
 // AutoCompleteHeadword is just the object in the AutoCompleteList
 type AutoCompleteHeadword struct {
 	Headword string `json:"headword"`
+}
+
+// RecaptchaResponse from Google
+type RecaptchaResponse struct {
+	Success     bool      `json:"success"`
+	ChallengeTS time.Time `json:"challenge_ts"`
+	Hostname    string    `json:"hostname"`
+	ErrorCodes  []int     `json:"error-codes"`
 }
 
 var defaultConnConfig pgx.ConnConfig
@@ -203,7 +212,30 @@ func query(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
+func recaptchaValidate(recaptchaResponse string) (r RecaptchaResponse) {
+	resp, err := http.PostForm("https://www.google.com/recaptcha/api/siteverify",
+		url.Values{"secret": {"6LfhfycTAAAAANpoGOMqHlrhPBQlQoAZwy_O-J5-"}, "response": {recaptchaResponse}})
+	if err != nil {
+		fmt.Printf("Post error: %s\n", err)
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Printf("Read error: could not read body: %s", err)
+	}
+	err = json.Unmarshal(body, &r)
+	if err != nil {
+		fmt.Printf("Read error: got invalid JSON: %s", err)
+	}
+	return
+}
+
 func submitDefinition(c echo.Context) error {
+	recaptchaCheck := recaptchaValidate(c.FormValue("recaptchaResponse"))
+	if recaptchaCheck.Success == false {
+		message := map[string]string{"message": "Recaptcha error"}
+		return c.JSON(http.StatusOK, message)
+	}
 	headword := sanitize.HTML(c.FormValue("term"))
 	source := sanitize.HTML(c.FormValue("source"))
 	link := sanitize.HTML(c.FormValue("link"))

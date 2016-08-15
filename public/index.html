@@ -20,10 +20,10 @@
 
     <body ng-app="DVLF" ng-controller="MainController as Main" ng-cloak>
 
-        <nav class="navbar navbar-fixed-top">
+        <nav class="navbar">
             <div class="container">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="#" style="padding: 8px;">
+                    <a class="navbar-brand" href="/" style="padding: 8px;">
                         <img style="max-height: 35px" alt="Brand" src="static/images/dvlf_logo_medium.gif">
                     </a>
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar" style="border: 1px solid #000; border-radius: 0px;">
@@ -32,7 +32,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <span class="navbar-brand" style="font-size: 22px; font-variant: small-caps;" href="#">Dictionaire Vivant de la Langue Française</span>
+                    <a class="navbar-brand" style="font-size: 22px; font-variant: small-caps;" href="/">Dictionaire Vivant de la Langue Française</a>
                 </div>
                 <div id="navbar" class="navbar-right collapse navbar-collapse" style="font-size: 80%;">
                     <ul class="nav navbar-nav">
@@ -51,7 +51,7 @@
             </div>
         </nav>
 
-        <div class="container-fluid" style="margin-top: 60px;">
+        <div class="container-fluid">
             <div style="text-align: center;">
                 <p class="lead">Découvrez...explorez...définissez...votre langue</p>
             </div>
@@ -93,8 +93,10 @@
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-touch.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-sanitize.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-cookies.min.js"></script>
-        <script src='https://www.google.com/recaptcha/api.js'></script>
+        <script src="https://www.google.com/recaptcha/api.js?onload=vcRecaptchaApiLoaded&render=explicit" async defer></script>
         <script src="static/js/angucomplete-alt.min.js"></script>
+        <script src="static/js/sticky.min.js"></script>
+        <script src="static/js/angular-recaptcha.min.js"></script>
         <script src="app/app.js"></script>
         <script src="app/config.js"></script>
         <script src="app/filters.js"></script>

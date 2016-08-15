@@ -2,7 +2,7 @@
     "use strict";
 
     angular
-        .module("DVLF", ['ngRoute', 'ngTouch', 'ngSanitize', 'angucomplete-alt']);
+        .module("DVLF", ['ngRoute', 'ngTouch', 'ngSanitize', 'angucomplete-alt', 'sticky', 'vcRecaptcha']);
 
     angular
         .module("DVLF")

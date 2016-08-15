@@ -19,7 +19,7 @@
                 }
                 scope.wordwheel = scope.Main.wordwheel.slice(start, end);
                 $timeout(function() {
-                    var offset = angular.element('#wordwheel a.active').offset().top - 500;
+                    var offset = angular.element('#wordwheel a.active').offset().top - 570;
                     angular.element('#wordwheel .list-group').scrollTop(offset);
                 })
             }
