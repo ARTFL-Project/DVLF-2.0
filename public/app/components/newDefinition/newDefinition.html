@@ -3,15 +3,17 @@
         <p>
             Entrez votre mot, votre définition, et vos sources. Puis appuyez sur "Soumettre".
         </p>
-        <p>
-            Note: Par mesure de sécurité, tout lien HTML sera désactivé.
+        <p class="note-to-user">
+            Par mesure de sécurité, tout lien HTML sera désactivé. <br>
+            Seules les balises HTML &lt;i&gt; (caractères en italiques) et &lt;b&gt; (caractères gras) sont autorisées.<br>
+            dans le corps de la définition.
         </p>
         <div class="row" style="margin-top: 20px;">
             <div class="col-xs-12 col-sm-3 col-md-2">
                 Terme:
             </div>
             <div class="col-xs-12 col-sm-8 col-md-10">
-                <input class="form-control" type="text" name="name" value="{{ Main.queryTerm }}" style="max-width: 300px;">
+                <input class="form-control" type="text" name="name" value="{{ Main.queryTerm }}" style="max-width: 300px;" ng-model="NewDefinition.submission.term">
             </div>
         </div>
         <div class="row">
@@ -19,7 +21,7 @@
                 Definition:
             </div>
             <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6" style="margin-top: 10px">
-                <textarea id="definition-area" name="name"></textarea><br>
+                <textarea id="definition-area" name="name" ng-model="NewDefinition.submission.definition"></textarea><br>
             </div>
         </div>
         <div class="row">
@@ -27,7 +29,7 @@
                 Source:
             </div>
             <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6" style="margin-top: 10px">
-                <textarea id="source-area" rows="1" name="name"></textarea><br>
+                <textarea id="source-area" rows="1" name="name" ng-model="NewDefinition.submission.source"></textarea><br>
             </div>
         </div>
         <div class="row">
@@ -35,11 +37,11 @@
                 Link:
             </div>
             <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6" style="margin-top: 10px">
-                <textarea id="link-area" rows="1" name="name"></textarea><br>
+                <textarea id="link-area" rows="1" name="name" ng-model="NewDefinition.submission.link"></textarea><br>
             </div>
         </div>
 
         <div class="g-recaptcha" data-sitekey="6LfhfycTAAAAAId87HWFIW-N8cShdp6O8fpAMK8h" style="margin-top: 10px;"></div>
         <br>
-        <button type="button" class="btn btn-default">Soumettre</button>
+        <button type="button" class="btn btn-default" ng-click="NewDefinition.submit()">Soumettre</button>
 </div>

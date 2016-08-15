@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -18,6 +19,7 @@ import (
 	"github.com/labstack/echo/middleware"
 
 	"github.com/jackc/pgx"
+	"github.com/kennygrant/sanitize"
 )
 
 // Results to export
@@ -202,37 +204,54 @@ func query(c echo.Context) error {
 }
 
 func submitDefinition(c echo.Context) error {
-	headword := c.FormValue("headword")
-	source := c.FormValue("source")
-	link := c.FormValue("link")
-	definition := c.FormValue("definition")
+	headword := sanitize.HTML(c.FormValue("term"))
+	source := sanitize.HTML(c.FormValue("source"))
+	link := sanitize.HTML(c.FormValue("link"))
+	allowedTags := []string{"i", "b"}
+	definition, htmlErr := sanitize.HTMLAllowing(c.FormValue("definition"), allowedTags)
+	if htmlErr != nil {
+		fmt.Println(htmlErr)
+		message := map[string]string{"message": "error"}
+		return c.JSON(http.StatusOK, message)
+	}
 	var newSubmission = UserSubmit{definition, source, link}
-
 	if _, ok := headwordMap[headword]; ok {
 		query := "SELECT user_submit FROM headwords WHERE headword=$1"
 		var userSubmission []UserSubmit
 		err := pool.QueryRow(query, headword).Scan(&userSubmission)
 		if err != nil {
+			fmt.Println(err)
 			message := map[string]string{"message": "error"}
 			return c.JSON(http.StatusOK, message)
 		}
+
 		userSubmission = append(userSubmission, newSubmission)
+		serializedSubmission, jsonError := json.Marshal(userSubmission)
+		if jsonError != nil {
+			fmt.Println(jsonError)
+		}
 
 		update := "UPDATE headwords SET user_submit=$1 WHERE headword=$2"
-		_, updateErr := pool.Exec(update, newSubmission, headword)
+		_, updateErr := pool.Exec(update, serializedSubmission, headword)
 		if updateErr != nil {
+			fmt.Println(updateErr)
 			message := map[string]string{"message": "error"}
 			return c.JSON(http.StatusOK, message)
 		}
 	} else {
 		var userSubmission = []UserSubmit{newSubmission}
-		var dictionaries map[string][]string
-		var synonyms []string
-		var antonyms []string
-		var examples []Example
+		serializedSubmission, jsonError := json.Marshal(userSubmission)
+		if jsonError != nil {
+			fmt.Println(jsonError)
+		}
+		dictionaries, _ := json.Marshal(map[string][]string{})
+		synonyms, _ := json.Marshal([]string{})
+		antonyms, _ := json.Marshal([]string{})
+		examples, _ := json.Marshal([]Example{})
 		insert := "INSERT INTO headwords (headword, dictionaries, synonyms, antonyms, user_submit, examples) VALUES ($1, $2, $3, $4, $5, $6)"
-		_, insertErr := pool.Exec(insert, headword, dictionaries, synonyms, antonyms, userSubmission, examples)
+		_, insertErr := pool.Exec(insert, headword, dictionaries, synonyms, antonyms, serializedSubmission, examples)
 		if insertErr != nil {
+			fmt.Println(insertErr)
 			message := map[string]string{"message": "error"}
 			return c.JSON(http.StatusOK, message)
 		}

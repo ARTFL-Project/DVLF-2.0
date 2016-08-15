@@ -16,7 +16,9 @@
             templateUrl: 'app/components/apropos/apropos.html'
         }).
         when('/definition', {
-            templateUrl: 'app/components/newDefinition/newDefinition.html'
+            templateUrl: 'app/components/newDefinition/newDefinition.html',
+            controller: "NewDefinitionController",
+            controllerAs: "NewDefinition"
         }).
         otherwise({
             redirectTo: '/'
