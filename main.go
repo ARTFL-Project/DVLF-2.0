@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"net/url"
 	"os"
@@ -179,9 +180,7 @@ func highlightExamples(examples []Example, queryTerm string) []Example {
 	for example := range examples {
 		var newContent []string
 		matches := tokenRegex.FindAllString(examples[example].Content, -1)
-		fmt.Println("^(" + strings.Join(forms, "|") + ")$")
 		for match := range matches {
-			fmt.Println(matches[match])
 			if formRegex.MatchString(matches[match]) {
 				newContent = append(newContent, fmt.Sprintf(`<span class="highlight">%s</span>`, matches[match]))
 			} else {
@@ -298,6 +297,66 @@ func submitDefinition(c echo.Context) error {
 	return c.JSON(http.StatusOK, message)
 }
 
+func submitExample(c echo.Context) error {
+	recaptchaCheck := recaptchaValidate(c.FormValue("recaptchaResponse"))
+	if recaptchaCheck.Success == false {
+		message := map[string]string{"message": "Recaptcha error"}
+		return c.JSON(http.StatusOK, message)
+	}
+	headword := sanitize.HTML(c.FormValue("term"))
+	source := sanitize.HTML(c.FormValue("source"))
+	link := sanitize.HTML(c.FormValue("link"))
+	allowedTags := []string{"i", "b"}
+	example, htmlErr := sanitize.HTMLAllowing(c.FormValue("example"), allowedTags)
+	if htmlErr != nil {
+		fmt.Println(htmlErr)
+		message := map[string]string{"message": "error"}
+		return c.JSON(http.StatusOK, message)
+	}
+
+	if _, ok := headwordMap[headword]; ok {
+		query := "SELECT examples FROM headwords WHERE headword=$1"
+		var userExamples []Example
+		err := pool.QueryRow(query, headword).Scan(&userExamples)
+		if err != nil {
+			fmt.Println(err)
+			message := map[string]string{"message": "error"}
+			return c.JSON(http.StatusOK, message)
+		}
+
+		var storedIDs = make(map[int]bool)
+		for _, storedExample := range userExamples {
+			storedIDs[storedExample.ID] = true
+		}
+		id := int(rand.Int31())
+		for {
+			if _, ok := storedIDs[id]; !ok {
+				break
+			}
+		}
+		score := 0
+		userExamples = append(userExamples, Example{example, link, score, id, 0.0, source})
+		serializedSubmission, jsonError := json.Marshal(userExamples)
+		if jsonError != nil {
+			fmt.Println(jsonError)
+		}
+
+		update := "UPDATE headwords SET examples=$1 WHERE headword=$2"
+		_, updateErr := pool.Exec(update, serializedSubmission, headword)
+		if updateErr != nil {
+			fmt.Println(updateErr)
+			message := map[string]string{"message": "error"}
+			return c.JSON(http.StatusOK, message)
+		}
+	} else {
+		fmt.Println("Headword does not exist for this example")
+		message := map[string]string{"message": "error"}
+		return c.JSON(http.StatusOK, message)
+	}
+	message := map[string]string{"message": "success"}
+	return c.JSON(http.StatusOK, message)
+}
+
 func voteForExample(c echo.Context) error {
 	headword, _ := url.QueryUnescape(c.Param("headword"))
 	exampleID, _ := strconv.Atoi(c.Param("id"))
@@ -363,6 +422,7 @@ func main() {
 	e.GET("/mot/*", index)
 	e.GET("/apropos", index)
 	e.GET("/definition", index)
+	e.GET("/exemple", index)
 
 	// API
 	e.GET("/api/mot/:headword", query)
@@ -372,6 +432,7 @@ func main() {
 	e.GET("/api/autocomplete/:prefix", autoComplete)
 	e.POST("/api/submit", submitDefinition)
 	e.GET("/api/vote/:headword/:id/:vote", voteForExample)
+	e.POST("/api/submitExample", submitExample)
 
 	// Start server
 	e.Run(standard.New(":8080"))

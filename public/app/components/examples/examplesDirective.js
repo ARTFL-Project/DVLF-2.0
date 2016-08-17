@@ -9,6 +9,7 @@
             templateUrl: "app/components/examples/examples.html",
             link: function(scope, element, attrs) {
                 scope.vote = function(id, vote) {
+                    console.log(id)
                     var headword = $routeParams.queryTerm;
                     var query = "/api/vote/" + headword + "/" + id + "/" + vote;
                     $http.get(query).then(function(response) {

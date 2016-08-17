@@ -13,7 +13,7 @@
                 Terme:
             </div>
             <div class="col-xs-12 col-sm-8 col-md-10">
-                <input class="form-control" type="text" name="name" value="{{ Main.queryTerm }}" style="max-width: 300px;" ng-model="NewDefinition.submission.term">
+                <input class="form-control" type="text" name="name" value="{{ Main.queryTerm }}" style="max-width: 300px;" ng-model="NewExample.submission.term">
             </div>
         </div>
         <div class="row">
@@ -21,7 +21,7 @@
                 Exemple:
             </div>
             <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6" style="margin-top: 10px">
-                <textarea id="definition-area" name="name" ng-model="NewDefinition.submission.definition"></textarea><br>
+                <textarea id="definition-area" name="name" ng-model="NewExample.submission.example"></textarea><br>
             </div>
         </div>
         <div class="row">
@@ -29,7 +29,7 @@
                 Source:
             </div>
             <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6" style="margin-top: 10px">
-                <textarea id="source-area" rows="1" name="name" ng-model="NewDefinition.submission.source"></textarea><br>
+                <textarea id="source-area" rows="1" name="name" ng-model="NewExample.submission.source"></textarea><br>
             </div>
         </div>
         <div class="row">
@@ -37,14 +37,14 @@
                 Lien:
             </div>
             <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6" style="margin-top: 10px">
-                <textarea id="link-area" rows="1" name="name" ng-model="NewDefinition.submission.link"></textarea><br>
+                <textarea id="link-area" rows="1" name="name" ng-model="NewExample.submission.link"></textarea><br>
             </div>
         </div>
 
-        <div vc-recaptcha key="NewDefinition.recaptcha.key" required="false" on-success="NewDefinition.recaptchaResponse(response)" style="margin-top: 10px;"></div>
+        <div vc-recaptcha key="NewExample.recaptcha.key" required="false" on-success="NewExample.recaptchaResponse(response)" style="margin-top: 10px;"></div>
         <br>
-        <button type="button" class="btn btn-default" ng-click="NewDefinition.submit()">
+        <button type="button" class="btn btn-default" ng-click="NewExample.submit()">
             Soumettre
-            <span class="glyphicon glyphicon-repeat spinning" ng-show="NewDefinition.submitting"></span>
+            <span class="glyphicon glyphicon-repeat spinning" ng-show="NewExample.submitting"></span>
         </button>
 </div>
