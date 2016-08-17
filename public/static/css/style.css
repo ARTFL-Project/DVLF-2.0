@@ -242,7 +242,7 @@ textarea {
 }
 .note-to-user {
     padding: 10px;
-    background-color: rgba(21, 95, 131, .6);
+    background-color: rgba(21, 95, 131, .45);
     color: #fff;
     display: inline-block;
 }

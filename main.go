@@ -154,7 +154,7 @@ func autoComplete(c echo.Context) error {
 
 func highlightExamples(examples []Example, queryTerm string) []Example {
 	query := "SELECT headword FROM word2lemma WHERE lemma=$1"
-	var forms []string
+	forms := []string{queryTerm}
 	rows, err := pool.Query(query, queryTerm)
 
 	if err != nil {
@@ -179,7 +179,9 @@ func highlightExamples(examples []Example, queryTerm string) []Example {
 	for example := range examples {
 		var newContent []string
 		matches := tokenRegex.FindAllString(examples[example].Content, -1)
+		fmt.Println("^(" + strings.Join(forms, "|") + ")$")
 		for match := range matches {
+			fmt.Println(matches[match])
 			if formRegex.MatchString(matches[match]) {
 				newContent = append(newContent, fmt.Sprintf(`<span class="highlight">%s</span>`, matches[match]))
 			} else {

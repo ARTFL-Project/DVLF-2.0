@@ -20,6 +20,11 @@
             controller: "NewDefinitionController",
             controllerAs: "NewDefinition"
         }).
+        when('/exemple', {
+            templateUrl: 'app/components/newExample/newExample.html',
+            controller: "NewExampleController",
+            controllerAs: "NewExample"
+        }).
         otherwise({
             redirectTo: '/'
         });

@@ -4,7 +4,7 @@
         .module('DVLF')
         .directive('examples', examples);
 
-    function examples($http, $timeout, $log, $rootScope, $routeParams) {
+    function examples($http, $timeout, $log, $location, $routeParams) {
         return {
             templateUrl: "app/components/examples/examples.html",
             link: function(scope, element, attrs) {
@@ -14,6 +14,9 @@
                     $http.get(query).then(function(response) {
                         angular.element("#" + id).text(response.data.score);
                     });
+                }
+                scope.addExample = function() {
+                    $location.url("/exemple");
                 }
             }
         }
