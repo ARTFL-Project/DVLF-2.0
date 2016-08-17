@@ -2,7 +2,7 @@
     <div id="examples-title">
         Exemples d'utilisation
     </div>
-    <div class="panel panel-default example" ng-repeat="example in Main.results.examples">
+    <div class="panel panel-default example" ng-repeat="example in Main.results.examples | sortByVote">
         <div class="example-score">
             <span class="glyphicon glyphicon-circle-arrow-up up" ng-click="vote(example.id, 'up')"></span>
             <span id="{{ example.id }}">{{ example.score }}</span>
