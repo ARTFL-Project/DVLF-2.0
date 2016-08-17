@@ -4,8 +4,8 @@ body {
   font-size: 160%;
 }
 .navbar-brand {
-    cursor: pointer;
-    color: inherit !important;
+  cursor: pointer;
+  color: inherit !important;
 }
 .badge {
   font-family: serif;
@@ -138,7 +138,7 @@ body {
   background-color: #fbfbfb;
 }
 #wordwheel .list-group {
-    margin-top: -10px;
+  margin-top: -10px;
   max-height: 800px;
   overflow-y: scroll;
 }
@@ -152,9 +152,8 @@ body {
 .highlight {
   color: red;
 }
-
 .angucomplete-holder {
-    position: relative;
+  position: relative;
 }
 #search_dropdown {
   position: absolute;
@@ -164,100 +163,166 @@ body {
   top: 34px;
 }
 .angucomplete-row {
-    padding: 5px 13px;
+  padding: 5px 13px;
 }
 angucomplete-row:focus {
-    background-color: #f8f8f8;
+  background-color: #f8f8f8;
 }
 .angucomplete-row:hover {
-    background-color: #f8f8f8;
-    cursor: pointer;
+  background-color: #f8f8f8;
+  cursor: pointer;
 }
 .angucomplete-selected-row {
-    background-color: #f8f8f8;
+  background-color: #f8f8f8;
 }
 .form-control {
-    font-size: 100%;
+  font-size: 100%;
 }
-
 #examples-title {
-    text-align: center;
-    font-size: 110%;
-    font-weight: 700;
-    margin-top: 0px;
-    padding: 5px;
-    background-color: #fbfbfb;
-    border-bottom: 1px solid #eee;
-    margin-bottom: 10px;
+  text-align: center;
+  font-size: 110%;
+  font-weight: 700;
+  margin-top: 0px;
+  padding: 5px;
+  background-color: #fbfbfb;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 10px;
 }
 .example {
-    margin: 10px;
-    padding: 10px;
+  margin: 10px;
+  padding: 10px;
 }
 .example-score {
-    display: inline;
-    font-family: serif;
-    font-size: 110%;
-    padding-right: 5px;
+  display: inline;
+  font-family: serif;
+  font-size: 110%;
+  padding-right: 5px;
 }
 .example-score .glyphicon {
-    color: #a8a8a8;
-    cursor: pointer;
-    transition: all 300ms;
+  color: #a8a8a8;
+  cursor: pointer;
+  transition: all 300ms;
 }
 .example-score .glyphicon:hover {
-    color: black;
+  color: black;
 }
 .example-score .up {
-    padding-right: 5px;
+  padding-right: 5px;
 }
 .example-score .down {
-    padding-left: 5px;
+  padding-left: 5px;
 }
 .example-content {
-    display: inline;
-    padding-left: 5px;
-    text-align: justify;
+  display: inline;
+  padding-left: 5px;
+  text-align: justify;
 }
 .example-source {
-    display: inline-block;
-    width: 100%;
-    text-align: right;
+  display: inline-block;
+  width: 100%;
+  text-align: right;
 }
-
 #search_value, #search_dropdown {
-    font-size: 110%;
+  font-size: 110%;
 }
-
 textarea {
-    border: 1px solid #ccc;
-    padding: 10px;
+  border: 1px solid #ccc;
+  padding: 10px;
 }
 #definition-area {
-    width: 100%;
-    min-height: 300px;
+  width: 100%;
+  min-height: 300px;
 }
-#source-area, #link-area {
-    width: 100%;
+#source-area, #link-area, #nym-area {
+  width: 100%;
 }
 .note-to-user {
-    padding: 10px;
-    background-color: rgba(21, 95, 131, .45);
-    color: #fff;
-    display: inline-block;
+  padding: 10px;
+  background-color: rgba(21, 95, 131, .45);
+  color: #fff;
+  display: inline-block;
 }
 .glyphicon.spinning {
-    vertical-align: sub;
-    animation: spin 1s infinite linear;
-    -webkit-animation: spin2 1s infinite linear;
+  vertical-align: sub;
+  animation: spin 1s infinite linear;
+  -webkit-animation: spin2 1s infinite linear;
 }
-
 @keyframes spin {
-    from { transform: scale(1) rotate(0deg); }
-    to { transform: scale(1) rotate(360deg); }
+  from {
+    transform: scale(1) rotate(0deg);
+  }
+  to {
+    transform: scale(1) rotate(360deg);
+  }
+}
+@-webkit-keyframes spin2 {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
 }
 
-@-webkit-keyframes spin2 {
-    from { -webkit-transform: rotate(0deg); }
-    to { -webkit-transform: rotate(360deg); }
+/*Animations*/
+
+.dico.ng-enter, .dico.ng-move {
+  transition: all .2s linear;
+  opacity: 0;
+}
+.dico.ng-enter-stagger {
+  transition-delay: 50ms;
+  -webkit-transition-delay: 50ms;
+  transition-duration: 0s;
+  -webkit-transition-duration: 0s;
+}
+.dico.ng-enter.ng-enter-active, .dico.ng-move.ng-move-active {
+  opacity: 1;
+}
+.example.ng-enter {
+  transition: all .2s linear;
+  opacity: 0;
+}
+.example.ng-enter-stagger {
+  transition-delay: 50ms;
+  -webkit-transition-delay: 50ms;
+  transition-duration: 0s;
+  -webkit-transition-duration: 0s;
+}
+.example.ng-enter.ng-enter-active {
+  opacity: 1;
+}
+#examples.ng-leave {
+  transition: 0.5s linear all;
+  opacity: 1;
+}
+#examples.ng-leave.ng-leave-active {
+  opacity: 0;
+}
+#wordwheel.ng-enter {
+  transition: all .2s linear;
+  opacity: 0;
+}
+#wordwheel.ng-enter.ng-enter-active {
+  opacity: 1;
+}
+.synonym.ng-enter, .antonym.ng-enter {
+  transition: all .2s linear;
+  opacity: 0;
+}
+.synonym.ng-enter-stagger, .antonym.ng-enter-stagger {
+  transition-delay: 3ms;
+  -webkit-transition-delay: 3ms;
+  transition-duration: 0s;
+  -webkit-transition-duration: 0s;
+}
+.synonym.ng-enter.ng-enter-active, .antonym.ng-enter.ng-enter-active {
+  opacity: 1;
+}
+#entry-total.ng-enter {
+  transition: all .2s linear;
+  opacity: 0;
+}
+#entry-total.ng-enter.ng-enter-active {
+  opacity: 1;
 }

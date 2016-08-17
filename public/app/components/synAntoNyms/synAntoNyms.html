@@ -1,10 +1,30 @@
 <div id="nyms">
     <div class="panel panel-default">
         <h4 class="nym-title">Synonymes</h4>
-        <p style="padding: 0 10px 10px 10px;" ng-bind-html="synonyms | unsafe"></p>
+        <p style="padding: 0 10px 10px 10px;">
+            <a class="synonym" ng-href="/mot/{{ synonym }}" ng-repeat="synonym in synonyms">
+                {{ synonym }}<span ng-hide="$last">,&nbsp;</span>
+            </a>
+        </p>
+        <p style="padding-left: 10px">
+            <button class="btn btn-default" type="button" ng-click="addSynonym()">
+                <span class="glyphicon glyphicon-plus" style="color: rgb(21, 95, 131); vertical-align: text-top;"></span>
+                Ajoutez un synonyme
+            </button>
+        </p>
     </div>
-    <div class="panel panel-default" style="margin-top: 10px;" ng-if="antonyms.length > 0">
+    <div class="panel panel-default" style="margin-top: 10px;">
         <h4 class="nym-title">Antonymes</h4>
-        <p style="padding: 0 10px 10px 10px" ng-bind-html="antonyms | unsafe"></p>
+        <p style="padding: 0 10px 10px 10px">
+            <a class="antonym" ng-href="/mot/{{ antonym }}" ng-repeat="antonym in antonyms">
+                {{ antonym }}<span ng-hide="$last">,&nbsp;</span>
+            </a>
+        </p>
+        <p style="padding-left: 10px">
+            <button class="btn btn-default" type="button" ng-click="addAntonym()">
+                <span class="glyphicon glyphicon-plus" style="color: rgb(21, 95, 131); vertical-align: text-top;"></span>
+                Ajoutez un antonyme
+            </button>
+        </p>
     </div>
 </div>

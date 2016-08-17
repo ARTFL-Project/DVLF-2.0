@@ -30,7 +30,7 @@
                 scope.dictionaries = [];
                 var dicoOrder = ["tlfi", "acad1932", "littre", "acad1835", "acad1798", "feraud", "acad1762", "acad1694", "nicot", "bob"];
                 $http.get(query).then(function(response) {
-                    scope.Main.results = response.data;
+                    scope.Results.results = response.data;
                     console.log(response.data)
                     $rootScope.$broadcast('resultsUpdate');
                     var displayed = 0;
@@ -52,8 +52,8 @@
                             });
                         }
                     }
-                    if (scope.Main.results.userSubmit.length) {
-                        totalEntries += scope.Main.results.userSubmit.length;
+                    if (scope.Results.results.userSubmit.length) {
+                        totalEntries += scope.Results.results.userSubmit.length;
                         displayed += 1;
                         if (displayed < 3) {
                             var show = true;
@@ -63,7 +63,7 @@
                         scope.dictionaries.push({
                             name: "userSubmit",
                             label: "Définition(s) d'utilisateurs",
-                            data: scope.Main.results.userSubmit,
+                            data: scope.Results.results.userSubmit,
                             show: show
                         })
                     }

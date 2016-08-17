@@ -25,6 +25,16 @@
             controller: "NewExampleController",
             controllerAs: "NewExample"
         }).
+        when('/synonyme', {
+            templateUrl: 'app/components/newSynAnto/newSynAnto.html',
+            controller: "NewSynAntoController",
+            controllerAs: "NewSynAnto"
+        }).
+        when('/antonyme', {
+            templateUrl: 'app/components/newSynAnto/newSynAnto.html',
+            controller: "NewSynAntoController",
+            controllerAs: "NewSynAnto"
+        }).
         otherwise({
             redirectTo: '/'
         });

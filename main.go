@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"os"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -42,6 +43,19 @@ type Example struct {
 	ID      int     `json:"id"`
 	DefSim  float32 `json:"defSim"`
 	Source  string  `json:"source"`
+}
+
+// ExamplesByID for sorting
+type ExamplesByID []Example
+
+func (a ExamplesByID) Len() int {
+	return len(a)
+}
+func (a ExamplesByID) Less(i, j int) bool {
+	return a[i].ID < a[j].ID
+}
+func (a ExamplesByID) Swap(i, j int) {
+	a[i], a[j] = a[j], a[i]
 }
 
 // UserSubmit fields
@@ -191,6 +205,27 @@ func highlightExamples(examples []Example, queryTerm string) []Example {
 		newExamples = append(newExamples, examples[example])
 	}
 	return newExamples
+}
+
+func sortExamples(examples []Example) []Example {
+	var orderedExamples []Example
+	var negativeExamples []Example
+	var otherExamples []Example
+	for _, example := range examples {
+		if example.Score > 0 {
+			orderedExamples = append(orderedExamples, example)
+		} else if example.Score < 0 {
+			negativeExamples = append(negativeExamples, example)
+		} else {
+			otherExamples = append(otherExamples, example)
+		}
+	}
+	sort.Sort(ExamplesByID(orderedExamples))
+	sort.Sort(ExamplesByID(negativeExamples))
+
+	orderedExamples = append(orderedExamples, otherExamples...)
+	orderedExamples = append(orderedExamples, negativeExamples...)
+	return orderedExamples
 }
 
 func query(c echo.Context) error {
@@ -392,6 +427,56 @@ func voteForExample(c echo.Context) error {
 	return c.JSON(http.StatusOK, message)
 }
 
+func submitNym(c echo.Context) error {
+	recaptchaCheck := recaptchaValidate(c.FormValue("recaptchaResponse"))
+	if recaptchaCheck.Success == false {
+		message := map[string]string{"message": "Recaptcha error"}
+		return c.JSON(http.StatusOK, message)
+	}
+	headword := sanitize.HTML(c.FormValue("term"))
+	nym := sanitize.HTML(c.FormValue("nym"))
+	typeOfNym := sanitize.HTML(c.FormValue("type"))
+	if _, ok := headwordMap[headword]; ok {
+		query := fmt.Sprintf("SELECT %s FROM headwords WHERE headword=$1", typeOfNym)
+		var nyms []string
+		err := pool.QueryRow(query, headword).Scan(&nyms)
+		if err != nil {
+			fmt.Println(err)
+			message := map[string]string{"message": "error"}
+			return c.JSON(http.StatusOK, message)
+		}
+
+		var storedNyms = make(map[string]bool)
+		for _, storedNym := range nyms {
+			storedNyms[storedNym] = true
+		}
+		if _, ok := storedNyms[nym]; ok {
+			fmt.Printf("%s is already in the DB\n", nym)
+			message := map[string]string{"message": "error"}
+			return c.JSON(http.StatusOK, message)
+		}
+		nyms = append(nyms, nym)
+		serializedSubmission, jsonError := json.Marshal(nyms)
+		if jsonError != nil {
+			fmt.Println(jsonError)
+		}
+
+		update := fmt.Sprintf("UPDATE headwords SET %s=$1 WHERE headword=$2", typeOfNym)
+		_, updateErr := pool.Exec(update, serializedSubmission, headword)
+		if updateErr != nil {
+			fmt.Println(updateErr)
+			message := map[string]string{"message": "error"}
+			return c.JSON(http.StatusOK, message)
+		}
+	} else {
+		fmt.Println("Headword does not exist for this example")
+		message := map[string]string{"message": "error"}
+		return c.JSON(http.StatusOK, message)
+	}
+	message := map[string]string{"message": "success"}
+	return c.JSON(http.StatusOK, message)
+}
+
 func index(c echo.Context) error {
 	indexByte, _ := ioutil.ReadFile("public/index.html")
 	index := string(indexByte)
@@ -423,6 +508,8 @@ func main() {
 	e.GET("/apropos", index)
 	e.GET("/definition", index)
 	e.GET("/exemple", index)
+	e.GET("/synonyme", index)
+	e.GET("/antonyme", index)
 
 	// API
 	e.GET("/api/mot/:headword", query)
@@ -433,6 +520,7 @@ func main() {
 	e.POST("/api/submit", submitDefinition)
 	e.GET("/api/vote/:headword/:id/:vote", voteForExample)
 	e.POST("/api/submitExample", submitExample)
+	e.POST("/api/submitNym", submitNym)
 
 	// Start server
 	e.Run(standard.New(":8080"))
