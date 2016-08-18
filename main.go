@@ -27,12 +27,27 @@ import (
 
 // Results to export
 type Results struct {
-	Headword     string              `json:"headword"`
-	Dictionaries map[string][]string `json:"dictionaries"`
-	Synonyms     []string            `json:"synonyms"`
-	Antonyms     []string            `json:"antonyms"`
-	UserSubmit   []UserSubmit        `json:"userSubmit"`
-	Examples     []Example           `json:"examples"`
+	Headword     string         `json:"headword"`
+	Dictionaries DictionaryData `json:"dictionaries"`
+	Synonyms     []string       `json:"synonyms"`
+	Antonyms     []string       `json:"antonyms"`
+	Examples     []Example      `json:"examples"`
+}
+
+// Dictionary to export
+type Dictionary struct {
+	Name       string              `json:"name"`
+	Label      string              `json:"label"`
+	ShortLabel string              `json:"shortLabel"`
+	Content    []map[string]string `json:"contentObj"`
+	Show       bool                `json:"show"`
+}
+
+// DictionaryData to export
+type DictionaryData struct {
+	Data         []Dictionary `json:"data"`
+	TotalDicos   int          `json:"totalDicos"`
+	TotalEntries int          `json:"totalEntries"`
 }
 
 // Example for headwords
@@ -89,6 +104,51 @@ var headwordList, headwordMap = getAllHeadwords()
 var tokenRegex = regexp.MustCompile(`(?i)([\p{L}]+)|([\.?,;:'!\-]+)|([\s]+)`)
 
 var outputLog = createLog()
+
+var dicoLabels = map[string]map[string]string{
+	"feraud": {
+		"label":      "Féraud: Dictionaire critique de la langue française (1787-1788)",
+		"shortLabel": "Féraud (1787-1788)",
+	},
+	"nicot": {
+		"label":      "Jean Nicot: Thresor de la langue française (1606)",
+		"shortLabel": "Jean Nicot (1606)",
+	},
+	"acad1694": {
+		"label":      "Dictionnaire de L'Académie française 1re édition (1694)",
+		"shortLabel": "Académie française (1694)",
+	},
+	"acad1762": {
+		"label":      "Dictionnaire de L'Académie française 4e édition (1762)",
+		"shortLabel": "Académie française (1762)",
+	},
+	"acad1798": {
+		"label":      "Dictionnaire de L'Académie française 5e édition (1798)",
+		"shortLabel": "Académie française (1798)",
+	},
+	"acad1835": {
+		"label":      "Dictionnaire de L'Académie française 6e édition (1835)",
+		"shortLabel": "Académie française (1835)",
+	},
+	"littre": {
+		"label":      "Émile Littré: Dictionnaire de la langue française (1872-1877)",
+		"shortLabel": "Littré (1872-1877)",
+	},
+	"acad1932": {
+		"label":      "Dictionnaire de L'Académie française 8e édition (1932-1935)",
+		"shortLabel": "Académie française (1932-1935)",
+	},
+	"tlfi": {
+		"label":      "Le Trésor de la Langue Française Informatisé",
+		"shortLabel": "Trésor Langue Française",
+	},
+	"bob": {
+		"label":      "BOB: Dictionaire d'argot",
+		"shortLabel": "BOB: Dictionaire d'argot",
+	},
+}
+
+var dicoOrder = []string{"tlfi", "acad1932", "littre", "acad1835", "acad1798", "feraud", "acad1762", "acad1694", "nicot", "bob"}
 
 func createConnPool() *pgx.ConnPool {
 	defaultConnConfig.Host = "localhost"
@@ -165,6 +225,50 @@ func autoComplete(c echo.Context) error {
 	results := make(map[string]AutoCompleteList)
 	results["headwords"] = headwords
 	return c.JSON(http.StatusOK, results)
+}
+
+func orderDictionaries(dictionaries map[string][]string, userSubmissions []UserSubmit) DictionaryData {
+	displayed := 0
+	var show bool
+	totalEntries := 0
+	totalDicos := 0
+	var newDicos []Dictionary
+	for _, dico := range dicoOrder {
+		if len(dictionaries[dico]) == 0 {
+			continue
+		}
+		totalDicos++
+		displayed++
+		if displayed < 3 {
+			show = true
+		} else {
+			show = false
+		}
+		totalEntries += len(dictionaries[dico])
+		var content []map[string]string
+		for _, entry := range dictionaries[dico] {
+			content = append(content, map[string]string{"content": entry})
+		}
+		newDicos = append(newDicos, Dictionary{dico, dicoLabels[dico]["label"], dicoLabels[dico]["shortLabel"], content, show})
+	}
+	if len(userSubmissions) > 0 {
+		totalEntries += len(userSubmissions)
+		displayed++
+		if displayed < 3 {
+			show = true
+		} else {
+			show = false
+		}
+		var content []map[string]string
+		for _, entry := range userSubmissions {
+			content = append(content, map[string]string{"content": entry.Content, "source": entry.Source, "link": entry.Link})
+		}
+		newDicos = append(newDicos, Dictionary{"userSubmit", "Définition(s) d'utilisateurs", "Définition(s) d'utilisateurs", content, show})
+	} else {
+		newDicos = append(newDicos, Dictionary{"userSubmit", "Définition(s) d'utilisateurs", "Définition(s) d'utilisateurs", make([]map[string]string, 0), true})
+	}
+	allDictionaries := DictionaryData{newDicos, totalDicos, totalEntries}
+	return allDictionaries
 }
 
 func highlightExamples(examples []Example, queryTerm string) []Example {
@@ -244,7 +348,8 @@ func query(c echo.Context) error {
 		return c.JSON(http.StatusOK, empty)
 	}
 	highlightedExamples := highlightExamples(examples, headword)
-	results = Results{headword, dictionaries, synonyms, antonyms, userSubmission, highlightedExamples}
+	allDictionaries := orderDictionaries(dictionaries, userSubmission)
+	results = Results{headword, allDictionaries, synonyms, antonyms, highlightedExamples}
 	return c.JSON(http.StatusOK, results)
 }
 

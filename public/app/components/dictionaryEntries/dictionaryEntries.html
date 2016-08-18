@@ -1,19 +1,30 @@
 <div>
-    <div class="panel panel-default dico" style="margin-top: 15px" ng-repeat="dico in dictionaries">
+    <div style="text-align: center" ng-if="Results.results.totalEntries === 0">
+        Il n'existe aucune entrée pour le terme <b>{{ ::Main.queryTerm }}</b><br><br>
+        <button class="btn btn-default" type="button" ng-click="Results.define()">
+            <span class="glyphicon glyphicon-plus add-button"></span>
+            Ajoutez votre définition
+        </button>
+    </div>
+    <div class="panel panel-default dico" style="margin-top: 15px" ng-repeat="dico in Results.results.dictionaries.data">
         <div class="row dico-title">
             <div class="col-xs-1 arrow" ng-click="toggleEntry($event)">
                 <span class="glyphicon glyphicon-menu-down" ng-show="dico.show"></span>
                 <span class="glyphicon glyphicon-menu-right" ng-show="!dico.show"></span>
             </div>
             <div class="col-xs-11 dico-label" ng-click="toggleEntry($event)">
-                {{ ::dico.label }}
-                <span class="badge pull-right">{{ ::dico.data.length }}</span>
+                <span class="hidden-xs hidden-sm">
+                    {{ ::dico.label }}
+                </span>
+                <span class="hidden-md hidden-lg">
+                    {{ ::dico.shortLabel }}
+                </span>
+                <span class="badge pull-right">{{ ::dico.contentObj.length }}</span>
             </div>
         </div>
         <div class="dico-entries" ng-class="{show: dico.show}">
-            <div class="entry" style="padding-right: 10px" ng-repeat="entry in ::dico.data" ng-class="{'tlfi': dico.name === 'tlfi'}">
-                <div ng-bind-html="entry | unsafe" ng-if="dico.name !== 'userSubmit'"></div>
-                <div ng-bind-html="entry.content | unsafe" ng-if="dico.name === 'userSubmit'"></div>
+            <div class="entry" style="padding-right: 10px" ng-repeat="entry in ::dico.contentObj" ng-class="{'tlfi': dico.name === 'tlfi'}">
+                <div ng-bind-html="entry.content | unsafe"></div>
                 <hr ng-if="!$last" style="width: 50%; margin-top: 15px; margin-bottom: 5px; border-color: #ddd;">
             </div>
             <div class="tlfi-link" ng-if="dico.name === 'tlfi'">
@@ -22,7 +33,7 @@
         </div>
         <div style="margin: 0 10px 10px 10px" ng-if="dico.name === 'userSubmit'">
             <button class="btn btn-default" type="button" ng-click="Results.define()">
-                <span class="glyphicon glyphicon-plus" style="color: rgb(21, 95, 131); vertical-align: text-top;"></span>
+                <span class="glyphicon glyphicon-plus add-button"></span>
                 Ajoutez votre définition
             </button>
         </div>

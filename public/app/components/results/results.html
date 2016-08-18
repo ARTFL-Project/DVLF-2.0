@@ -1,11 +1,11 @@
 <div id="results">
     <div class="row">
         <div class="col-xs-12 col-sm-offset-3 col-sm-6">
-            <h3 id="entry-total" style="text-align: center;" ng-if="Results.totalEntries > 0">
+            <h3 id="entry-total" style="text-align: center;" ng-if="Results.results.dictionaries.totalEntries > 0">
                 <b>{{ Results.currentTerm }}</b>:
-                {{ Results.totalEntries }}
+                {{ Results.results.dictionaries.totalEntries }}
                 entrées dans
-                {{ Results.totalDicos }}
+                {{ Results.results.dictionaries.totalDicos }}
                 dictionnaires
             </h3>
         </div>
@@ -13,8 +13,8 @@
             <div class="pull-right hidden-xs">
                 <div class="btn-group">
                     <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="glyphicon glyphicon-plus" style="color: rgb(21, 95, 131); vertical-align: text-top;"></span>
-                        <span style="font-variant: small-caps; font-weight: 700">Contribuer au DVLF</span>
+                        <span class="glyphicon glyphicon-plus add-button"></span>
+                        <span style="font-variant: small-caps;">Contribuer au DVLF</span>
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
@@ -36,7 +36,7 @@
             <div class="hidden-sm hidden-md hidden-lg" style="text-align: center">
                 <div class="btn-group">
                     <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="glyphicon glyphicon-plus" style="color: rgb(21, 95, 131); vertical-align: text-top;"></span>
+                        <span class="glyphicon glyphicon-plus add-button"></span>
                         <span style="font-variant: small-caps; font-weight: 700">Contribuer au DVLF</span>
                         <span class="caret"></span>
                     </button>
@@ -65,7 +65,7 @@
             </div>
             <div class="col-xs-12 col-sm-6 col-md-7 col-lg-8">
                 <dictionary-entries head="{{ Results.currentTerm }}"></dictionary-entries>
-                <examples ng-show="Results.totalDicos > 0"></examples>
+                <examples ng-show="Results.results.dictionaries.totalDicos > 0"></examples>
             </div>
             <div class="hidden-xs col-sm-3 col-md-3 col-lg-2" style="margin-top: 15px;">
                 <syn-anto-nyms></syn-anto-nyms>

@@ -1,6 +1,7 @@
 body {
   margin: 0 auto;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Amiri', serif;
+  font-weight: 300;
   font-size: 160%;
 }
 .navbar-brand {
@@ -8,7 +9,7 @@ body {
   color: inherit !important;
 }
 .badge {
-  font-family: serif;
+  padding-top: 5px;
 }
 .a-propos {
   text-align: justify;
@@ -242,6 +243,13 @@ textarea {
   color: #fff;
   display: inline-block;
 }
+
+.add-button {
+    color: rgb(21, 95, 131);
+    vertical-align: top;
+}
+
+
 .glyphicon.spinning {
   vertical-align: sub;
   animation: spin 1s infinite linear;
