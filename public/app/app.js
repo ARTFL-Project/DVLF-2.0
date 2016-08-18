@@ -31,6 +31,7 @@
                 if (typeof(word) === 'undefined') {
                     word = angular.element("#search_value").val();
                 }
+                console.log(word)
                 $location.path("/mot/" + word.trim());
             }
 

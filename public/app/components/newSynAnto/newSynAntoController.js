@@ -14,7 +14,6 @@
         } else {
             var typeOfNym = "antonyms";
         }
-        console.log(vm.typeOfNym)
         vm.submission = {
             term: $scope.Main.queryTerm,
             nym: "",

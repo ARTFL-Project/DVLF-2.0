@@ -1,21 +1,30 @@
-<div class="panel panel-default dico" style="margin-top: 15px" ng-repeat="dico in dictionaries">
-    <div class="row dico-title">
-        <div class="col-xs-1 arrow" ng-click="toggleEntry($event)">
-            <span class="glyphicon glyphicon-menu-down" ng-show="dico.show"></span>
-            <span class="glyphicon glyphicon-menu-right" ng-show="!dico.show"></span>
+<div>
+    <div class="panel panel-default dico" style="margin-top: 15px" ng-repeat="dico in dictionaries">
+        <div class="row dico-title">
+            <div class="col-xs-1 arrow" ng-click="toggleEntry($event)">
+                <span class="glyphicon glyphicon-menu-down" ng-show="dico.show"></span>
+                <span class="glyphicon glyphicon-menu-right" ng-show="!dico.show"></span>
+            </div>
+            <div class="col-xs-11 dico-label" ng-click="toggleEntry($event)">
+                {{ ::dico.label }}
+                <span class="badge pull-right">{{ ::dico.data.length }}</span>
+            </div>
         </div>
-        <div class="col-xs-11 dico-label" ng-click="toggleEntry($event)">
-            {{ ::dico.label }}
-            <span class="badge pull-right">{{ ::dico.data.length }}</span>
+        <div class="dico-entries" ng-class="{show: dico.show}">
+            <div class="entry" style="padding-right: 10px" ng-repeat="entry in ::dico.data" ng-class="{'tlfi': dico.name === 'tlfi'}">
+                <div ng-bind-html="entry | unsafe" ng-if="dico.name !== 'userSubmit'"></div>
+                <div ng-bind-html="entry.content | unsafe" ng-if="dico.name === 'userSubmit'"></div>
+                <hr ng-if="!$last" style="width: 50%; margin-top: 15px; margin-bottom: 5px; border-color: #ddd;">
+            </div>
+            <div class="tlfi-link" ng-if="dico.name === 'tlfi'">
+                <a ng-href="http://www.cnrtl.fr/definition/{{Results.currentTerm | encodeURIComponent}}" target="_blank">=> Voir la définition complète au CNRTL</a>
+            </div>
         </div>
-    </div>
-    <div class="dico-entries" ng-class="{show: dico.show}">
-        <div class="entry" style="padding-right: 10px" ng-repeat="entry in ::dico.data" ng-class="{'tlfi': dico.name === 'tlfi'}">
-            <div ng-bind-html="entry | unsafe" ng-if="dico.name !== 'userSubmit'"></div>
-            <div ng-bind-html="entry.content | unsafe" ng-if="dico.name === 'userSubmit'"></div>
-        </div>
-        <div class="tlfi-link" ng-if="dico.name === 'tlfi'">
-            <a ng-href="http://www.cnrtl.fr/definition/{{Results.currentTerm | encodeURIComponent}}" target="_blank">=> Voir la définition complète au CNRTL</a>
+        <div style="margin: 0 10px 10px 10px" ng-if="dico.name === 'userSubmit'">
+            <button class="btn btn-default" type="button" ng-click="Results.define()">
+                <span class="glyphicon glyphicon-plus" style="color: rgb(21, 95, 131); vertical-align: text-top;"></span>
+                Ajoutez votre définition
+            </button>
         </div>
     </div>
 </div>

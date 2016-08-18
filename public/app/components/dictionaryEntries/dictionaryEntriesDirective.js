@@ -31,7 +31,6 @@
                 var dicoOrder = ["tlfi", "acad1932", "littre", "acad1835", "acad1798", "feraud", "acad1762", "acad1694", "nicot", "bob"];
                 $http.get(query).then(function(response) {
                     scope.Results.results = response.data;
-                    console.log(response.data)
                     $rootScope.$broadcast('resultsUpdate');
                     var displayed = 0;
                     var totalEntries = 0;
@@ -65,6 +64,13 @@
                             label: "Définition(s) d'utilisateurs",
                             data: scope.Results.results.userSubmit,
                             show: show
+                        })
+                    } else {
+                        scope.dictionaries.push({
+                            name: "userSubmit",
+                            label: "Définition(s) d'utilisateurs",
+                            data: [],
+                            show: true
                         })
                     }
                     scope.Results.totalDicos = displayed;
