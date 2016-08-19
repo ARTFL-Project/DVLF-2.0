@@ -32,6 +32,7 @@ type Results struct {
 	Synonyms     []string       `json:"synonyms"`
 	Antonyms     []string       `json:"antonyms"`
 	Examples     []Example      `json:"examples"`
+	TimeSeries   [][]float64    `json:"timeSeries"`
 }
 
 // Dictionary to export
@@ -334,14 +335,15 @@ func sortExamples(examples []Example) []Example {
 
 func query(c echo.Context) error {
 	headword, _ := url.QueryUnescape(c.Param("headword"))
-	query := "SELECT user_submit, dictionaries, synonyms, antonyms, examples FROM headwords WHERE headword=$1"
+	query := "SELECT user_submit, dictionaries, synonyms, antonyms, examples, time_series FROM headwords WHERE headword=$1"
 	var results Results
 	var dictionaries map[string][]string
 	var synonyms []string
 	var antonyms []string
 	var userSubmission []UserSubmit
 	var examples []Example
-	err := pool.QueryRow(query, headword).Scan(&userSubmission, &dictionaries, &synonyms, &antonyms, &examples)
+	var timeSeries [][]float64
+	err := pool.QueryRow(query, headword).Scan(&userSubmission, &dictionaries, &synonyms, &antonyms, &examples, &timeSeries)
 	if err != nil {
 		fmt.Println(err)
 		var empty []string
@@ -349,7 +351,7 @@ func query(c echo.Context) error {
 	}
 	highlightedExamples := highlightExamples(examples, headword)
 	allDictionaries := orderDictionaries(dictionaries, userSubmission)
-	results = Results{headword, allDictionaries, synonyms, antonyms, highlightedExamples}
+	results = Results{headword, allDictionaries, synonyms, antonyms, highlightedExamples, timeSeries}
 	return c.JSON(http.StatusOK, results)
 }
 

@@ -126,7 +126,7 @@ body {
   vertical-align: middle;
   font-size: 80%;
 }
-.nym-title, .index {
+.nym-title, .index, #time-series-title {
   background-color: #fbfbfb;
   border-bottom: 1px solid #eee;
   text-align: center;
