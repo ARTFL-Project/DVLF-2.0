@@ -8,7 +8,7 @@
         return {
             templateUrl: "app/components/wordwheel/wordwheel.html",
             link: function(scope, el, attrs) {
-                var currentIndex = scope.Main.wordwheel.indexOf(attrs.head);
+                var currentIndex = scope.Main.wordwheelObject[attrs.head];
                 var start = currentIndex - 500;
                 if (start < 0) {
                     start = 0;

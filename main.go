@@ -600,7 +600,7 @@ func main() {
 	e.Static("/static", "public/static")
 	e.Static("/app", "public/app")
 
-	// e.File("/favicon.ico", "images/favicon.ico")
+	e.File("/favicon.ico", "images/favicon.ico")
 
 	// Middleware
 	e.Use(middleware.Logger())

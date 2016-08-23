@@ -25,6 +25,10 @@ a.btn:hover {
   border: 1px solid #000;
 }
 
+a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, button.list-group-item:hover {
+    background-color: #f0f0f0;
+}
+
 /*Dictionary formatting*/
 
 body {
@@ -96,7 +100,7 @@ body {
   font-weight: 700;
   margin-top: 0px;
   padding: 5px;
-  background-color: #fbfbfb;
+  background-color: #f0f0f0;
   border-bottom: 1px solid #eee;
 }
 .dico-label, .arrow {
@@ -127,7 +131,7 @@ body {
   font-size: 80%;
 }
 .nym-title, .index, #time-series-title {
-  background-color: #fbfbfb;
+  background-color: #f0f0f0;
   border-bottom: 1px solid #eee;
   text-align: center;
   margin-top: 0;
@@ -136,7 +140,7 @@ body {
 }
 .navbar, #navbar {
   border-bottom: 1px solid #eee;
-  background-color: #fbfbfb;
+  background-color: #f0f0f0;
 }
 #wordwheel .list-group {
   margin-top: -10px;
@@ -167,14 +171,14 @@ body {
   padding: 5px 13px;
 }
 angucomplete-row:focus {
-  background-color: #f8f8f8;
+  background-color: #f0f0f0;
 }
 .angucomplete-row:hover {
-  background-color: #f8f8f8;
+  background-color: #f0f0f0;
   cursor: pointer;
 }
 .angucomplete-selected-row {
-  background-color: #f8f8f8;
+  background-color: #f0f0f0;
 }
 .form-control {
   font-size: 100%;
@@ -185,7 +189,7 @@ angucomplete-row:focus {
   font-weight: 700;
   margin-top: 0px;
   padding: 5px;
-  background-color: #fbfbfb;
+  background-color: #f0f0f0;
   border-bottom: 1px solid #eee;
   margin-bottom: 10px;
 }

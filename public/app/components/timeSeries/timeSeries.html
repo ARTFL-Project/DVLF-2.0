@@ -1,6 +1,10 @@
 <div id="time-series">
     <div class="panel panel-default">
         <h4 id="time-series-title">Usage à travers le temps</h4>
-        <canvas id="line" class="chart" height="250"></canvas>
+        <h6 style="padding: 0 10px">Occurrences du mot {{ ::Main.queryTerm }} pour un million de mots</h6>
+        <canvas id="line" class="chart" height="200"></canvas>
+        <!-- <div style="display: none" ng-show="!showTimeSeries">
+            Pas de statistiques disponibles pour ce terme.
+        </div> -->
     </div>
 </div>

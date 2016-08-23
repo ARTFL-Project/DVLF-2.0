@@ -63,15 +63,13 @@
             <div class="hidden-xs col-sm-3 col-md-2" style="margin-top: 15px;">
                 <wordwheel head="{{ Results.currentTerm }}" ng-if="Main.wordwheel.length > 0" ng-animate-children></wordwheel>
             </div>
-            <div class="col-xs-12 col-sm-6 col-md-7 col-lg-8">
+            <div class="col-xs-12 col-sm-6 col-md-7 col-lg-7">
                 <dictionary-entries head="{{ Results.currentTerm }}"></dictionary-entries>
                 <syn-anto-nyms class="hidden-sm hidden-md hidden-lg"></syn-anto-nyms>
                 <examples ng-show="Results.results.dictionaries.totalDicos > 0"></examples>
             </div>
-            <div class="hidden-xs col-sm-3 col-md-3 col-lg-2" style="margin-top: 15px;">
+            <div class="hidden-xs col-sm-3 col-md-3 col-lg-3" style="margin-top: 15px;">
                 <syn-anto-nyms></syn-anto-nyms>
-            </div>
-            <div class="hidden-xs col-sm-3 col-md-3 col-lg-2" style="margin-top: 15px;">
                 <time-series></time-series>
             </div>
         </div>

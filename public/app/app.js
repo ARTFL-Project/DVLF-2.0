@@ -20,6 +20,10 @@
 
             $http.get('/api/wordwheel').then(function(response) {
                 vm.wordwheel = response.data;
+                vm.wordwheelObject = {};
+                for (var i=0; i < vm.wordwheel.length; i+=1) {
+                    vm.wordwheelObject[vm.wordwheel[i]] = i;
+                }
             });
 
             vm.apropos = false;
@@ -28,11 +32,15 @@
             }
 
             vm.search = function(word) {
-                if (typeof(word) === 'undefined') {
+                // if (typeof(word) === 'undefined') {
                     word = angular.element("#search_value").val();
-                }
-                console.log(word)
-                $location.path("/mot/" + word.trim());
+                    $location.path("/mot/" + word.trim());
+                //     console.log(word)
+                //     $scope.$apply();
+                // } else {
+                //     console.log(word)
+                //     $location.path("/mot/" + word.trim());
+                // }
             }
 
             $scope.autocomplete = function(query) {
