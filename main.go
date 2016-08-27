@@ -172,7 +172,7 @@ func createLog() *os.File {
 	return f
 }
 
-func getAllHeadwords() ([]string, map[string]bool) {
+func getAllHeadwords() ([]string, map[string]int) {
 	query := "SELECT headword FROM headwords"
 	rows, err := pool.Query(query)
 	if err != nil {
@@ -194,9 +194,9 @@ func getAllHeadwords() ([]string, map[string]bool) {
 	cl := collate.New(language.French, collate.Loose, collate.IgnoreCase)
 
 	cl.SortStrings(headwords)
-	var headwordHash = make(map[string]bool)
-	for _, value := range headwords {
-		headwordHash[value] = true
+	var headwordHash = make(map[string]int)
+	for pos, value := range headwords {
+		headwordHash[value] = pos
 	}
 	return headwords, headwordHash
 }
@@ -333,6 +333,24 @@ func sortExamples(examples []Example) []Example {
 	return orderedExamples
 }
 
+func getWordwheel(c echo.Context) error {
+	headword, _ := url.QueryUnescape(c.FormValue("headword"))
+	fmt.Println(headword)
+	if _, ok := headwordMap[headword]; ok {
+		index := headwordMap[headword]
+		startIndex := index - 100
+		if startIndex < 0 {
+			startIndex = 0
+		}
+		endIndex := index + 100
+		if endIndex > len(headwordList) {
+			endIndex = len(headwordList) - 1
+		}
+		return c.JSON(http.StatusOK, headwordList[startIndex:endIndex])
+	}
+	return c.JSON(http.StatusOK, headwordList[0:200])
+}
+
 func query(c echo.Context) error {
 	headword, _ := url.QueryUnescape(c.Param("headword"))
 	query := "SELECT user_submit, dictionaries, synonyms, antonyms, examples, time_series FROM headwords WHERE headword=$1"
@@ -430,10 +448,15 @@ func submitDefinition(c echo.Context) error {
 			message := map[string]string{"message": "error"}
 			return c.JSON(http.StatusOK, message)
 		}
-		headwordMap[headword] = true
 		headwordList = append(headwordList, headword)
 		cl := collate.New(language.French, collate.Loose, collate.IgnoreCase)
 		cl.SortStrings(headwordList)
+		for index, word := range headwordList {
+			if word == headword {
+				headwordMap[headword] = index
+				break
+			}
+		}
 	}
 	message := map[string]string{"message": "success"}
 	return c.JSON(http.StatusOK, message)
@@ -600,7 +623,7 @@ func main() {
 	e.Static("/static", "public/static")
 	e.Static("/app", "public/app")
 
-	e.File("/favicon.ico", "images/favicon.ico")
+	e.File("/dvlf.ico", "public/static/images/dvlf.ico")
 
 	// Middleware
 	e.Use(middleware.Logger())
@@ -620,9 +643,7 @@ func main() {
 
 	// API
 	e.GET("/api/mot/:headword", query)
-	e.GET("/api/wordwheel", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, headwordList)
-	})
+	e.GET("/api/wordwheel", getWordwheel)
 	e.GET("/api/autocomplete/:prefix", autoComplete)
 	e.POST("/api/submit", submitDefinition)
 	e.GET("/api/vote/:headword/:id/:vote", voteForExample)

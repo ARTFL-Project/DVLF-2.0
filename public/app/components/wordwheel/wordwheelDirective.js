@@ -4,23 +4,21 @@
         .module('DVLF')
         .directive('wordwheel', wordwheel);
 
-    function wordwheel($http, $timeout, $log) {
+    function wordwheel($http, $timeout, $rootScope, $anchorScroll) {
         return {
             templateUrl: "app/components/wordwheel/wordwheel.html",
             link: function(scope, el, attrs) {
-                var currentIndex = scope.Main.wordwheelObject[attrs.head];
-                var start = currentIndex - 500;
-                if (start < 0) {
-                    start = 0;
-                }
-                var end = currentIndex + 500;
-                if (end > scope.Main.wordwheel.length - 1) {
-                    end = scope.Main.wordwheel.length - 1;
-                }
-                scope.wordwheel = scope.Main.wordwheel.slice(start, end);
-                $timeout(function() {
-                    var offset = angular.element('#wordwheel a.active').offset().top - 570;
-                    angular.element('#wordwheel .list-group').scrollTop(offset);
+                scope.$on("resultsUpdate", function(e, args) {
+                    scope.currentTerm = args.queryTerm;
+                    $http.get('/api/wordwheel?headword=' + args.queryTerm).then(function(response) {
+                        scope.wordwheel = response.data;
+                        $timeout(function() {
+                            var offset = angular.element('#wordwheel a.active').offset().top - 570;
+                            if (offset != 0) {
+                                angular.element('#wordwheel .list-group').scrollTop(offset);
+                            }
+                        });
+                    });
                 })
             }
         }

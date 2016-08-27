@@ -18,7 +18,11 @@
                 scope.dictionaries = [];
                 $http.get(query).then(function(response) {
                     scope.Results.results = response.data;
-                    $rootScope.$broadcast('resultsUpdate');
+                    $rootScope.$broadcast('resultsUpdate', {
+                        totalDicos: response.data.dictionaries.totalDicos,
+                        totalEntries: response.data.dictionaries.totalEntries,
+                        queryTerm: attrs.head.trim()
+                    });
                     var displayed = 0;
                     var totalEntries = 0;
                     if (response.data != null) {

@@ -5,11 +5,11 @@
         .module("DVLF")
         .controller('NewDefinitionController', NewDefinitionController);
 
-    function NewDefinitionController($scope, $log, $location, $routeParams, $http, $httpParamSerializer) {
+    function NewDefinitionController($scope, $log, $location, $routeParams, $http, $httpParamSerializer, totalResults) {
         var vm = this;
 
         vm.submission = {
-            term: $scope.Main.queryTerm,
+            term: totalResults.queryTerm,
             definition: "",
             source: "",
             link: "",

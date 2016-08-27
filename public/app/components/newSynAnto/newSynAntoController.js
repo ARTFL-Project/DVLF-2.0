@@ -5,7 +5,7 @@
         .module("DVLF")
         .controller('NewSynAntoController', NewSynAntoController);
 
-    function NewSynAntoController($scope, $log, $location, $routeParams, $http, $httpParamSerializer) {
+    function NewSynAntoController($scope, $log, $location, $routeParams, $http, $httpParamSerializer, totalResults) {
         var vm = this;
 
         vm.typeOfNym = $location.path().replace('/', '');
@@ -15,7 +15,7 @@
             var typeOfNym = "antonyms";
         }
         vm.submission = {
-            term: $scope.Main.queryTerm,
+            term: totalResults.queryTerm,
             nym: "",
             type: typeOfNym,
             recaptchaResponse: ""

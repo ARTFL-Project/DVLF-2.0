@@ -229,6 +229,7 @@ angucomplete-row:focus {
 }
 #search_value, #search_dropdown {
   font-size: 110%;
+  text-align: left;
 }
 textarea {
   border: 1px solid #ccc;
@@ -331,10 +332,10 @@ textarea {
 .synonym.ng-enter.ng-enter-active, .antonym.ng-enter.ng-enter-active {
   opacity: 1;
 }
-#entry-total.ng-enter {
+.entry-total.ng-enter {
   transition: all .2s linear;
   opacity: 0;
 }
-#entry-total.ng-enter.ng-enter-active {
+.entry-total.ng-enter.ng-enter-active {
   opacity: 1;
 }

@@ -10,8 +10,10 @@
             link: function(scope) {
                 scope.$on('resultsUpdate', function () {
                     $timeout(function() {
-                        scope.synonyms = scope.Results.results.synonyms;
-                        scope.antonyms = scope.Results.results.antonyms
+                        if (typeof(scope.synonyms) == 'undefined') { // avoid bubbling effect
+                            scope.synonyms = scope.Results.results.synonyms;
+                            scope.antonyms = scope.Results.results.antonyms
+                        }
                     });
                 });
                 scope.addSynonym = function() {

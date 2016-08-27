@@ -5,11 +5,11 @@
         .module("DVLF")
         .controller('NewExampleController', NewExampleController);
 
-    function NewExampleController($scope, $log, $location, $routeParams, $http, $httpParamSerializer) {
+    function NewExampleController($scope, $log, $location, $routeParams, $http, $httpParamSerializer, totalResults) {
         var vm = this;
 
         vm.submission = {
-            term: $scope.Main.queryTerm,
+            term: totalResults.queryTerm,
             example: "",
             source: "",
             link: "",
