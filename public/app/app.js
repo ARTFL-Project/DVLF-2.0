@@ -17,7 +17,7 @@
             vm.atHome = false;
         }
         $scope.$watch(function() {
-            if (angular.equals({}, $routeParams)) {
+            if (angular.equals({}, $routeParams) && $location.path() != "/apropos") {
                 return true;
             } else {
                 return false;
