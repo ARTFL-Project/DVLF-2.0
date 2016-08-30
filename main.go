@@ -368,8 +368,9 @@ func query(c echo.Context) error {
 		return c.JSON(http.StatusOK, empty)
 	}
 	highlightedExamples := highlightExamples(examples, headword)
+	sortedExamples := sortExamples(highlightedExamples)
 	allDictionaries := orderDictionaries(dictionaries, userSubmission)
-	results = Results{headword, allDictionaries, synonyms, antonyms, highlightedExamples, timeSeries}
+	results = Results{headword, allDictionaries, synonyms, antonyms, sortedExamples, timeSeries}
 	return c.JSON(http.StatusOK, results)
 }
 

@@ -8,12 +8,18 @@
         return {
             templateUrl: "app/components/examples/examples.html",
             link: function(scope, element, attrs) {
+                scope.voted = {};
                 scope.vote = function(id, vote) {
-                    var headword = $routeParams.queryTerm;
-                    var query = "/api/vote/" + headword + "/" + id + "/" + vote;
-                    $http.get(query).then(function(response) {
-                        angular.element("#" + id).text(response.data.score);
-                    });
+                    if (id in scope.voted) {
+                        alert("Vous avez déjà voté pour cet exemple.")
+                    } else {
+                        scope.voted[id] = true;
+                        var headword = $routeParams.queryTerm;
+                        var query = "/api/vote/" + headword + "/" + id + "/" + vote;
+                        $http.get(query).then(function(response) {
+                            angular.element("#" + id).text(response.data.score);
+                        });
+                    }
                 }
                 scope.addExample = function() {
                     $location.url("/exemple");

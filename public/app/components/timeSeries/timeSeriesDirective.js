@@ -4,11 +4,12 @@
         .module('DVLF')
         .directive('timeSeries', timeSeries);
 
-    function timeSeries($rootScope, $timeout, $location) {
+    function timeSeries($rootScope, $timeout, $location, totalResults) {
         var buildTimeSeries = function(scope) {
             var dateList = [];
             var counts = [];
 
+            scope.queryTerm = totalResults.queryTerm;
             scope.showTimeSeries = true;
             if (typeof(scope.Results.results.timeSeries) !== 'undefined') {
                 for (var i=0; i  < scope.Results.results.timeSeries.length; i +=1) {
