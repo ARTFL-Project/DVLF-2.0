@@ -17,7 +17,7 @@
             vm.atHome = false;
         }
         $scope.$watch(function() {
-            if (angular.equals({}, $routeParams) && $location.path() != "/apropos") {
+            if (angular.equals({}, $routeParams) && $location.path() != "/apropos" && $location.path() != "/synonyme" && $location.path() != "/antonyme" && $location.path() != "/definition" && $location.path() != "/exemple") {
                 return true;
             } else {
                 return false;

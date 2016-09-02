@@ -2,8 +2,8 @@
     <div class="panel panel-default">
         <h4 class="nym-title">Synonymes</h4>
         <p style="padding: 0 10px 10px 10px;">
-            <a class="synonym" ng-href="/mot/{{ synonym }}" ng-repeat="synonym in synonyms">
-                {{ synonym }}<span ng-hide="$last">,&nbsp;</span>
+            <a class="synonym" ng-href="/mot/{{ synonym.label }}" ng-repeat="synonym in synonyms">
+                {{ synonym.label }}<span ng-hide="$last">,&nbsp;</span>
             </a>
         </p>
         <p style="padding-left: 10px">
@@ -16,8 +16,8 @@
     <div class="panel panel-default" style="margin-top: 10px;">
         <h4 class="nym-title">Antonymes</h4>
         <p style="padding: 0 10px 10px 10px">
-            <a class="antonym" ng-href="/mot/{{ antonym }}" ng-repeat="antonym in antonyms">
-                {{ antonym }}<span ng-hide="$last">,&nbsp;</span>
+            <a class="antonym" ng-href="/mot/{{ antonym.label }}" ng-repeat="antonym in antonyms">
+                {{ antonym.label }}<span ng-hide="$last">,&nbsp;</span>
             </a>
         </p>
         <p style="padding-left: 10px">

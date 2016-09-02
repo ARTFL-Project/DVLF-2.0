@@ -29,8 +29,8 @@ import (
 type Results struct {
 	Headword     string         `json:"headword"`
 	Dictionaries DictionaryData `json:"dictionaries"`
-	Synonyms     []string       `json:"synonyms"`
-	Antonyms     []string       `json:"antonyms"`
+	Synonyms     []Nym          `json:"synonyms"`
+	Antonyms     []Nym          `json:"antonyms"`
 	Examples     []Example      `json:"examples"`
 	TimeSeries   [][]float64    `json:"timeSeries"`
 }
@@ -53,12 +53,12 @@ type DictionaryData struct {
 
 // Example for headwords
 type Example struct {
-	Content string  `json:"content"`
-	Link    string  `json:"link"`
-	Score   int     `json:"score"`
-	ID      int     `json:"id"`
-	DefSim  float32 `json:"defSim"`
-	Source  string  `json:"source"`
+	Content    string `json:"content"`
+	Link       string `json:"link"`
+	Score      int    `json:"score"`
+	ID         int    `json:"id"`
+	Source     string `json:"source"`
+	UserSubmit bool   `json:"userSubmit"`
 }
 
 // ExamplesByID for sorting
@@ -79,6 +79,12 @@ type UserSubmit struct {
 	Content string `json:"content"`
 	Source  string `json:"source"`
 	Link    string `json:"link"`
+}
+
+// Nym type
+type Nym struct {
+	Label      string `json:"label"`
+	UserSubmit bool   `json:"UserSubmit"`
 }
 
 // AutoCompleteList is the top 10 words
@@ -356,8 +362,8 @@ func query(c echo.Context) error {
 	query := "SELECT user_submit, dictionaries, synonyms, antonyms, examples, time_series FROM headwords WHERE headword=$1"
 	var results Results
 	var dictionaries map[string][]string
-	var synonyms []string
-	var antonyms []string
+	var synonyms []Nym
+	var antonyms []Nym
 	var userSubmission []UserSubmit
 	var examples []Example
 	var timeSeries [][]float64
@@ -501,7 +507,7 @@ func submitExample(c echo.Context) error {
 			}
 		}
 		score := 0
-		userExamples = append(userExamples, Example{example, link, score, id, 0.0, source})
+		userExamples = append(userExamples, Example{example, link, score, id, source, true})
 		serializedSubmission, jsonError := json.Marshal(userExamples)
 		if jsonError != nil {
 			fmt.Println(jsonError)
@@ -565,11 +571,11 @@ func submitNym(c echo.Context) error {
 		return c.JSON(http.StatusOK, message)
 	}
 	headword := sanitize.HTML(c.FormValue("term"))
-	nym := sanitize.HTML(c.FormValue("nym"))
+	nym := Nym{sanitize.HTML(c.FormValue("nym")), true}
 	typeOfNym := sanitize.HTML(c.FormValue("type"))
 	if _, ok := headwordMap[headword]; ok {
 		query := fmt.Sprintf("SELECT %s FROM headwords WHERE headword=$1", typeOfNym)
-		var nyms []string
+		var nyms []Nym
 		err := pool.QueryRow(query, headword).Scan(&nyms)
 		if err != nil {
 			fmt.Println(err)
@@ -579,10 +585,10 @@ func submitNym(c echo.Context) error {
 
 		var storedNyms = make(map[string]bool)
 		for _, storedNym := range nyms {
-			storedNyms[storedNym] = true
+			storedNyms[storedNym.Label] = true
 		}
-		if _, ok := storedNyms[nym]; ok {
-			fmt.Printf("%s is already in the DB\n", nym)
+		if _, ok := storedNyms[nym.Label]; ok {
+			fmt.Printf("%s is already in the DB\n", nym.Label)
 			message := map[string]string{"message": "error"}
 			return c.JSON(http.StatusOK, message)
 		}
