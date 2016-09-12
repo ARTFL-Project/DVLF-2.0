@@ -9,7 +9,7 @@
             <span class="glyphicon glyphicon-circle-arrow-down down" ng-click="vote(example.id, 'down')"></span>
         </div>
         <div class="example-content" ng-bind-html="example.content | unsafe"></div>
-        <div class="example-source">Source: <a ng-href="http:/{{ example.link }}" target="_blank">{{ example.source }}</a></div>
+        <div class="example-source">Source: <a ng-href="{{ example.link }}" target="_blank">{{ example.source }}</a></div>
     </div>
     <button class="btn btn-default" style="margin: 0 10px 10px 10px" type="button" ng-click="addExample()">
         <span class="glyphicon glyphicon-plus add-button"></span>

@@ -108,7 +108,7 @@ var pool = createConnPool()
 
 var headwordList, headwordMap = getAllHeadwords()
 
-var tokenRegex = regexp.MustCompile(`(?i)([\p{L}]+)|([\.?,;:'!\-]+)|([\s]+)`)
+var tokenRegex = regexp.MustCompile(`(?i)([\p{L}]+)|([\.?,;:'’!\-]+)|([\s]+)|([\d]+)`)
 
 var outputLog = createLog()
 
@@ -300,7 +300,7 @@ func highlightExamples(examples []Example, queryTerm string) []Example {
 		forms = append(forms, form)
 	}
 
-	formRegex := regexp.MustCompile("^(" + strings.Join(forms, "|") + ")$")
+	formRegex := regexp.MustCompile("(?i)^(" + strings.Join(forms, "|") + ")$")
 	var newExamples []Example
 	for example := range examples {
 		var newContent []string
