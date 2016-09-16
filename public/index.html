@@ -55,7 +55,7 @@
             <div style="text-align: center;">
                 <p class="lead">Découvrez...explorez...définissez...votre langue</p>
             </div>
-            <div class="row" ng-hide="Main.atHome">
+            <div class="row" ng-if="!Main.atHome">
                 <form class="col-xs-12 col-sm-offset-3 col-md-offset-4 col-sm-6 col-md-4" ng-submit="Main.search(Main.queryTerm)">
                     <div class="input-group">
                         <div

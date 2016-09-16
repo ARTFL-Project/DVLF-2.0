@@ -11,7 +11,7 @@
 
             scope.queryTerm = totalResults.queryTerm;
             scope.showTimeSeries = true;
-            if (typeof(scope.Results.results.timeSeries) !== 'undefined') {
+            if (typeof(scope.Results.results.timeSeries) !== 'undefined' && scope.Results.results.timeSeries != null) {
                 for (var i=0; i  < scope.Results.results.timeSeries.length; i +=1) {
                     dateList.push(scope.Results.results.timeSeries[i][0]);
                     counts.push(scope.Results.results.timeSeries[i][1]);
