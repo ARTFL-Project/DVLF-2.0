@@ -18,6 +18,7 @@
                 scope.dictionaries = [];
                 $http.get(query).then(function(response) {
                     scope.Results.results = response.data;
+                    scope.totalEntries = response.data.dictionaries.totalEntries;
                     $rootScope.$broadcast('resultsUpdate', {
                         totalDicos: response.data.dictionaries.totalDicos,
                         totalEntries: response.data.dictionaries.totalEntries,
@@ -32,8 +33,9 @@
                             totalEntries: 0
                         };
                     }
-
+                    console.log(scope.Results.results.dictionaries.totalEntries)
                 });
+
                 scope.toggleEntry = function(event) {
                     var entry = angular.element(event.currentTarget).parents(".dico").find(".dico-entries");
                     var arrows = entry.parents(".dico").find(".arrow .glyphicon");

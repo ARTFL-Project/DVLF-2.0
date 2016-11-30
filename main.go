@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"html"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
@@ -27,12 +28,14 @@ import (
 
 // Results to export
 type Results struct {
-	Headword     string         `json:"headword"`
-	Dictionaries DictionaryData `json:"dictionaries"`
-	Synonyms     []Nym          `json:"synonyms"`
-	Antonyms     []Nym          `json:"antonyms"`
-	Examples     []Example      `json:"examples"`
-	TimeSeries   [][]float64    `json:"timeSeries"`
+	Headword         string         `json:"headword"`
+	Dictionaries     DictionaryData `json:"dictionaries"`
+	Synonyms         []Nym          `json:"synonyms"`
+	Antonyms         []Nym          `json:"antonyms"`
+	Examples         []Example      `json:"examples"`
+	TimeSeries       [][]float64    `json:"timeSeries"`
+	Collocates       []Collocates   `json:"collocates"`
+	NearestNeighbors []string       `json:"nearestNeighbors"`
 }
 
 // Dictionary to export
@@ -42,6 +45,12 @@ type Dictionary struct {
 	ShortLabel string              `json:"shortLabel"`
 	Content    []map[string]string `json:"contentObj"`
 	Show       bool                `json:"show"`
+}
+
+// Collocates Type
+type Collocates struct {
+	Key   string `json:"key"`
+	Value int    `json:"value"`
 }
 
 // DictionaryData to export
@@ -320,22 +329,25 @@ func highlightExamples(examples []Example, queryTerm string) []Example {
 
 func sortExamples(examples []Example) []Example {
 	var orderedExamples []Example
-	var negativeExamples []Example
 	var otherExamples []Example
+	var userExamplesWithNoScore []Example
 	for _, example := range examples {
 		if example.Score > 0 {
 			orderedExamples = append(orderedExamples, example)
-		} else if example.Score < 0 {
-			negativeExamples = append(negativeExamples, example)
-		} else {
+		} else if example.UserSubmit && example.Score == 0 {
+			userExamplesWithNoScore = append(userExamplesWithNoScore, example)
+		} else if example.Score == 0 {
 			otherExamples = append(otherExamples, example)
 		}
 	}
-	sort.Sort(ExamplesByID(orderedExamples))
-	sort.Sort(ExamplesByID(negativeExamples))
 
+	sort.Sort(ExamplesByID(orderedExamples))
+
+	orderedExamples = append(orderedExamples, userExamplesWithNoScore...)
 	orderedExamples = append(orderedExamples, otherExamples...)
-	orderedExamples = append(orderedExamples, negativeExamples...)
+	if len(orderedExamples) > 30 {
+		return orderedExamples[:30]
+	}
 	return orderedExamples
 }
 
@@ -359,7 +371,7 @@ func getWordwheel(c echo.Context) error {
 
 func query(c echo.Context) error {
 	headword, _ := url.QueryUnescape(c.Param("headword"))
-	query := "SELECT user_submit, dictionaries, synonyms, antonyms, examples, time_series FROM headwords WHERE headword=$1"
+	query := "SELECT user_submit, dictionaries, synonyms, antonyms, examples, time_series, collocations, nearest_neighbors FROM headwords WHERE headword=$1"
 	var results Results
 	var dictionaries map[string][]string
 	var synonyms []Nym
@@ -367,16 +379,18 @@ func query(c echo.Context) error {
 	var userSubmission []UserSubmit
 	var examples []Example
 	var timeSeries [][]float64
-	err := pool.QueryRow(query, headword).Scan(&userSubmission, &dictionaries, &synonyms, &antonyms, &examples, &timeSeries)
+	var collocations []Collocates
+	var nearestNeighbors []string
+	err := pool.QueryRow(query, headword).Scan(&userSubmission, &dictionaries, &synonyms, &antonyms, &examples, &timeSeries, &collocations, &nearestNeighbors)
 	if err != nil {
 		fmt.Println(err)
-		var empty []string
+		empty := Results{headword, DictionaryData{[]Dictionary{}, 0, 0}, []Nym{}, []Nym{}, []Example{}, [][]float64{}, []Collocates{}, []string{}}
 		return c.JSON(http.StatusOK, empty)
 	}
 	highlightedExamples := highlightExamples(examples, headword)
 	sortedExamples := sortExamples(highlightedExamples)
 	allDictionaries := orderDictionaries(dictionaries, userSubmission)
-	results = Results{headword, allDictionaries, synonyms, antonyms, sortedExamples, timeSeries}
+	results = Results{headword, allDictionaries, synonyms, antonyms, sortedExamples, timeSeries, collocations, nearestNeighbors}
 	return c.JSON(http.StatusOK, results)
 }
 
@@ -409,6 +423,7 @@ func submitDefinition(c echo.Context) error {
 	link := sanitize.HTML(c.FormValue("link"))
 	allowedTags := []string{"i", "b"}
 	definition, htmlErr := sanitize.HTMLAllowing(c.FormValue("definition"), allowedTags)
+	definition = html.UnescapeString(definition)
 	if htmlErr != nil {
 		fmt.Println(htmlErr)
 		message := map[string]string{"message": "error"}
@@ -480,6 +495,7 @@ func submitExample(c echo.Context) error {
 	link := sanitize.HTML(c.FormValue("link"))
 	allowedTags := []string{"i", "b"}
 	example, htmlErr := sanitize.HTMLAllowing(c.FormValue("example"), allowedTags)
+	example = html.UnescapeString(example)
 	if htmlErr != nil {
 		fmt.Println(htmlErr)
 		message := map[string]string{"message": "error"}

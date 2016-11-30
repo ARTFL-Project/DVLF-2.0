@@ -1,7 +1,7 @@
 <div>
-    <div style="text-align: center" ng-if="Results.results.totalEntries === 0">
-        Il n'existe aucune entrée pour le terme <b>{{ ::Main.queryTerm }}</b><br><br>
-        <button class="btn btn-default" type="button" ng-click="Results.define()">
+    <div style="margin: 15px 0px;" ng-if="totalEntries === 0">
+        Il n'existe aucune entrée pour le terme <b>{{ ::Results.results.headword }}</b>
+        <button class="btn btn-default" style="margin-left: 10px;" type="button" ng-click="Results.define()">
             <span class="glyphicon glyphicon-plus add-button"></span>
             Ajoutez votre définition
         </button>
