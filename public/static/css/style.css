@@ -1,252 +1,330 @@
 body {
-  margin: 0 auto;
-  font-family: 'Amiri', serif;
-  font-weight: 300;
-  font-size: 160%;
-}
-.navbar-brand {
-  cursor: pointer;
-  color: inherit !important;
-}
-.badge {
-  padding-top: 5px;
-}
-.a-propos {
-  text-align: justify;
-}
-a.btn:hover {
-  color: #fff !important;
-}
-.btn, .panel, .panel-heading, .list-group-item:first-child, .list-group-item:last-child, .popover, .progress, .form-control, .tooltip-inner, .modal-content {
-  border-radius: 0px !important;
-}
-.icon-bar {
-  border-radius: 0px !important;
-  border: 1px solid #000;
+    margin: 0 auto;
+    font-family: 'Amiri', serif;
+    font-weight: 300;
+    font-size: 160%;
 }
 
-a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, button.list-group-item:hover {
+.navbar-brand {
+    cursor: pointer;
+    color: inherit !important;
+}
+
+.badge {
+    padding-top: 5px;
+}
+
+.a-propos {
+    text-align: justify;
+}
+
+a.btn:hover {
+    color: #fff !important;
+}
+
+.btn,
+.panel,
+.panel-heading,
+.list-group-item:first-child,
+.list-group-item:last-child,
+.popover,
+.progress,
+.form-control,
+.tooltip-inner,
+.modal-content {
+    border-radius: 0px !important;
+}
+
+.icon-bar {
+    border-radius: 0px !important;
+    border: 1px solid #000;
+}
+
+a.list-group-item:focus,
+a.list-group-item:hover,
+button.list-group-item:focus,
+button.list-group-item:hover {
     background-color: #f0f0f0;
 }
+
 
 /*Dictionary formatting*/
 
 body {
-  counter-reset: section;
-  /* Set the section counter to 0 */
+    counter-reset: section;
+    /* Set the section counter to 0 */
 }
+
 .xml-prononciation::before {
-  content: "(";
+    content: "(";
 }
+
 .xml-prononciation::after {
-  content: ")\A";
+    content: ")\A";
 }
+
 .xml-nature {
-  font-style: italic;
+    font-style: italic;
 }
-.xml-indent, .xml-variante {
-  display: block;
-}
+
+.xml-indent,
 .xml-variante {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  text-indent: -1.3em;
-  padding-left: 1.3em;
+    display: block;
 }
+
+.xml-variante {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-indent: -1.3em;
+    padding-left: 1.3em;
+}
+
 .xml-variante::before {
-  counter-increment: section;
-  content: counter(section) ")\00a0";
-  font-weight: 700;
+    counter-increment: section;
+    content: counter(section) ")\00a0";
+    font-weight: 700;
 }
-:not(.xml-rubrique)+ .xml-indent {
-  padding-top: 10px;
+
+:not(.xml-rubrique)+.xml-indent {
+    padding-top: 10px;
 }
+
 .xml-indent {
-  padding-left: 1.3em;
+    padding-left: 1.3em;
 }
+
 .xml-cit {
-  padding-left: 2.3em;
-  display: block;
-  text-indent: -1.3em;
+    padding-left: 2.3em;
+    display: block;
+    text-indent: -1.3em;
 }
-.xml-indent> .xml-cit {
-  padding-left: 1em;
+
+.xml-indent>.xml-cit {
+    padding-left: 1em;
 }
+
 .xml-cit::before {
-  content: '\2012\00a0\00ab\00a0';
+    content: '\2012\00a0\00ab\00a0';
 }
+
 .xml-cit::after {
-  content: '\00a0\00bb\00a0(' attr(aut) '\00a0' attr(ref) ')';
-  font-variant: small-caps;
+    content: '\00a0\00bb\00a0(' attr(aut) '\00a0' attr(ref) ')';
+    font-variant: small-caps;
 }
+
 .xml-rubrique {
-  display: block;
-  margin-top: 20px;
+    display: block;
+    margin-top: 20px;
 }
+
 .xml-rubrique::before {
-  content: attr(nom);
-  font-variant: small-caps;
-  font-weight: 700;
+    content: attr(nom);
+    font-variant: small-caps;
+    font-weight: 700;
 }
-.xml-corps+ .xml-rubrique {
-  margin-top: 10px;
+
+.xml-corps+.xml-rubrique {
+    margin-top: 10px;
 }
+
 .dico {
-  overflow: hidden;
+    overflow: hidden;
 }
+
 .dico-title {
-  text-align: center;
-  font-size: 110%;
-  font-weight: 700;
-  margin-top: 0px;
-  padding: 5px;
-  background-color: #f0f0f0;
-  border-bottom: 1px solid #eee;
+    text-align: center;
+    font-size: 110%;
+    font-weight: 700;
+    margin-top: 0px;
+    padding: 5px;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #eee;
 }
-.dico-label, .arrow {
-  cursor: pointer;
+
+.dico-label,
+.arrow {
+    cursor: pointer;
 }
+
 .dico-entries {
-  text-align: justify;
-  margin-top: 10px;
-  line-height: 150%;
-  display: none;
-  transition: all 200ms;
+    text-align: justify;
+    margin-top: 10px;
+    line-height: 150%;
+    display: none;
+    transition: all 200ms;
 }
+
 .dico-entries.show {
-  display: block;
+    display: block;
 }
+
 .entry {
-  /*max-height: 400px;*/
-  overflow-y: auto;
-  padding: 0 10px 10px 10px;
-  font-size: inherit !important;
+    /*max-height: 400px;*/
+    overflow-y: auto;
+    padding: 0 10px 10px 10px;
+    font-size: inherit !important;
 }
+
 .entry.tlfi {
-  max-height: 145px;
-  overflow: hidden;
+    max-height: 145px;
+    overflow: hidden;
 }
+
 .arrow .glyphicon {
-  vertical-align: middle;
-  font-size: 80%;
+    vertical-align: middle;
+    font-size: 80%;
 }
-.nym-title, .index, #time-series-title {
-  background-color: #f0f0f0;
-  border-bottom: 1px solid #eee;
-  text-align: center;
-  margin-top: 0;
-  padding: 7px;
-  font-weight: 700;
+
+.nym-title,
+.index,
+#time-series-title {
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+    margin-top: 0;
+    padding: 7px;
+    font-weight: 700;
 }
-.navbar, #navbar {
-  border-bottom: 1px solid #eee;
-  background-color: #f0f0f0;
+
+.navbar,
+#navbar {
+    border-bottom: 1px solid #eee;
+    background-color: #f0f0f0;
 }
+
 #wordwheel .list-group {
-  margin-top: -10px;
-  max-height: 800px;
-  overflow-y: scroll;
+    margin-top: -10px;
+    max-height: 800px;
+    overflow-y: scroll;
 }
+
 .tlfi-link {
-  float: left;
-  padding: 10px 10px 10px 10px;
+    float: left;
+    padding: 10px 10px 10px 10px;
 }
+
 .tlfi-link a {
-  cursor: pointer;
+    cursor: pointer;
 }
+
 .highlight {
-  color: red;
+    color: red;
 }
+
 .angucomplete-holder {
-  position: relative;
+    position: relative;
 }
+
 #search_dropdown {
-  position: absolute;
-  border: 1px solid #eee;
-  background: #fff;
-  z-index: 10;
-  top: 34px;
+    position: absolute;
+    border: 1px solid #eee;
+    background: #fff;
+    z-index: 10;
+    top: 34px;
 }
+
 .angucomplete-row {
-  padding: 5px 13px;
+    padding: 5px 13px;
 }
+
 angucomplete-row:focus {
-  background-color: #f0f0f0;
+    background-color: #f0f0f0;
 }
+
 .angucomplete-row:hover {
-  background-color: #f0f0f0;
-  cursor: pointer;
+    background-color: #f0f0f0;
+    cursor: pointer;
 }
+
 .angucomplete-selected-row {
-  background-color: #f0f0f0;
+    background-color: #f0f0f0;
 }
+
 .form-control {
-  font-size: 100%;
+    font-size: 100%;
 }
+
 #examples-title {
-  text-align: center;
-  font-size: 110%;
-  font-weight: 700;
-  margin-top: 0px;
-  padding: 5px;
-  background-color: #f0f0f0;
-  border-bottom: 1px solid #eee;
-  margin-bottom: 10px;
+    text-align: center;
+    font-size: 110%;
+    font-weight: 700;
+    margin-top: 0px;
+    padding: 5px;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 10px;
 }
+
 .example {
-  margin: 10px;
-  padding: 10px;
+    margin: 10px;
+    padding: 10px;
 }
+
 .example-score {
-  display: inline;
-  font-family: serif;
-  font-size: 110%;
-  padding-right: 5px;
+    display: inline;
+    font-family: serif;
+    font-size: 110%;
+    padding-right: 5px;
 }
+
 .example-score .glyphicon {
-  color: #a8a8a8;
-  cursor: pointer;
-  transition: all 300ms;
+    color: #a8a8a8;
+    cursor: pointer;
+    transition: all 300ms;
 }
+
 .example-score .glyphicon:hover {
-  color: black;
+    color: black;
 }
+
 .example-score .up {
-  padding-right: 5px;
+    padding-right: 5px;
 }
+
 .example-score .down {
-  padding-left: 5px;
+    padding-left: 5px;
 }
+
 .example-content {
-  display: inline;
-  padding-left: 5px;
-  text-align: justify;
+    display: inline;
+    padding-left: 5px;
+    text-align: justify;
 }
+
 .example-source {
-  display: inline-block;
-  width: 100%;
-  text-align: right;
+    display: inline-block;
+    width: 100%;
+    text-align: right;
+    font-size: 85%;
 }
-#search_value, #search_dropdown {
-  font-size: 110%;
-  text-align: left;
+
+#search_value,
+#search_dropdown {
+    font-size: 110%;
+    text-align: left;
 }
+
 textarea {
-  border: 1px solid #ccc;
-  padding: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
 }
+
 #definition-area {
-  width: 100%;
-  min-height: 300px;
+    width: 100%;
+    min-height: 300px;
 }
-#source-area, #link-area, #nym-area {
-  width: 100%;
+
+#source-area,
+#link-area,
+#nym-area {
+    width: 100%;
 }
+
 .note-to-user {
-  padding: 10px;
-  background-color: rgba(21, 95, 131, .45);
-  color: #fff;
-  display: inline-block;
+    padding: 10px;
+    background-color: rgba(21, 95, 131, .45);
+    color: #fff;
+    display: inline-block;
 }
 
 .add-button {
@@ -254,88 +332,109 @@ textarea {
     vertical-align: top;
 }
 
-
 .glyphicon.spinning {
-  vertical-align: sub;
-  animation: spin 1s infinite linear;
-  -webkit-animation: spin2 1s infinite linear;
+    vertical-align: sub;
+    animation: spin 1s infinite linear;
+    -webkit-animation: spin2 1s infinite linear;
 }
+
 @keyframes spin {
-  from {
-    transform: scale(1) rotate(0deg);
-  }
-  to {
-    transform: scale(1) rotate(360deg);
-  }
+    from {
+        transform: scale(1) rotate(0deg);
+    }
+    to {
+        transform: scale(1) rotate(360deg);
+    }
 }
+
 @-webkit-keyframes spin2 {
-  from {
-    -webkit-transform: rotate(0deg);
-  }
-  to {
-    -webkit-transform: rotate(360deg);
-  }
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
 }
+
 
 /*Animations*/
 
-.dico.ng-enter, .dico.ng-move {
-  transition: all .2s linear;
-  opacity: 0;
+.dico.ng-enter,
+.dico.ng-move {
+    transition: all .2s linear;
+    opacity: 0;
 }
+
 .dico.ng-enter-stagger {
-  transition-delay: 50ms;
-  -webkit-transition-delay: 50ms;
-  transition-duration: 0s;
-  -webkit-transition-duration: 0s;
+    transition-delay: 50ms;
+    -webkit-transition-delay: 50ms;
+    transition-duration: 0s;
+    -webkit-transition-duration: 0s;
 }
-.dico.ng-enter.ng-enter-active, .dico.ng-move.ng-move-active {
-  opacity: 1;
+
+.dico.ng-enter.ng-enter-active,
+.dico.ng-move.ng-move-active {
+    opacity: 1;
 }
+
 .example.ng-enter {
-  transition: all .2s linear;
-  opacity: 0;
+    transition: all .2s linear;
+    opacity: 0;
 }
+
 .example.ng-enter-stagger {
-  transition-delay: 50ms;
-  -webkit-transition-delay: 50ms;
-  transition-duration: 0s;
-  -webkit-transition-duration: 0s;
+    transition-delay: 50ms;
+    -webkit-transition-delay: 50ms;
+    transition-duration: 0s;
+    -webkit-transition-duration: 0s;
 }
+
 .example.ng-enter.ng-enter-active {
-  opacity: 1;
+    opacity: 1;
 }
+
 #examples.ng-leave {
-  transition: 0.5s linear all;
-  opacity: 1;
+    transition: 0.5s linear all;
+    opacity: 1;
 }
+
 #examples.ng-leave.ng-leave-active {
-  opacity: 0;
+    opacity: 0;
 }
+
 #wordwheel.ng-enter {
-  transition: all .2s linear;
-  opacity: 0;
+    transition: all .2s linear;
+    opacity: 0;
 }
+
 #wordwheel.ng-enter.ng-enter-active {
-  opacity: 1;
+    opacity: 1;
 }
-.synonym.ng-enter, .antonym.ng-enter {
-  transition: all .2s linear;
-  opacity: 0;
+
+.synonym.ng-enter,
+.antonym.ng-enter {
+    transition: all .2s linear;
+    opacity: 0;
 }
-.synonym.ng-enter-stagger, .antonym.ng-enter-stagger {
-  transition-delay: 3ms;
-  -webkit-transition-delay: 3ms;
-  transition-duration: 0s;
-  -webkit-transition-duration: 0s;
+
+.synonym.ng-enter-stagger,
+.antonym.ng-enter-stagger {
+    transition-delay: 3ms;
+    -webkit-transition-delay: 3ms;
+    transition-duration: 0s;
+    -webkit-transition-duration: 0s;
 }
-.synonym.ng-enter.ng-enter-active, .antonym.ng-enter.ng-enter-active {
-  opacity: 1;
+
+.synonym.ng-enter.ng-enter-active,
+.antonym.ng-enter.ng-enter-active {
+    opacity: 1;
 }
+
 .entry-total.ng-enter {
-  transition: all .2s linear;
-  opacity: 0;
+    transition: all .2s linear;
+    opacity: 0;
 }
+
 .entry-total.ng-enter.ng-enter-active {
-  opacity: 1;
+    opacity: 1;
 }

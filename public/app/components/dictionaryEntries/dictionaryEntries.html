@@ -25,6 +25,7 @@
         <div class="dico-entries" ng-class="{show: dico.show}">
             <div class="entry" style="padding-right: 10px" ng-repeat="entry in ::dico.contentObj" ng-class="{'tlfi': dico.name === 'tlfi'}">
                 <div ng-bind-html="entry.content | unsafe"></div>
+                <div class="example-source" ng-if="entry.date">Contribuée le {{ ::entry.date}}</div>
                 <hr ng-if="!$last" style="width: 50%; margin-top: 15px; margin-bottom: 5px; border-color: #ddd;">
             </div>
             <div class="tlfi-link" ng-if="dico.name === 'tlfi'">

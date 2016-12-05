@@ -68,6 +68,7 @@ type Example struct {
 	ID         int    `json:"id"`
 	Source     string `json:"source"`
 	UserSubmit bool   `json:"userSubmit"`
+	Date       string `json:"date"`
 }
 
 // ExamplesByID for sorting
@@ -88,12 +89,14 @@ type UserSubmit struct {
 	Content string `json:"content"`
 	Source  string `json:"source"`
 	Link    string `json:"link"`
+	Date    string `json:"date"`
 }
 
 // Nym type
 type Nym struct {
 	Label      string `json:"label"`
 	UserSubmit bool   `json:"UserSubmit"`
+	Date       string `json:"date"`
 }
 
 // AutoCompleteList is the top 10 words
@@ -277,11 +280,11 @@ func orderDictionaries(dictionaries map[string][]string, userSubmissions []UserS
 		}
 		var content []map[string]string
 		for _, entry := range userSubmissions {
-			content = append(content, map[string]string{"content": entry.Content, "source": entry.Source, "link": entry.Link})
+			content = append(content, map[string]string{"content": entry.Content, "source": entry.Source, "link": entry.Link, "date": entry.Date})
 		}
-		newDicos = append(newDicos, Dictionary{"userSubmit", "Définition(s) d'utilisateurs", "Définition(s) d'utilisateurs", content, show})
+		newDicos = append(newDicos, Dictionary{"userSubmit", "Définition(s) d'utilisateurs/trices", "Définition(s) d'utilisateurs/trices", content, show})
 	} else {
-		newDicos = append(newDicos, Dictionary{"userSubmit", "Définition(s) d'utilisateurs", "Définition(s) d'utilisateurs", make([]map[string]string, 0), true})
+		newDicos = append(newDicos, Dictionary{"userSubmit", "Définition(s) d'utilisateurs/trices", "Définition(s) d'utilisateurs/trices", make([]map[string]string, 0), true})
 	}
 	allDictionaries := DictionaryData{newDicos, totalDicos, totalEntries}
 	return allDictionaries
@@ -412,6 +415,30 @@ func recaptchaValidate(recaptchaResponse string) (r RecaptchaResponse) {
 	return
 }
 
+func convertTimeStampToString(timeStamp string) string {
+	months := []string{"Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"}
+	year := strings.Split(timeStamp, "-")[0]
+	month := strings.Split(timeStamp, "-")[1]
+	if strings.HasPrefix(month, "0") {
+		month = month[1:]
+	}
+	monthIndex, indexErr := strconv.Atoi(month)
+	if indexErr != nil {
+		fmt.Printf("Index error: %s", indexErr)
+		return timeStamp
+	}
+	month = months[monthIndex-1]
+	day := strings.Split(timeStamp, "-")[2]
+	if strings.HasPrefix(day, "0") {
+		day = day[1:]
+	}
+	if day == "1" {
+		day = "1er"
+	}
+	fullDate := fmt.Sprintf("%s %s %s", day, month, year)
+	return fullDate
+}
+
 func submitDefinition(c echo.Context) error {
 	recaptchaCheck := recaptchaValidate(c.FormValue("recaptchaResponse"))
 	if recaptchaCheck.Success == false {
@@ -429,7 +456,8 @@ func submitDefinition(c echo.Context) error {
 		message := map[string]string{"message": "error"}
 		return c.JSON(http.StatusOK, message)
 	}
-	var newSubmission = UserSubmit{definition, source, link}
+	timeStamp := convertTimeStampToString(strings.Split(time.Now().String(), " ")[0])
+	var newSubmission = UserSubmit{definition, source, link, timeStamp}
 	if _, ok := headwordMap[headword]; ok {
 		query := "SELECT user_submit FROM headwords WHERE headword=$1"
 		var userSubmission []UserSubmit
@@ -523,7 +551,8 @@ func submitExample(c echo.Context) error {
 			}
 		}
 		score := 0
-		userExamples = append(userExamples, Example{example, link, score, id, source, true})
+		timeStamp := convertTimeStampToString(strings.Split(time.Now().String(), " ")[0])
+		userExamples = append(userExamples, Example{example, link, score, id, source, true, timeStamp})
 		serializedSubmission, jsonError := json.Marshal(userExamples)
 		if jsonError != nil {
 			fmt.Println(jsonError)
@@ -587,7 +616,8 @@ func submitNym(c echo.Context) error {
 		return c.JSON(http.StatusOK, message)
 	}
 	headword := sanitize.HTML(c.FormValue("term"))
-	nym := Nym{sanitize.HTML(c.FormValue("nym")), true}
+	timeStamp := convertTimeStampToString(strings.Split(time.Now().String(), " ")[0])
+	nym := Nym{sanitize.HTML(c.FormValue("nym")), true, timeStamp}
 	typeOfNym := sanitize.HTML(c.FormValue("type"))
 	if _, ok := headwordMap[headword]; ok {
 		query := fmt.Sprintf("SELECT %s FROM headwords WHERE headword=$1", typeOfNym)
