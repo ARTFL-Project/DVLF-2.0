@@ -31,6 +31,21 @@
         });
 
         vm.apropos = false;
+         $scope.$watch(function() {
+            if ($location.path() == "/apropos") {
+                return true;
+            } else {
+                return false;
+            }
+        }, function(apropos) {
+            if (apropos) {
+                vm.apropos = true;
+            } else {
+                vm.apropos = false;
+            }
+        });
+
+
         vm.viewAPropos = function() {
             $location.path("/apropos")
         }

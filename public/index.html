@@ -42,8 +42,11 @@
                         <li>
                             <a href="" ng-click="Main.viewAPropos()">À propos du DVLF</a>
                         </li>
-                        <li>
-                            <a href="#contact">Contactez-nous</a>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Contactez-nous<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a>dvlf@artfl.uchicago.edu</a></li>
+                            </ul>
                         </li>
                     </ul>
                 </div>
@@ -80,7 +83,7 @@
 
             <div class="row" ng-hide="Main.atHome">
                 <div class="col-xs-12 col-sm-offset-3 col-sm-6">
-                    <total></total>
+                    <total ng-class="{'hide-results': Main.apropos}"></total>
                 </div>
                 <div class="col-xs-12 col-sm-3" style="margin-top: 15px">
                     <div class="pull-right hidden-xs">

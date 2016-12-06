@@ -356,7 +356,6 @@ func sortExamples(examples []Example) []Example {
 
 func getWordwheel(c echo.Context) error {
 	headword, _ := url.QueryUnescape(c.FormValue("headword"))
-	fmt.Println(headword)
 	if _, ok := headwordMap[headword]; ok {
 		index := headwordMap[headword]
 		startIndex := index - 100

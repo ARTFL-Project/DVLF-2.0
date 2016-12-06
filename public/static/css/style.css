@@ -9,6 +9,13 @@ body {
     cursor: pointer;
     color: inherit !important;
 }
+.navbar-nav>li>a:hover {
+    color: #000 !important;
+}
+
+.nav .dropdown-menu>li>a:hover {
+    color: black !important;
+}
 
 .badge {
     padding-top: 5px;
@@ -47,6 +54,10 @@ button.list-group-item:hover {
     background-color: #f0f0f0;
 }
 
+
+.hide-results {
+    visibility: hidden;
+}
 
 /*Dictionary formatting*/
 
