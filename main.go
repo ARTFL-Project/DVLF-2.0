@@ -670,7 +670,7 @@ func main() {
 	e := echo.New()
 
 	fmt.Println(len(headwordList))
-	e.SetDebug(true)
+	//e.SetDebug(true)
 
 	e.Static("/static", "public/static")
 	e.Static("/app", "public/app")
