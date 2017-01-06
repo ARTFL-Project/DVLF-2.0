@@ -8,7 +8,7 @@
         .module("DVLF")
         .controller('MainController', MainController);
 
-    function MainController($scope, $routeParams, $route, $log, $http, $location, totalResults) {
+    function MainController($scope, $routeParams, $route, $log, $http, $location, $window, totalResults) {
         var vm = this;
 
         if (angular.equals({}, $routeParams)) {
@@ -61,5 +61,9 @@
                 $location.path("/mot/" + query.title.trim());
             }
         }
+
+        $scope.$on('$viewContentLoaded', function(event) {
+            $window.ga('send', 'pageview', { page: $location.url() });
+        });
     }
 })();

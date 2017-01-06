@@ -9,7 +9,7 @@
             <span class="glyphicon glyphicon-circle-arrow-down down" ng-click="vote(example.id, 'down')"></span>
         </div>
         <div class="example-content" ng-bind-html="example.content | unsafe"></div>
-        <div class="example-source" ng-if="example.source">Source:
+        <div class="example-source" ng-if="example.source">Source trouvée sur:
             <a ng-href="{{ example.link }}" target="_blank" ng-if="example.link != 'http://'">{{ ::example.source }}</a>
             <span ng-if="example.link == 'http://'">{{ ::example.source }}</span>
         </div>
