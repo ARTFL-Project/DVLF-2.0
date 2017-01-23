@@ -685,7 +685,7 @@ func main() {
 	e.Use(middleware.Secure())
 
 	// Enable TLS
-	e.AutoTLSManager.Cache = autocert.DirCache("/shared/dvlf/dvlf_app/.cache")
+	e.AutoTLSManager.Cache = autocert.DirCache(".cache")
 	// Redirect http traffic to https
 	e.Pre(middleware.NonWWWRedirect())
 	e.Pre(middleware.HTTPSWWWRedirect())
