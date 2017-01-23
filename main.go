@@ -15,11 +15,11 @@ import (
 	"strings"
 	"time"
 
+	"golang.org/x/crypto/acme/autocert"
 	"golang.org/x/text/collate"
 	"golang.org/x/text/language"
 
 	"github.com/labstack/echo"
-	"github.com/labstack/echo/engine/standard"
 	"github.com/labstack/echo/middleware"
 
 	"github.com/jackc/pgx"
@@ -669,7 +669,6 @@ func main() {
 	// Echo instance
 	e := echo.New()
 
-	fmt.Println(len(headwordList))
 	//e.SetDebug(true)
 
 	e.Static("/static", "public/static")
@@ -684,6 +683,13 @@ func main() {
 		Level: 5,
 	}))
 	e.Use(middleware.Secure())
+
+	// Enable TLS
+	e.AutoTLSManager.Cache = autocert.DirCache("/shared/dvlf/dvlf_app/.cache")
+	// Redirect http traffic to https
+	e.Pre(middleware.NonWWWRedirect())
+	e.Pre(middleware.HTTPSWWWRedirect())
+	e.Pre(middleware.HTTPSRedirect())
 
 	e.GET("/", index)
 	e.GET("/mot/*", index)
@@ -703,5 +709,5 @@ func main() {
 	e.POST("/api/submitNym", submitNym)
 
 	// Start server
-	e.Run(standard.New(":8080"))
+	e.Logger.Fatal(e.StartAutoTLS(":443"))
 }

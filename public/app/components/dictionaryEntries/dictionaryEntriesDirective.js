@@ -33,7 +33,6 @@
                             totalEntries: 0
                         };
                     }
-                    console.log(scope.Results.results.dictionaries.totalEntries)
                 });
 
                 scope.toggleEntry = function(event) {
