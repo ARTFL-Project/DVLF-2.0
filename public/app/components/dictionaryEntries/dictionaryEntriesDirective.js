@@ -16,6 +16,7 @@
             link: function(scope, element, attrs) {
                 var query = "/api/mot/" + attrs.head.trim();
                 scope.dictionaries = [];
+                scope.Main.loading = true;
                 $http.get(query).then(function(response) {
                     scope.Results.results = response.data;
                     scope.totalEntries = response.data.dictionaries.totalEntries;
@@ -24,6 +25,7 @@
                         totalEntries: response.data.dictionaries.totalEntries,
                         queryTerm: attrs.head.trim()
                     });
+                    scope.Main.loading = false;
                     var displayed = 0;
                     var totalEntries = 0;
                     if (response.data != null) {

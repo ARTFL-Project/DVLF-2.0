@@ -51,7 +51,6 @@
         }
 
         vm.search = function(word) {
-            console.log(angular.element("#search_value").val())
             word = angular.element("#search_value").val();
             $location.path("/mot/" + word.trim());
         }

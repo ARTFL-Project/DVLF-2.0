@@ -10,8 +10,8 @@
             var counts = [];
 
             scope.queryTerm = totalResults.queryTerm;
-            scope.showTimeSeries = true;
-            if (typeof(scope.Results.results.timeSeries) !== 'undefined' && scope.Results.results.timeSeries != null) {
+            scope.showTimeSeries = false;
+            if (scope.Results.results.timeSeries.length > 0) {
                 for (var i=0; i  < scope.Results.results.timeSeries.length; i +=1) {
                     dateList.push(scope.Results.results.timeSeries[i][0]);
                     counts.push(scope.Results.results.timeSeries[i][1]);
@@ -60,6 +60,7 @@
                         }
                     }
                 });
+                scope.showTimeSeries = true;
             } else {
                 scope.showTimeSeries = false;
             }
