@@ -24,7 +24,18 @@ import (
 
 	"github.com/jackc/pgx"
 	"github.com/kennygrant/sanitize"
+	"github.com/tdewolff/minify"
+	"github.com/tdewolff/minify/css"
+	"github.com/tdewolff/minify/js"
 )
+
+// App config
+type config struct {
+	DatabaseName     string `json:"databaseName"`
+	DatabaseUser     string `json:"user"`
+	DatabasePassword string `json:"password"`
+	Debug            bool   `json:"debug"`
+}
 
 // Results to export
 type Results struct {
@@ -169,11 +180,142 @@ var dicoLabels = map[string]map[string]string{
 
 var dicoOrder = []string{"tlfi", "acad1932", "littre", "acad1835", "acad1798", "feraud", "acad1762", "acad1694", "nicot", "bob"}
 
+var webConfig = loadConfig()
+
+var appJs = []string{
+	"static/js/jquery.min.js",
+	"static/js/bootstrap.min.js",
+	"static/js/angular.min.js",
+	"static/js/angular-route.min.js",
+	"static/js/angular-resource.min.js",
+	"static/js/angular-route.min.js",
+	"static/js/angular-animate.min.js",
+	"static/js/angular-touch.min.js",
+	"static/js/angular-sanitize.min.js",
+	"static/js/angular-cookies.min.js",
+	"static/js/Chart.min.js",
+	"static/js/angucomplete-alt.min.js",
+	"static/js/sticky.min.js",
+	"static/js/angular-recaptcha.min.js",
+	"app/app.js",
+	"app/config.js",
+	"app/filters.js",
+	"app/values.js",
+	"app/components/apropos/aproposDirective.js",
+	"app/components/results/resultsController.js",
+	"app/components/dictionaryEntries/dictionaryEntriesDirective.js",
+	"app/components/wordwheel/wordwheelDirective.js",
+	"app/components/synAntoNyms/synAntoNymsDirective.js",
+	"app/components/examples/examplesDirective.js",
+	"app/components/newDefinition/newDefinitionController.js",
+	"app/components/newExample/newExampleController.js",
+	"app/components/newSynAnto/newSynAntoController.js",
+	"app/components/timeSeries/timeSeriesDirective.js",
+	"app/components/total/totalDirective.js",
+	"app/components/collocations/collocationDirective.js",
+	"app/components/nearestNeighbors/nearestNeighborsDirective.js",
+}
+
+var appCSS = []string{
+	"static/css/bootstrap.min.css",
+	"static/css/style.css",
+}
+
+var indexHTML, mainJS, mainCSS = getIndexHTML()
+
+func getIndexHTML() (string, string, string) {
+	t := time.Now()
+	secs := t.Unix()
+	suffix := strconv.Itoa(int(secs))
+	dvlfCSSPath := fmt.Sprintf("public/static/css/dvlf-%s.css", suffix)
+	dvlfJsPath := fmt.Sprintf("public/static/js/dvlf-%s.js", suffix)
+	indexByte, _ := ioutil.ReadFile("public/index.html")
+	index := string(indexByte)
+	cssPaths := ""
+	javascript := ""
+	if webConfig.Debug == true {
+		for _, jsFile := range appJs {
+			javascript += fmt.Sprintf("<script src='%s'></script>", jsFile)
+		}
+		for _, cssFile := range appCSS {
+			cssPaths += fmt.Sprintf("<link href='%s' rel='stylesheet'>", cssFile)
+		}
+	} else {
+		m := minify.New()
+		m.AddFunc("text/css", css.Minify)
+		m.AddFunc("text/javascript", js.Minify)
+		jsCode := ""
+		for _, jsFile := range appJs {
+			jsByte, _ := ioutil.ReadFile(fmt.Sprintf("public/%s", jsFile))
+			jsString := string(jsByte)
+			minifiedJs, err := m.String("text/javascript", jsString)
+			if err != nil {
+				fmt.Println(err)
+			}
+			jsCode += minifiedJs
+		}
+		if _, notExists := os.Stat(dvlfJsPath); notExists == nil {
+			os.Remove(dvlfJsPath)
+		}
+		f, err := os.Create(dvlfJsPath)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer f.Close()
+		_, writeErr := f.WriteString(jsCode)
+		if writeErr != nil {
+			fmt.Println(writeErr)
+		}
+		f.Sync()
+		cssCode := ""
+		for _, cssFile := range appCSS {
+			cssByte, _ := ioutil.ReadFile(fmt.Sprintf("public/%s", cssFile))
+			cssString := string(cssByte)
+			minifiedCSS, err := m.String("text/css", cssString)
+			if err != nil {
+				fmt.Println(err)
+			}
+			cssCode += minifiedCSS
+		}
+		if _, notExists := os.Stat(dvlfCSSPath); notExists == nil {
+			os.Remove(dvlfCSSPath)
+		}
+		c, err := os.Create(dvlfCSSPath)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer c.Close()
+		_, cssWriteErr := c.WriteString(cssCode)
+		if cssWriteErr != nil {
+			fmt.Println(cssWriteErr)
+		}
+		c.Sync()
+		javascript = fmt.Sprintf("<script async src='static/js/dvlf-%s.js'></script>", suffix)
+		cssPaths = fmt.Sprintf("<link href='static/css/dvlf-%s.css' rel='stylesheet'>", suffix)
+	}
+	index = strings.Replace(index, "$APP_CSS$", cssPaths, 1)
+	index = strings.Replace(index, "$APP_SCRIPTS$", javascript, 1)
+	return index, dvlfJsPath, dvlfCSSPath
+}
+
+func loadConfig() config {
+	configFile, err := os.Open("config.json")
+	if err != nil {
+		fmt.Println("opening config file", err.Error())
+	}
+	var settings config
+	jsonParser := json.NewDecoder(configFile)
+	if err = jsonParser.Decode(&settings); err != nil {
+		fmt.Println("parsing config file", err.Error())
+	}
+	return settings
+}
+
 func createConnPool() *pgx.ConnPool {
 	defaultConnConfig.Host = "localhost"
-	defaultConnConfig.Database = "dvlf"
-	defaultConnConfig.User = "artfl"
-	defaultConnConfig.Password = "martini"
+	defaultConnConfig.Database = webConfig.DatabaseName
+	defaultConnConfig.User = webConfig.DatabaseUser
+	defaultConnConfig.Password = webConfig.DatabasePassword
 	defaultConnConfig.RuntimeParams = make(map[string]string)
 	defaultConnConfig.RuntimeParams["statement_timeout"] = "40000"
 	config := pgx.ConnPoolConfig{ConnConfig: defaultConnConfig, MaxConnections: 50}
@@ -660,21 +802,19 @@ func submitNym(c echo.Context) error {
 }
 
 func index(c echo.Context) error {
-	indexByte, _ := ioutil.ReadFile("public/index.html")
-	index := string(indexByte)
-	return c.HTML(http.StatusOK, index)
+	return c.HTML(http.StatusOK, indexHTML)
 }
 
 func main() {
 	// Echo instance
 	e := echo.New()
 
-	//e.SetDebug(true)
-
 	e.Static("/static", "public/static")
 	e.Static("/app", "public/app")
 
 	e.File("/dvlf.ico", "public/static/images/dvlf.ico")
+
+	e.Debug = webConfig.Debug
 
 	// Middleware
 	e.Use(middleware.Logger())
@@ -698,6 +838,27 @@ func main() {
 	e.GET("/exemple", index)
 	e.GET("/synonyme", index)
 	e.GET("/antonyme", index)
+
+	e.GET("/static/js/dvlf*", func(c echo.Context) error {
+		c.Response().Header().Add("Cache-Control", "max-age=946080000")
+		return c.File(mainJS)
+	})
+	e.GET("/static/css/dvlf*", func(c echo.Context) error {
+		c.Response().Header().Add("Cache-Control", "max-age=946080000")
+		return c.File(mainCSS)
+	})
+	e.GET("static/images/dvlf_logo_medium_no_beta_transparent.png", func(c echo.Context) error {
+		c.Response().Header().Add("Cache-Control", "max-age=2592000")
+		return c.File("public/static/images/dvlf_logo_medium_no_beta_transparent.png")
+	})
+	e.GET("/static/fonts/glyphicons-halflings-regular.woff2", func(c echo.Context) error {
+		c.Response().Header().Add("Cache-Control", "max-age=2592000")
+		return c.File("public/static/fonts/glyphicons-halflings-regular.woff2")
+	})
+	e.GET("/static/fonts/glyphicons-halflings-regular.woff", func(c echo.Context) error {
+		c.Response().Header().Add("Cache-Control", "max-age=2592000")
+		return c.File("public/static/fonts/glyphicons-halflings-regular.woff")
+	})
 
 	// API
 	e.GET("/api/mot/:headword", query)

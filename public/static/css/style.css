@@ -9,6 +9,7 @@ body {
     cursor: pointer;
     color: inherit !important;
 }
+
 .navbar-nav>li>a:hover {
     color: #000 !important;
 }
@@ -54,10 +55,10 @@ button.list-group-item:hover {
     background-color: #f0f0f0;
 }
 
-
 .hide-results {
     visibility: hidden;
 }
+
 
 /*Dictionary formatting*/
 
@@ -365,4 +366,83 @@ textarea {
     to {
         -webkit-transform: rotate(360deg);
     }
+}
+
+body {
+    color: rgb(61, 61, 61);
+}
+
+
+/* Button colors */
+
+.btn-primary {
+    background: rgb(21, 95, 131);
+    transition: background-color 200ms;
+    border-color: transparent;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background: rgba(21, 95, 131, .8);
+    border-color: transparent;
+    outline: 0;
+}
+
+.btn-primary.active,
+.open>.dropdown-toggle.btn-primary,
+#collocation_table th {
+    background: rgb(21, 67, 95);
+    border-color: transparent;
+    color: #fff;
+}
+
+.btn-primary[disabled] {
+    background-color: rgb(91, 150, 173);
+    border-color: transparent;
+}
+
+
+/* Links */
+
+a {
+    color: rgb(21, 95, 131);
+    font-weight: 400;
+    transition: all 200ms;
+}
+
+a:hover {
+    color: rgb(128, 0, 0) !important;
+    text-decoration: none;
+}
+
+.ui-menu-item .highlight {
+    color: rgb(174, 89, 80);
+}
+
+#waiting,
+#waiting-inner,
+#waiting-inner-inner {
+    border-color: rgba(174, 89, 80, .5) rgba(143, 57, 49, .7) rgba(174, 89, 80, .5) rgba(174, 89, 80, .5);
+}
+
+.filter-list {
+    color: rgb(109, 50, 39);
+    font-weight: 400;
+}
+
+.navbar-right a:hover {
+    color: #fff !important;
+}
+
+.btn-default {
+    background-color: #fbfbfb;
+}
+
+.list-group-item.active {
+    background-color: rgb(21, 95, 131);
+    border-color: rgb(21, 95, 131);
+}
+
+.hidden {
+    opacity: 0;
 }

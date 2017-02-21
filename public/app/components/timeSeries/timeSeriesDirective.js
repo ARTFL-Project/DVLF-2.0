@@ -12,10 +12,11 @@
             scope.queryTerm = totalResults.queryTerm;
             scope.showTimeSeries = false;
             if (scope.Results.results.timeSeries.length > 0) {
-                for (var i=0; i  < scope.Results.results.timeSeries.length; i +=1) {
+                for (var i = 0; i < scope.Results.results.timeSeries.length; i += 1) {
                     dateList.push(scope.Results.results.timeSeries[i][0]);
                     counts.push(scope.Results.results.timeSeries[i][1]);
                 }
+                console.log(dateList, counts)
                 Chart.defaults.global.responsive = true;
                 Chart.defaults.global.animation.duration = 400;
                 Chart.defaults.global.tooltipCornerRadius = 0;
@@ -60,6 +61,7 @@
                         }
                     }
                 });
+                console.log(scope.myBarChart)
                 scope.showTimeSeries = true;
             } else {
                 scope.showTimeSeries = false;
@@ -68,7 +70,7 @@
         return {
             templateUrl: "app/components/timeSeries/timeSeries.html",
             link: function(scope) {
-                scope.$on('resultsUpdate', function () {
+                scope.$on('resultsUpdate', function() {
                     $timeout(function() {
                         buildTimeSeries(scope);
                     });
