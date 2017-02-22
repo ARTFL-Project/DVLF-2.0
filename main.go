@@ -823,8 +823,8 @@ func getSimilarHeadWords(queryTerm string) []FuzzyResult {
 	maxScore := float64(1)
 	for _, word := range headwordList {
 		normalizedWord := norm.NFC.String(word)
-		score := levenshtein.Similarity(normQueryTerm, normalizedWord, fuzzySearchParams)
-		if score >= 0.6 && score < maxScore {
+		score := levenshtein.Match(normQueryTerm, normalizedWord, fuzzySearchParams)
+		if score >= 0.7 && score < maxScore {
 			results = append(results, FuzzyResult{word, score})
 		}
 	}
