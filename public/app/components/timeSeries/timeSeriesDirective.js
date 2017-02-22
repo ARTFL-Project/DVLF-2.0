@@ -16,7 +16,6 @@
                     dateList.push(scope.Results.results.timeSeries[i][0]);
                     counts.push(scope.Results.results.timeSeries[i][1]);
                 }
-                console.log(dateList, counts)
                 Chart.defaults.global.responsive = true;
                 Chart.defaults.global.animation.duration = 400;
                 Chart.defaults.global.tooltipCornerRadius = 0;
@@ -61,7 +60,6 @@
                         }
                     }
                 });
-                console.log(scope.myBarChart)
                 scope.showTimeSeries = true;
             } else {
                 scope.showTimeSeries = false;

@@ -18,10 +18,12 @@ import (
 	"golang.org/x/crypto/acme/autocert"
 	"golang.org/x/text/collate"
 	"golang.org/x/text/language"
+	"golang.org/x/text/unicode/norm"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 
+	"github.com/agext/levenshtein"
 	"github.com/jackc/pgx"
 	"github.com/kennygrant/sanitize"
 	"github.com/tdewolff/minify"
@@ -47,6 +49,7 @@ type Results struct {
 	TimeSeries       [][]float64    `json:"timeSeries"`
 	Collocates       []Collocates   `json:"collocates"`
 	NearestNeighbors []string       `json:"nearestNeighbors"`
+	FuzzyResults     []FuzzyResult  `json:"fuzzyResults"`
 }
 
 // Dictionary to export
@@ -124,6 +127,12 @@ type RecaptchaResponse struct {
 	ChallengeTS time.Time `json:"challenge_ts"`
 	Hostname    string    `json:"hostname"`
 	ErrorCodes  []int     `json:"error-codes"`
+}
+
+// FuzzyResult is the result of fuzzy searching
+type FuzzyResult struct {
+	Word  string  `json:"word"`
+	Score float64 `json:"score"`
 }
 
 var defaultConnConfig pgx.ConnConfig
@@ -222,6 +231,8 @@ var appCSS = []string{
 }
 
 var indexHTML, mainJS, mainCSS = getIndexHTML()
+
+var fuzzySearchParams = levenshtein.NewParams()
 
 func getIndexHTML() (string, string, string) {
 	t := time.Now()
@@ -525,16 +536,21 @@ func query(c echo.Context) error {
 	var timeSeries [][]float64
 	var collocations []Collocates
 	var nearestNeighbors []string
+	fuzzyResults := []FuzzyResult{}
 	err := pool.QueryRow(query, headword).Scan(&userSubmission, &dictionaries, &synonyms, &antonyms, &examples, &timeSeries, &collocations, &nearestNeighbors)
 	if err != nil {
 		fmt.Println(err)
-		empty := Results{headword, DictionaryData{[]Dictionary{}, 0, 0}, []Nym{}, []Nym{}, []Example{}, [][]float64{}, []Collocates{}, []string{}}
+		fuzzyResults = getSimilarHeadWords(headword)
+		empty := Results{headword, DictionaryData{[]Dictionary{}, 0, 0}, []Nym{}, []Nym{}, []Example{}, [][]float64{}, []Collocates{}, []string{}, fuzzyResults}
 		return c.JSON(http.StatusOK, empty)
 	}
 	highlightedExamples := highlightExamples(examples, headword)
 	sortedExamples := sortExamples(highlightedExamples)
 	allDictionaries := orderDictionaries(dictionaries, userSubmission)
-	results = Results{headword, allDictionaries, synonyms, antonyms, sortedExamples, timeSeries, collocations, nearestNeighbors}
+	if allDictionaries.TotalEntries < 2 {
+		fuzzyResults = getSimilarHeadWords(headword)
+	}
+	results = Results{headword, allDictionaries, synonyms, antonyms, sortedExamples, timeSeries, collocations, nearestNeighbors, fuzzyResults}
 	return c.JSON(http.StatusOK, results)
 }
 
@@ -799,6 +815,21 @@ func submitNym(c echo.Context) error {
 	}
 	message := map[string]string{"message": "success"}
 	return c.JSON(http.StatusOK, message)
+}
+
+func getSimilarHeadWords(queryTerm string) []FuzzyResult {
+	results := []FuzzyResult{}
+	normQueryTerm := norm.NFC.String(queryTerm)
+	maxScore := float64(1)
+	for _, word := range headwordList {
+		normalizedWord := norm.NFC.String(word)
+		score := levenshtein.Similarity(normQueryTerm, normalizedWord, fuzzySearchParams)
+		if score >= 0.6 && score < maxScore {
+			results = append(results, FuzzyResult{word, score})
+		}
+	}
+	sort.Slice(results, func(i, j int) bool { return results[i].Score > results[j].Score })
+	return results
 }
 
 func index(c echo.Context) error {

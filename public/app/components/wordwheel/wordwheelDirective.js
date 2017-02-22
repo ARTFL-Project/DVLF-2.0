@@ -13,9 +13,11 @@
                     $http.get('/api/wordwheel?headword=' + args.queryTerm).then(function(response) {
                         scope.wordwheel = response.data;
                         $timeout(function() {
-                            var offset = angular.element('#wordwheel a.active').offset().top - 570;
-                            if (offset != 0) {
-                                angular.element('#wordwheel .list-group').scrollTop(offset);
+                            if (typeof(angular.element('#wordwheel a.active').offset()) != "undefined") {
+                                var offset = angular.element('#wordwheel a.active').offset().top - 570;
+                                if (offset != 0) {
+                                    angular.element('#wordwheel .list-group').scrollTop(offset);
+                                }
                             }
                         });
                     });

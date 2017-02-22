@@ -6,6 +6,12 @@
             Ajoutez votre définition
         </button>
     </div>
+    <div ng-if="totalEntries < 2">
+        Voici des termes similaires présent dans l'index:<br>
+        <div style="display: inline-block" ng-repeat="word in Results.results.fuzzyResults.slice(0,20)">
+            <a ng-href="/mot/{{word.word}}">{{word.word}}&nbsp;&nbsp;</a>
+        </div>
+    </div>
     <div class="panel panel-default dico" style="margin-top: 15px" ng-repeat="dico in Results.results.dictionaries.data">
         <div class="row dico-title">
             <div class="col-xs-1 arrow" ng-click="toggleEntry($event)">
