@@ -8,7 +8,7 @@
     </div>
     <div ng-if="totalEntries < 2">
         <div ng-if="Results.results.fuzzyResults.length > 0">
-            Voici des termes similaires présent dans l'index:<br>
+            Voici des termes similaires présents dans l'index:<br>
             <div style="display: inline-block" ng-repeat="word in Results.results.fuzzyResults">
                 <a ng-href="/mot/{{word.word}}">{{word.word}}&nbsp;&nbsp;</a>
             </div>

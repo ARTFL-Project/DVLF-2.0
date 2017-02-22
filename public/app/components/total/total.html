@@ -2,8 +2,9 @@
     <b>{{ queryTerm }}</b>:
     <span class="entry-total" ng-if="totalEntries > 0">
         {{ totalEntries }}
-        entrées dans
+        <ng-pluralize count="totalEntries" when="{'1': 'entrée', 'other': 'entrées'}"></ng-pluralize>
+        dans
         {{ totalDicos }}
-        dictionnaires
+        <ng-pluralize count="totalDicos" when="{'1': 'dictionnaire', 'other': 'dictionnaires'}"></ng-pluralize>
     </span>
 </h3>
