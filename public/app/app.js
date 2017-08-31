@@ -31,7 +31,7 @@
         });
 
         vm.apropos = false;
-         $scope.$watch(function() {
+        $scope.$watch(function() {
             if ($location.path() == "/apropos") {
                 return true;
             } else {
@@ -64,5 +64,10 @@
         $scope.$on('$viewContentLoaded', function(event) {
             $window.ga('send', 'pageview', { page: $location.url() });
         });
+
+        vm.wordOfTheDay = "";
+        $http.get("/api/wordoftheday").then(function(response) {
+            vm.wordOfTheDay = response.data;
+        })
     }
 })();

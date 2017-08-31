@@ -155,7 +155,9 @@
                     </div>
                 </form>
             </div>
-
+        </div>
+        <div style="text-align: center; margin-top: 50px;" ng-if="Main.atHome && Main.wordOfTheDay != ''">
+            <h3>Notre mot du jour : <a ng-href="/mot/{{Main.wordOfTheDay}}">{{Main.wordOfTheDay}}</a></h3>
         </div>
 
     </div>

@@ -39,6 +39,12 @@ type config struct {
 	Debug            bool   `json:"debug"`
 }
 
+// Words of the day
+type wordOfTheDay struct {
+	Headword string `json:"headword"`
+	Date     string `json:"date"`
+}
+
 // Results to export
 type Results struct {
 	Headword         string         `json:"headword"`
@@ -233,6 +239,25 @@ var appCSS = []string{
 var indexHTML, mainJS, mainCSS = getIndexHTML()
 
 var fuzzySearchParams = levenshtein.NewParams()
+
+var wordsOfTheDay = loadWordsOfTheDay()
+
+func loadWordsOfTheDay() map[string]string {
+	wordOfTheDayFile, err := os.Open("words_of_the_day.json")
+	if err != nil {
+		fmt.Println("opening words of the day file", err.Error())
+	}
+	var wordList []wordOfTheDay
+	jsonParser := json.NewDecoder(wordOfTheDayFile)
+	if err = jsonParser.Decode(&wordList); err != nil {
+		fmt.Println("parsing word of the day file", err.Error())
+	}
+	dateToWords := make(map[string]string)
+	for _, wordElement := range wordList {
+		dateToWords[wordElement.Date] = wordElement.Headword
+	}
+	return dateToWords
+}
 
 func getIndexHTML() (string, string, string) {
 	t := time.Now()
@@ -626,13 +651,8 @@ func submitDefinition(c echo.Context) error {
 		}
 
 		userSubmission = append(userSubmission, newSubmission)
-		serializedSubmission, jsonError := json.Marshal(userSubmission)
-		if jsonError != nil {
-			fmt.Println(jsonError)
-		}
-
 		update := "UPDATE headwords SET user_submit=$1 WHERE headword=$2"
-		_, updateErr := pool.Exec(update, serializedSubmission, headword)
+		_, updateErr := pool.Exec(update, userSubmission, headword)
 		if updateErr != nil {
 			fmt.Println(updateErr)
 			message := map[string]string{"message": "error"}
@@ -640,16 +660,12 @@ func submitDefinition(c echo.Context) error {
 		}
 	} else {
 		var userSubmission = []UserSubmit{newSubmission}
-		serializedSubmission, jsonError := json.Marshal(userSubmission)
-		if jsonError != nil {
-			fmt.Println(jsonError)
-		}
-		dictionaries, _ := json.Marshal(map[string][]string{})
-		synonyms, _ := json.Marshal([]string{})
-		antonyms, _ := json.Marshal([]string{})
-		examples, _ := json.Marshal([]Example{})
+		dictionaries := make(map[string][]string)
+		synonyms := []string{}
+		antonyms := []string{}
+		examples := []Example{}
 		insert := "INSERT INTO headwords (headword, dictionaries, synonyms, antonyms, user_submit, examples) VALUES ($1, $2, $3, $4, $5, $6)"
-		_, insertErr := pool.Exec(insert, headword, dictionaries, synonyms, antonyms, serializedSubmission, examples)
+		_, insertErr := pool.Exec(insert, headword, dictionaries, synonyms, antonyms, userSubmission, examples)
 		if insertErr != nil {
 			fmt.Println(insertErr)
 			message := map[string]string{"message": "error"}
@@ -710,13 +726,8 @@ func submitExample(c echo.Context) error {
 		score := 0
 		timeStamp := convertTimeStampToString(strings.Split(time.Now().String(), " ")[0])
 		userExamples = append(userExamples, Example{example, link, score, id, source, true, timeStamp})
-		serializedSubmission, jsonError := json.Marshal(userExamples)
-		if jsonError != nil {
-			fmt.Println(jsonError)
-		}
-
 		update := "UPDATE headwords SET examples=$1 WHERE headword=$2"
-		_, updateErr := pool.Exec(update, serializedSubmission, headword)
+		_, updateErr := pool.Exec(update, userExamples, headword)
 		if updateErr != nil {
 			fmt.Println(updateErr)
 			message := map[string]string{"message": "error"}
@@ -796,13 +807,8 @@ func submitNym(c echo.Context) error {
 			return c.JSON(http.StatusOK, message)
 		}
 		nyms = append(nyms, nym)
-		serializedSubmission, jsonError := json.Marshal(nyms)
-		if jsonError != nil {
-			fmt.Println(jsonError)
-		}
-
 		update := fmt.Sprintf("UPDATE headwords SET %s=$1 WHERE headword=$2", typeOfNym)
-		_, updateErr := pool.Exec(update, serializedSubmission, headword)
+		_, updateErr := pool.Exec(update, nyms, headword)
 		if updateErr != nil {
 			fmt.Println(updateErr)
 			message := map[string]string{"message": "error"}
@@ -899,6 +905,12 @@ func main() {
 	e.GET("/api/vote/:headword/:id/:vote", voteForExample)
 	e.POST("/api/submitExample", submitExample)
 	e.POST("/api/submitNym", submitNym)
+	e.GET("/api/wordoftheday", func(c echo.Context) error {
+		date := strings.Split(time.Now().String(), " ")[0]
+		println(date)
+		word := wordsOfTheDay[date]
+		return c.JSON(http.StatusOK, word)
+	})
 
 	// Start server
 	e.Logger.Fatal(e.StartAutoTLS(":443"))
