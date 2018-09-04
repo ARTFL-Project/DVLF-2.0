@@ -37,6 +37,8 @@ type config struct {
 	DatabaseUser     string `json:"user"`
 	DatabasePassword string `json:"password"`
 	Debug            bool   `json:"debug"`
+	TwitterUser      string `json:"twitterUser"`
+	TwitterPassword  string `json:"twitterPassword"`
 }
 
 // Words of the day
