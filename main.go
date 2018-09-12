@@ -26,9 +26,9 @@ import (
 	"github.com/agext/levenshtein"
 	"github.com/jackc/pgx"
 	"github.com/kennygrant/sanitize"
-	"github.com/tdewolff/minify"
-	"github.com/tdewolff/minify/css"
-	"github.com/tdewolff/minify/js"
+	// "github.com/tdewolff/minify"
+	// "github.com/tdewolff/minify/css"
+	// "github.com/tdewolff/minify/js"
 )
 
 // App config
@@ -39,6 +39,7 @@ type config struct {
 	Debug            bool   `json:"debug"`
 	TwitterUser      string `json:"twitterUser"`
 	TwitterPassword  string `json:"twitterPassword"`
+	RecaptchaSecret  string `json:"recaptchaSecret"`
 }
 
 // Words of the day
@@ -245,7 +246,7 @@ var appCSS = []string{
 	"static/css/style.css",
 }
 
-var indexHTML, mainJS, mainCSS = getIndexHTML()
+var indexHTML = getIndexHTML()
 
 var fuzzySearchParams = levenshtein.NewParams()
 
@@ -268,79 +269,79 @@ func loadWordsOfTheDay() map[string]string {
 	return dateToWords
 }
 
-func getIndexHTML() (string, string, string) {
-	t := time.Now()
-	secs := t.Unix()
-	suffix := strconv.Itoa(int(secs))
-	dvlfCSSPath := fmt.Sprintf("public/static/css/dvlf-%s.css", suffix)
-	dvlfJsPath := fmt.Sprintf("public/static/js/dvlf-%s.js", suffix)
-	indexByte, _ := ioutil.ReadFile("public/index.html")
+func getIndexHTML() string {
+	// t := time.Now()
+	// secs := t.Unix()
+	// suffix := strconv.Itoa(int(secs))
+	// dvlfCSSPath := fmt.Sprintf("public/static/css/dvlf-%s.css", suffix)
+	// dvlfJsPath := fmt.Sprintf("public/static/js/dvlf-%s.js", suffix)
+	indexByte, _ := ioutil.ReadFile("public/dist/index.html")
 	index := string(indexByte)
-	cssPaths := ""
-	javascript := ""
-	if webConfig.Debug == true {
-		for _, jsFile := range appJs {
-			javascript += fmt.Sprintf("<script src='%s'></script>", jsFile)
-		}
-		for _, cssFile := range appCSS {
-			cssPaths += fmt.Sprintf("<link href='%s' rel='stylesheet'>", cssFile)
-		}
-	} else {
-		m := minify.New()
-		m.AddFunc("text/css", css.Minify)
-		m.AddFunc("text/javascript", js.Minify)
-		jsCode := ""
-		for _, jsFile := range appJs {
-			jsByte, _ := ioutil.ReadFile(fmt.Sprintf("public/%s", jsFile))
-			jsString := string(jsByte)
-			minifiedJs, err := m.String("text/javascript", jsString)
-			if err != nil {
-				fmt.Println(err)
-			}
-			jsCode += minifiedJs
-		}
-		if _, notExists := os.Stat(dvlfJsPath); notExists == nil {
-			os.Remove(dvlfJsPath)
-		}
-		f, err := os.Create(dvlfJsPath)
-		if err != nil {
-			fmt.Println(err)
-		}
-		defer f.Close()
-		_, writeErr := f.WriteString(jsCode)
-		if writeErr != nil {
-			fmt.Println(writeErr)
-		}
-		f.Sync()
-		cssCode := ""
-		for _, cssFile := range appCSS {
-			cssByte, _ := ioutil.ReadFile(fmt.Sprintf("public/%s", cssFile))
-			cssString := string(cssByte)
-			minifiedCSS, err := m.String("text/css", cssString)
-			if err != nil {
-				fmt.Println(err)
-			}
-			cssCode += minifiedCSS
-		}
-		if _, notExists := os.Stat(dvlfCSSPath); notExists == nil {
-			os.Remove(dvlfCSSPath)
-		}
-		c, err := os.Create(dvlfCSSPath)
-		if err != nil {
-			fmt.Println(err)
-		}
-		defer c.Close()
-		_, cssWriteErr := c.WriteString(cssCode)
-		if cssWriteErr != nil {
-			fmt.Println(cssWriteErr)
-		}
-		c.Sync()
-		javascript = fmt.Sprintf("<script async src='static/js/dvlf-%s.js'></script>", suffix)
-		cssPaths = fmt.Sprintf("<link href='static/css/dvlf-%s.css' rel='stylesheet'>", suffix)
-	}
-	index = strings.Replace(index, "$APP_CSS$", cssPaths, 1)
-	index = strings.Replace(index, "$APP_SCRIPTS$", javascript, 1)
-	return index, dvlfJsPath, dvlfCSSPath
+	// cssPaths := ""
+	// javascript := ""
+	// if webConfig.Debug == true {
+	// for _, jsFile := range appJs {
+	// 	javascript += fmt.Sprintf("<script src='%s'></script>", jsFile)
+	// }
+	// for _, cssFile := range appCSS {
+	// 	cssPaths += fmt.Sprintf("<link href='%s' rel='stylesheet'>", cssFile)
+	// }
+	// } else {
+	// m := minify.New()
+	// m.AddFunc("text/css", css.Minify)
+	// m.AddFunc("text/javascript", js.Minify)
+	// jsCode := ""
+	// for _, jsFile := range appJs {
+	// 	jsByte, _ := ioutil.ReadFile(fmt.Sprintf("public/%s", jsFile))
+	// 	jsString := string(jsByte)
+	// 	minifiedJs, err := m.String("text/javascript", jsString)
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	}
+	// 	jsCode += minifiedJs
+	// }
+	// if _, notExists := os.Stat(dvlfJsPath); notExists == nil {
+	// 	os.Remove(dvlfJsPath)
+	// }
+	// f, err := os.Create(dvlfJsPath)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// defer f.Close()
+	// _, writeErr := f.WriteString(jsCode)
+	// if writeErr != nil {
+	// 	fmt.Println(writeErr)
+	// }
+	// f.Sync()
+	// cssCode := ""
+	// for _, cssFile := range appCSS {
+	// 	cssByte, _ := ioutil.ReadFile(fmt.Sprintf("public/%s", cssFile))
+	// 	cssString := string(cssByte)
+	// 	minifiedCSS, err := m.String("text/css", cssString)
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	}
+	// 	cssCode += minifiedCSS
+	// }
+	// 	if _, notExists := os.Stat(dvlfCSSPath); notExists == nil {
+	// 		os.Remove(dvlfCSSPath)
+	// 	}
+	// 	c, err := os.Create(dvlfCSSPath)
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	}
+	// 	defer c.Close()
+	// 	_, cssWriteErr := c.WriteString(cssCode)
+	// 	if cssWriteErr != nil {
+	// 		fmt.Println(cssWriteErr)
+	// 	}
+	// 	c.Sync()
+	// 	javascript = fmt.Sprintf("<script async src='static/js/dvlf-%s.js'></script>", suffix)
+	// 	cssPaths = fmt.Sprintf("<link href='static/css/dvlf-%s.css' rel='stylesheet'>", suffix)
+	// }
+	// index = strings.Replace(index, "$APP_CSS$", cssPaths, 1)
+	// index = strings.Replace(index, "$APP_SCRIPTS$", javascript, 1)
+	return index
 }
 
 func loadConfig() config {
@@ -620,7 +621,7 @@ func query(c echo.Context) error {
 
 func recaptchaValidate(recaptchaResponse string) (r RecaptchaResponse) {
 	resp, err := http.PostForm("https://www.google.com/recaptcha/api/siteverify",
-		url.Values{"secret": {"6LfhfycTAAAAANpoGOMqHlrhPBQlQoAZwy_O-J5-"}, "response": {recaptchaResponse}})
+		url.Values{"secret": {webConfig.RecaptchaSecret}, "response": {recaptchaResponse}})
 	if err != nil {
 		fmt.Printf("Post error: %s\n", err)
 	}
@@ -886,8 +887,9 @@ func main() {
 	// Echo instance
 	e := echo.New()
 
-	e.Static("/static", "public/static")
-	e.Static("/app", "public/app")
+	e.Static("/css", "public/dist/css")
+	e.Static("/js", "public/dist/js")
+	e.Static("/img", "public/dist/img")
 
 	e.File("/dvlf.ico", "public/static/images/dvlf.ico")
 
@@ -919,14 +921,14 @@ func main() {
 	e.GET("/synonyme", index)
 	e.GET("/antonyme", index)
 
-	e.GET("/static/js/dvlf*", func(c echo.Context) error {
-		c.Response().Header().Add("Cache-Control", "max-age=946080000")
-		return c.File(mainJS)
-	})
-	e.GET("/static/css/dvlf*", func(c echo.Context) error {
-		c.Response().Header().Add("Cache-Control", "max-age=946080000")
-		return c.File(mainCSS)
-	})
+	// e.GET("/css/*", func(c echo.Context) error {
+	// 	c.Response().Header().Add("Cache-Control", "max-age=946080000")
+	// 	return c.File(mainJS)
+	// })
+	// e.GET("/static/css/dvlf*", func(c echo.Context) error {
+	// 	c.Response().Header().Add("Cache-Control", "max-age=946080000")
+	// 	return c.File(mainCSS)
+	// })
 	e.GET("static/images/dvlf_logo_medium_no_beta_transparent.png", func(c echo.Context) error {
 		c.Response().Header().Add("Cache-Control", "max-age=2592000")
 		return c.File("public/static/images/dvlf_logo_medium_no_beta_transparent.png")

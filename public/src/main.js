@@ -6,7 +6,7 @@ import globalConfig from "../appConfig.json";
 
 Vue.prototype.$globalConfig = globalConfig;
 
-Vue.config.productionTip = false
+Vue.config.productionTip = true
 Vue.prototype.$http = axios;
 
 export const EventBus = new Vue(); // To pass messages between components
