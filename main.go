@@ -270,77 +270,8 @@ func loadWordsOfTheDay() map[string]string {
 }
 
 func getIndexHTML() string {
-	// t := time.Now()
-	// secs := t.Unix()
-	// suffix := strconv.Itoa(int(secs))
-	// dvlfCSSPath := fmt.Sprintf("public/static/css/dvlf-%s.css", suffix)
-	// dvlfJsPath := fmt.Sprintf("public/static/js/dvlf-%s.js", suffix)
 	indexByte, _ := ioutil.ReadFile("public/dist/index.html")
 	index := string(indexByte)
-	// cssPaths := ""
-	// javascript := ""
-	// if webConfig.Debug == true {
-	// for _, jsFile := range appJs {
-	// 	javascript += fmt.Sprintf("<script src='%s'></script>", jsFile)
-	// }
-	// for _, cssFile := range appCSS {
-	// 	cssPaths += fmt.Sprintf("<link href='%s' rel='stylesheet'>", cssFile)
-	// }
-	// } else {
-	// m := minify.New()
-	// m.AddFunc("text/css", css.Minify)
-	// m.AddFunc("text/javascript", js.Minify)
-	// jsCode := ""
-	// for _, jsFile := range appJs {
-	// 	jsByte, _ := ioutil.ReadFile(fmt.Sprintf("public/%s", jsFile))
-	// 	jsString := string(jsByte)
-	// 	minifiedJs, err := m.String("text/javascript", jsString)
-	// 	if err != nil {
-	// 		fmt.Println(err)
-	// 	}
-	// 	jsCode += minifiedJs
-	// }
-	// if _, notExists := os.Stat(dvlfJsPath); notExists == nil {
-	// 	os.Remove(dvlfJsPath)
-	// }
-	// f, err := os.Create(dvlfJsPath)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-	// defer f.Close()
-	// _, writeErr := f.WriteString(jsCode)
-	// if writeErr != nil {
-	// 	fmt.Println(writeErr)
-	// }
-	// f.Sync()
-	// cssCode := ""
-	// for _, cssFile := range appCSS {
-	// 	cssByte, _ := ioutil.ReadFile(fmt.Sprintf("public/%s", cssFile))
-	// 	cssString := string(cssByte)
-	// 	minifiedCSS, err := m.String("text/css", cssString)
-	// 	if err != nil {
-	// 		fmt.Println(err)
-	// 	}
-	// 	cssCode += minifiedCSS
-	// }
-	// 	if _, notExists := os.Stat(dvlfCSSPath); notExists == nil {
-	// 		os.Remove(dvlfCSSPath)
-	// 	}
-	// 	c, err := os.Create(dvlfCSSPath)
-	// 	if err != nil {
-	// 		fmt.Println(err)
-	// 	}
-	// 	defer c.Close()
-	// 	_, cssWriteErr := c.WriteString(cssCode)
-	// 	if cssWriteErr != nil {
-	// 		fmt.Println(cssWriteErr)
-	// 	}
-	// 	c.Sync()
-	// 	javascript = fmt.Sprintf("<script async src='static/js/dvlf-%s.js'></script>", suffix)
-	// 	cssPaths = fmt.Sprintf("<link href='static/css/dvlf-%s.css' rel='stylesheet'>", suffix)
-	// }
-	// index = strings.Replace(index, "$APP_CSS$", cssPaths, 1)
-	// index = strings.Replace(index, "$APP_SCRIPTS$", javascript, 1)
 	return index
 }
 
@@ -921,14 +852,6 @@ func main() {
 	e.GET("/synonyme", index)
 	e.GET("/antonyme", index)
 
-	// e.GET("/css/*", func(c echo.Context) error {
-	// 	c.Response().Header().Add("Cache-Control", "max-age=946080000")
-	// 	return c.File(mainJS)
-	// })
-	// e.GET("/static/css/dvlf*", func(c echo.Context) error {
-	// 	c.Response().Header().Add("Cache-Control", "max-age=946080000")
-	// 	return c.File(mainCSS)
-	// })
 	e.GET("static/images/dvlf_logo_medium_no_beta_transparent.png", func(c echo.Context) error {
 		c.Response().Header().Add("Cache-Control", "max-age=2592000")
 		return c.File("public/static/images/dvlf_logo_medium_no_beta_transparent.png")
