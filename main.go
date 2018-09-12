@@ -106,6 +106,13 @@ func (a ExamplesByID) Swap(i, j int) {
 	a[i], a[j] = a[j], a[i]
 }
 
+// Wordwheel data
+type Wordwheel struct {
+	Words      []string `json:"words"`
+	StartIndex int      `json:"startIndex"`
+	EndIndex   int      `json:"endIndex"`
+}
+
 // UserSubmit fields
 type UserSubmit struct {
 	Content string `json:"content"`
@@ -134,7 +141,7 @@ type RecaptchaResponse struct {
 	Success     bool      `json:"success"`
 	ChallengeTS time.Time `json:"challenge_ts"`
 	Hostname    string    `json:"hostname"`
-	ErrorCodes  []int     `json:"error-codes"`
+	ErrorCodes  []string  `json:"error-codes"`
 }
 
 // FuzzyResult is the result of fuzzy searching
@@ -536,19 +543,49 @@ func sortExamples(examples []Example) []Example {
 
 func getWordwheel(c echo.Context) error {
 	headword, _ := url.QueryUnescape(c.FormValue("headword"))
-	if _, ok := headwordMap[headword]; ok {
-		index := headwordMap[headword]
-		startIndex := index - 100
-		if startIndex < 0 {
-			startIndex = 0
+	startIndex, _ := url.QueryUnescape(c.FormValue("startIndex"))
+	endIndex, _ := url.QueryUnescape(c.FormValue("endIndex"))
+	if headword != "" {
+		if _, ok := headwordMap[headword]; ok {
+			index := headwordMap[headword]
+			startIndex := index - 100
+			if startIndex < 0 {
+				startIndex = 0
+			}
+			endIndex := index + 100
+			if endIndex > len(headwordList) {
+				endIndex = len(headwordList) - 1
+			}
+			return c.JSON(http.StatusOK, Wordwheel{headwordList[startIndex:endIndex], startIndex, endIndex})
 		}
-		endIndex := index + 100
-		if endIndex > len(headwordList) {
-			endIndex = len(headwordList) - 1
-		}
-		return c.JSON(http.StatusOK, headwordList[startIndex:endIndex])
+		return c.JSON(http.StatusOK, Wordwheel{headwordList[0:200], 0, 200})
+	} else if startIndex != "" {
+		startIndexInt, _ := strconv.Atoi(startIndex)
+		return getWordsBefore(c, startIndexInt)
 	}
-	return c.JSON(http.StatusOK, headwordList[0:200])
+	endIndexInt, _ := strconv.Atoi(endIndex)
+	return getWordsAfter(c, endIndexInt)
+
+}
+
+func getWordsBefore(c echo.Context, endIndex int) error {
+	var startIndex int
+	if endIndex-500 < 0 {
+		startIndex = 0
+	} else {
+		startIndex = endIndex - 500
+	}
+	return c.JSON(http.StatusOK, Wordwheel{headwordList[startIndex:endIndex], startIndex, endIndex})
+}
+
+func getWordsAfter(c echo.Context, startIndex int) error {
+	var endIndex int
+	if startIndex+500 > len(headwordList) {
+		endIndex = len(headwordList)
+	} else {
+		endIndex = startIndex + 500
+	}
+	return c.JSON(http.StatusOK, Wordwheel{headwordList[startIndex:endIndex], startIndex, endIndex})
 }
 
 func query(c echo.Context) error {
@@ -626,6 +663,7 @@ func convertTimeStampToString(timeStamp string) string {
 func submitDefinition(c echo.Context) error {
 	recaptchaCheck := recaptchaValidate(c.FormValue("recaptchaResponse"))
 	if recaptchaCheck.Success == false {
+		fmt.Println(recaptchaCheck)
 		message := map[string]string{"message": "Recaptcha error"}
 		return c.JSON(http.StatusOK, message)
 	}
@@ -856,6 +894,9 @@ func main() {
 	e.Debug = webConfig.Debug
 
 	// Middleware
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowHeaders: []string{"*"},
+	}))
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.GzipWithConfig(middleware.GzipConfig{
