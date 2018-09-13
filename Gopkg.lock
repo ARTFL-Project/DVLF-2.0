@@ -89,32 +89,6 @@
   version = "v0.8.0"
 
 [[projects]]
-  digest = "1:540311f8c2ea16e1f45d55f44d564a11e3204f77031031fbf89f8c8326b82e44"
-  name = "github.com/tdewolff/minify"
-  packages = [
-    ".",
-    "css",
-    "js",
-  ]
-  pruneopts = "UT"
-  revision = "8d72a4127ae33b755e95bffede9b92e396267ce2"
-  version = "v2.3.5"
-
-[[projects]]
-  digest = "1:b59962594a3a87b2756c1222df30658e771cedfcd22e51dfcb0f8841274e4ec6"
-  name = "github.com/tdewolff/parse"
-  packages = [
-    ".",
-    "buffer",
-    "css",
-    "js",
-    "strconv",
-  ]
-  pruneopts = "UT"
-  revision = "d739d6fccb0971177e06352fea02d3552625efb1"
-  version = "v2.3.3"
-
-[[projects]]
   branch = "master"
   digest = "1:c468422f334a6b46a19448ad59aaffdfc0a36b08fdcc1c749a0b29b6453d7e59"
   name = "github.com/valyala/bytebufferpool"
@@ -189,9 +163,6 @@
     "github.com/kennygrant/sanitize",
     "github.com/labstack/echo",
     "github.com/labstack/echo/middleware",
-    "github.com/tdewolff/minify",
-    "github.com/tdewolff/minify/css",
-    "github.com/tdewolff/minify/js",
     "golang.org/x/crypto/acme/autocert",
     "golang.org/x/text/collate",
     "golang.org/x/text/language",

@@ -26,9 +26,6 @@ import (
 	"github.com/agext/levenshtein"
 	"github.com/jackc/pgx"
 	"github.com/kennygrant/sanitize"
-	// "github.com/tdewolff/minify"
-	// "github.com/tdewolff/minify/css"
-	// "github.com/tdewolff/minify/js"
 )
 
 // App config
