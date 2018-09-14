@@ -19,39 +19,41 @@
                 Aucun terme similaire dans l'index
             </div>
         </div>
-        <div class="panel panel-default dico" style="margin-top: 15px" v-for="(dico, dicoIndex) in results.data" :key="dicoIndex">
-            <div class="row dico-title">
-                <div class="col-xs-1 arrow" @click="toggleEntry(dicoIndex)">
-                    <span class="glyphicon glyphicon-menu-down" v-show="dico.show"></span>
-                    <span class="glyphicon glyphicon-menu-right" v-show="!dico.show"></span>
+        <transition-group appear name="fade">
+            <div class="panel panel-default dico" style="margin-top: 15px; animation-duration: 0.4s" v-for="(dico, dicoIndex) in results.data" :key="dicoIndex">
+                <div class="row dico-title">
+                    <div class="col-xs-1 arrow" @click="toggleEntry(dicoIndex)">
+                        <span class="glyphicon glyphicon-menu-down" v-show="dico.show"></span>
+                        <span class="glyphicon glyphicon-menu-right" v-show="!dico.show"></span>
+                    </div>
+                    <div class="col-xs-11 dico-label" @click="toggleEntry(dicoIndex)">
+                        <span class="hidden-xs hidden-sm">
+                            {{ dico.label }}
+                        </span>
+                        <span class="hidden-md hidden-lg">
+                            {{ dico.shortLabel }}
+                        </span>
+                        <span class="badge pull-right">{{ dico.contentObj.length }}</span>
+                    </div>
                 </div>
-                <div class="col-xs-11 dico-label" @click="toggleEntry(dicoIndex)">
-                    <span class="hidden-xs hidden-sm">
-                        {{ dico.label }}
-                    </span>
-                    <span class="hidden-md hidden-lg">
-                        {{ dico.shortLabel }}
-                    </span>
-                    <span class="badge pull-right">{{ dico.contentObj.length }}</span>
+                <div class="dico-entries" :class="{showdico: dico.show}">
+                    <div class="entry" style="padding-right: 10px" v-for="(entry, index) in dico.contentObj" :key="index" :class="{'tlfi': dico.name === 'tlfi'}">
+                        <div v-html="entry.content"></div>
+                        <div class="example-source" v-if="entry.date">Contribuée le {{ entry.date}}</div>
+                        <hr v-if="!index == dico.contentObj.length-1" style="width: 50%; margin-top: 15px; margin-bottom: 5px; border-color: #ddd;">
+                    </div>
+                    <div class="tlfi-link" v-if="dico.name === 'tlfi'">
+                        <a :href="`http://www.cnrtl.fr/definition/{encodeURIComponent(Results.currentTerm)}`" target="_blank">=> Voir la définition complète au CNRTL</a>
+                    </div>
+                </div>
+                <div style="margin: 10px 10px 10px 10px" v-if="dico.name === 'userSubmit'">
+                    <button class="btn btn-default" type="button" @click="define()">
+                        <span class="glyphicon glyphicon-plus add-button"></span>
+                        Ajoutez votre définition
+                    </button>
                 </div>
             </div>
-            <div class="dico-entries" :class="{showdico: dico.show}">
-                <div class="entry" style="padding-right: 10px" v-for="(entry, index) in dico.contentObj" :key="index" :class="{'tlfi': dico.name === 'tlfi'}">
-                    <div v-html="entry.content"></div>
-                    <div class="example-source" v-if="entry.date">Contribuée le {{ entry.date}}</div>
-                    <hr v-if="!index == dico.contentObj.length-1" style="width: 50%; margin-top: 15px; margin-bottom: 5px; border-color: #ddd;">
-                </div>
-                <div class="tlfi-link" v-if="dico.name === 'tlfi'">
-                    <a :href="`http://www.cnrtl.fr/definition/{encodeURIComponent(Results.currentTerm)}`" target="_blank">=> Voir la définition complète au CNRTL</a>
-                </div>
-            </div>
-            <div style="margin: 10px 10px 10px 10px" v-if="dico.name === 'userSubmit'">
-                <button class="btn btn-default" type="button" @click="define()">
-                    <span class="glyphicon glyphicon-plus add-button"></span>
-                    Ajoutez votre définition
-                </button>
-            </div>
-        </div>
+        </transition-group>
     </div>
 </template>
 
@@ -227,6 +229,11 @@ export default {
 
 .tlfi-link a {
     cursor: pointer;
+}
+.badge {
+    background-color: #fff;
+    color: rgb(21, 95, 131);
+    font-family: initial;
 }
 </style>
 

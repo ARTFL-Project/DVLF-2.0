@@ -25,7 +25,6 @@ export default {
 
 <style>
 body {
-    /* font-size: 160%; */
     counter-reset: section;
     /* Set the section counter to 0 */
 }

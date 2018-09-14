@@ -1,13 +1,15 @@
 <template>
-    <div class="panel panel-default" style="padding: 10px; margin-top: 15px;">
-        <div class="row" v-if="!atHome">
+    <div style="padding: 10px; margin-top: 15px;">
+        <div class="row">
             <div class="col-xs-12 col-sm-offset-3 col-sm-6">
-                <h3 :class="{'hide-results': apropos}" style="text-align: center;">
-                    <b>{{ currentTerm }}</b>:
-                    <span class="entry-total" v-if="totalResults > 0">
-                        {{ totalResults }} {{ pluralize("entrée", totalResults) }} dans {{ totalDicos }} {{ pluralize("dictionnaire", totalDicos) }}
-                    </span>
-                </h3>
+                <transition name="fade">
+                    <h3 :class="{'hide-results': apropos}" style="text-align: center; animation-duration: 0.4s" v-show="!loading">
+                        <b>{{ currentTerm }}</b>:
+                        <span class="entry-total" v-show="totalResults > 0">
+                            {{ totalResults }} {{ pluralize("entrée", totalResults) }} dans {{ totalDicos }} {{ pluralize("dictionnaire", totalDicos) }}
+                        </span>
+                    </h3>
+                </transition>
             </div>
             <div class="col-xs-12 col-sm-3" style="margin-top: 15px">
                 <div class="pull-right hidden-xs">
@@ -60,19 +62,23 @@
         </div>
         <div id="results" class="row">
             <div class="hidden-xs col-sm-3 col-md-2" style="margin-top: 15px;">
-                <word-wheel :headword="currentTerm"></word-wheel>
+                <transition name="fade">
+                    <word-wheel :headword="currentTerm" v-if="!loading" style="animation-duration: 0.4s"></word-wheel>
+                </transition>
             </div>
             <div class="col-xs-12 col-sm-6 col-md-7 col-lg-7" v-if="totalResults > 0">
                 <dictionary-entries :results="results.dictionaries" :fuzzy-results="results.fuzzyResults"></dictionary-entries>
                 <syn-anto-nyms class="hidden-sm hidden-md hidden-lg" :synonyms="results.synonyms" :antonyms="results.antonyms"></syn-anto-nyms>
                 <examples :examples="results.examples"></examples>
             </div>
-            <div class="hidden-xs col-sm-3 col-md-3 col-lg-3" style="margin-top: 15px;" v-if="totalResults > 0">
-                <syn-anto-nyms :synonyms="results.synonyms" :antonyms="results.antonyms"></syn-anto-nyms>
-                <collocations :collocates="results.collocates" :headword="currentTerm"></collocations>
-                <nearest-neighbors :nearest-neighbors="results.nearestNeighbors" :headword="currentTerm"></nearest-neighbors>
-                <time-series :time-series="results.timeSeries" :headword="currentTerm"></time-series>
-            </div>
+            <transition name="fade">
+                <div class="hidden-xs col-sm-3 col-md-3 col-lg-3" style="margin-top: 15px; animation-duration: 0.4s" v-if="totalResults > 0">
+                    <syn-anto-nyms :synonyms="results.synonyms" :antonyms="results.antonyms"></syn-anto-nyms>
+                    <collocations :collocates="results.collocates" :headword="currentTerm"></collocations>
+                    <nearest-neighbors :nearest-neighbors="results.nearestNeighbors" :headword="currentTerm"></nearest-neighbors>
+                    <time-series :time-series="results.timeSeries" :headword="currentTerm"></time-series>
+                </div>
+            </transition>
         </div>
     </div>
 </template>
@@ -86,6 +92,7 @@ import TimeSeries from "./TimeSeries.vue"
 import Examples from "./Examples.vue"
 import WordWheel from "./WordWheel.vue"
 import { EventBus } from "../main.js"
+require("vue2-animate/dist/vue2-animate.min.css")
 
 export default {
     name: "Results",
@@ -105,7 +112,8 @@ export default {
             totalResults: 0,
             totalDicos: 0,
             atHome: true,
-            apropos: false
+            apropos: false,
+            loading: true
         }
     },
     created() {
@@ -129,6 +137,7 @@ export default {
                     this.results = response.data
                     this.totalResults = this.results.dictionaries.totalEntries
                     this.totalDicos = this.results.dictionaries.totalDicos
+                    this.loading = false
                 })
                 .catch(error => {
                     this.error = error.toString()

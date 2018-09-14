@@ -2,11 +2,9 @@
     <div id="wordwheel" class="panel panel-default">
         <h4 class="index">Index</h4>
         <div class="list-group">
-            <button type="button" id="up" class="btn btn-default" @click="addBefore()">&#8679;</button>
             <router-link :to="`/mot/${word}`" :id="word" class="list-group-item wordwheel-item" :href="`/mot/${word}`" :class="{'active': word === headword}" v-for="(word, index) in wordwheel" :key="index">
                 {{ word }}
             </router-link>
-            <button type="button" id="down" class="btn btn-default" @click="addAfter()">&#8679;</button>
         </div>
     </div>
 </template>
@@ -25,7 +23,15 @@ export default {
             firstLoad: true,
             startIndex: 0,
             endIndex: 0,
-            currentFirst: null
+            currentFirst: null,
+            loading: false,
+            upperLimit: 2000
+        }
+    },
+    computed: {
+        lowerLimit: function() {
+            let wordwheelSize = this.wordwheel.length || 0
+            return wordwheelSize * 40 - 3000
         }
     },
     created() {
@@ -33,6 +39,7 @@ export default {
     },
     methods: {
         fetchData() {
+            this.loading = true
             let vm = this
             this.$http
                 .get(
@@ -60,6 +67,8 @@ export default {
                             .getElementById("wordwheel")
                             .querySelector(".active")
                         VueScrollTo.scrollTo(element, options)
+                        vm.loading = false
+                        vm.infiniteScroll()
                     })
                 })
                 .catch(error => {
@@ -67,23 +76,50 @@ export default {
                     console.log(error)
                 })
         },
-        addBefore() {
-            this.currentFirst = this.wordwheel[0]
+        infiniteScroll() {
             var vm = this
-            this.$http
+            this.$nextTick(function() {
+                let wordWheel = this.$el.querySelector(".list-group")
+                let timeout
+                wordWheel.onscroll = function() {
+                    if (timeout) {
+                        window.clearTimeout(timeout)
+                    }
+
+                    timeout = window.setTimeout(function() {
+                        let scrollPosition = wordWheel.scrollTop
+                        if (!vm.loading && !vm.firstLoad) {
+                            if (scrollPosition < vm.upperLimit) {
+                                vm.addBefore(vm)
+                            } else if (scrollPosition > vm.lowerLimit) {
+                                vm.addAfter(vm)
+                            }
+                        }
+                        if (vm.firstLoad) {
+                            vm.firstLoad = false
+                        }
+                    }, 2)
+                }
+            })
+        },
+        addBefore(vm) {
+            vm.loading = true
+            vm.currentFirst = vm.wordwheel[50] // We get the 50st since this where we trigger the load (50*40px)
+            vm.$http
                 .get(
-                    `${this.$globalConfig.apiServer}/api/wordwheel?startIndex=${
-                        this.startIndex
+                    `${vm.$globalConfig.apiServer}/api/wordwheel?startIndex=${
+                        vm.startIndex
                     }`
                 )
                 .then(function(response) {
                     vm.wordwheel.unshift(...response.data.words)
                     vm.startIndex = response.data.startIndex
                     vm.endIndex = response.data.endIndex
+                    vm.loading = false
                     vm.$nextTick(function() {
                         let options = {
                             container: "#wordwheel .list-group",
-                            duration: 10,
+                            duration: 1,
                             offset: -24
                         }
                         let element = document.getElementById(vm.currentFirst)
@@ -91,25 +127,26 @@ export default {
                     })
                 })
                 .catch(error => {
-                    this.error = error.toString()
+                    vm.error = error.toString()
                     console.log(error)
                 })
         },
-        addAfter() {
-            var vm = this
-            this.$http
+        addAfter(vm) {
+            vm.loading = true
+            vm.$http
                 .get(
-                    `${this.$globalConfig.apiServer}/api/wordwheel?endIndex=${
-                        this.endIndex
+                    `${vm.$globalConfig.apiServer}/api/wordwheel?endIndex=${
+                        vm.endIndex
                     }`
                 )
                 .then(function(response) {
                     vm.wordwheel.push(...response.data.words)
                     vm.startIndex = response.data.startIndex
                     vm.endIndex = response.data.endIndex
+                    vm.loading = false
                 })
                 .catch(error => {
-                    this.error = error.toString()
+                    vm.error = error.toString()
                     console.log(error)
                 })
         }

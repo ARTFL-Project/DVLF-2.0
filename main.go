@@ -339,9 +339,9 @@ func autoComplete(c echo.Context) error {
 	prefix, _ := url.QueryUnescape(c.Param("prefix"))
 	prefix = strings.TrimSpace(prefix)
 	prefix = strings.ToLower(prefix)
-	prefix += "%"
+	likePrefix := prefix + "%"
 	query := "SELECT headword FROM headwords WHERE headword LIKE $1 ORDER BY headword LIMIT 10"
-	rows, err := pool.Query(query, prefix)
+	rows, err := pool.Query(query, likePrefix)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -355,6 +355,8 @@ func autoComplete(c echo.Context) error {
 		if err != nil {
 			fmt.Println(err)
 		}
+		remainder := strings.Replace(headword, prefix, "", 1)
+		headword = fmt.Sprintf("<span class=\"highlight\">%s</span>%s", prefix, remainder)
 		headwords = append(headwords, AutoCompleteHeadword{headword})
 	}
 	results := make(map[string]AutoCompleteList)
@@ -819,7 +821,7 @@ func main() {
 	e.Static("/js", "public/dist/js")
 	e.Static("/img", "public/dist/img")
 
-	e.File("/dvlf.ico", "public/static/images/dvlf.ico")
+	e.File("/dvlf.ico", "public/dist/img/dvlf.ico")
 
 	e.Debug = webConfig.Debug
 

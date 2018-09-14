@@ -1,26 +1,28 @@
 <template>
-    <div id="examples" class="panel panel-default">
-        <div id="examples-title">
-            Exemples d'utilisation
-        </div>
-        <div class="panel panel-default example" v-for="(example, index) in examples" :key="index">
-            <div class="example-score">
-                <span class="glyphicon glyphicon-circle-arrow-up up" @click="vote(example.id, 'up')"></span>
-                <span :id="example.id">{{ example.score }}</span>
-                <span class="glyphicon glyphicon-circle-arrow-down down" @click="vote(example.id, 'down')"></span>
+    <transition appear name="fade">
+        <div id="examples" class="panel panel-default" style="animation-duration: 0.4s">
+            <div id="examples-title">
+                Exemples d'utilisation
             </div>
-            <div class="example-content" v-html="example.content"></div>
-            <div class="example-source" v-if="example.source">Source trouvée sur:
-                <a :href="example.link" target="_blank" v-if="example.link != 'http://'">{{ example.source }}</a>
-                <span v-if="example.link == 'http://'">{{ example.source }}</span>
+            <div class="panel panel-default example" v-for="(example, index) in examples" :key="index">
+                <div class="example-score">
+                    <span class="glyphicon glyphicon-circle-arrow-up up" @click="vote(example.id, 'up')"></span>
+                    <span :id="example.id">{{ example.score }}</span>
+                    <span class="glyphicon glyphicon-circle-arrow-down down" @click="vote(example.id, 'down')"></span>
+                </div>
+                <div class="example-content" v-html="example.content"></div>
+                <div class="example-source" v-if="example.source">Source trouvée sur:
+                    <a :href="example.link" target="_blank" v-if="example.link != 'http://'">{{ example.source }}</a>
+                    <span v-if="example.link == 'http://'">{{ example.source }}</span>
+                </div>
+                <div class="example-source" v-if="example.date">Contribué le {{ example.date }}</div>
             </div>
-            <div class="example-source" v-if="example.date">Contribué le {{ example.date }}</div>
+            <button class="btn btn-default" style="margin: 0 10px 10px 10px" type="button" @click="addExample()">
+                <span class="glyphicon glyphicon-plus add-button"></span>
+                Ajoutez votre exemple
+            </button>
         </div>
-        <button class="btn btn-default" style="margin: 0 10px 10px 10px" type="button" @click="addExample()">
-            <span class="glyphicon glyphicon-plus add-button"></span>
-            Ajoutez votre exemple
-        </button>
-    </div>
+    </transition>
 </template>
 
 <script>
