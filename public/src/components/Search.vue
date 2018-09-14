@@ -64,6 +64,11 @@ export default {
         EventBus.$on("OffHome", function() {
             vm.atHome = false
         })
+        this.$http(`${this.$globalConfig.apiServer}/api/wordoftheday`).then(
+            function(response) {
+                vm.wordOfTheDay = response.data
+            }
+        )
     },
     methods: {
         search() {
@@ -122,7 +127,6 @@ export default {
             this.arrowCounter = -1
         },
         handleClickOutside(evt) {
-            console.log("hey")
             if (!this.$el.contains(evt.target)) {
                 this.isOpen = false
                 this.arrowCounter = -1
