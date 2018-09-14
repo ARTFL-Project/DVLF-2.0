@@ -24,10 +24,10 @@
                 </form>
             </div>
         </div>
-        <div style="text-align: center; margin-top: 50px;" v-if="atHome">
-            <h3>Notre mot du jour :
+        <div style="text-align: center; margin-top: 10px;" v-if="atHome">
+            <h4>Notre mot du jour :
                 <router-link :to="`/mot/${wordOfTheDay}`">{{wordOfTheDay}}</router-link>
-            </h3>
+            </h4>
         </div>
     </div>
 </template>
