@@ -66,13 +66,13 @@
                     <word-wheel :headword="currentTerm" v-if="!loading" style="animation-duration: 0.4s"></word-wheel>
                 </transition>
             </div>
-            <div class="col-xs-12 col-sm-6 col-md-7 col-lg-7" v-if="totalResults > 0">
+            <div class="col-xs-12 col-sm-6 col-md-7 col-lg-7" v-if="!loading">
                 <dictionary-entries :results="results.dictionaries" :fuzzy-results="results.fuzzyResults"></dictionary-entries>
                 <syn-anto-nyms class="hidden-sm hidden-md hidden-lg" :synonyms="results.synonyms" :antonyms="results.antonyms"></syn-anto-nyms>
                 <examples :examples="results.examples"></examples>
             </div>
             <transition name="fade">
-                <div class="hidden-xs col-sm-3 col-md-3 col-lg-3" style="margin-top: 15px; animation-duration: 0.4s" v-if="totalResults > 0">
+                <div class="hidden-xs col-sm-3 col-md-3 col-lg-3" style="margin-top: 15px; animation-duration: 0.4s" v-if="!loading">
                     <syn-anto-nyms :synonyms="results.synonyms" :antonyms="results.antonyms"></syn-anto-nyms>
                     <collocations :collocates="results.collocates" :headword="currentTerm"></collocations>
                     <nearest-neighbors :nearest-neighbors="results.nearestNeighbors" :headword="currentTerm"></nearest-neighbors>
@@ -121,6 +121,7 @@ export default {
     },
     methods: {
         fetchData() {
+            this.loading = true
             let query = `${
                 this.$globalConfig.apiServer
             }/api/mot/${this.$route.params.queryTerm.trim()}`

@@ -1,5 +1,5 @@
 <template>
-    <div id="nearest-neighbors" ng-if="nearestNeighbors.length > 0">
+    <div id="nearest-neighbors" v-if="nearestNeighbors.length > 0">
         <div class="panel panel-default">
             <h4 class="nym-title">Mots associés</h4>
             <span id="nn-title">Mots les plus associés à

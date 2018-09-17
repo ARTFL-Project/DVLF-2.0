@@ -489,7 +489,20 @@ func getWordwheel(c echo.Context) error {
 			}
 			return c.JSON(http.StatusOK, Wordwheel{headwordList[startIndex:endIndex], startIndex, endIndex})
 		}
-		return c.JSON(http.StatusOK, Wordwheel{headwordList[0:200], 0, 200})
+		tempHeadwords := headwordList
+		tempHeadwords = append(tempHeadwords, headword)
+		cl := collate.New(language.French, collate.Loose, collate.IgnoreCase)
+		cl.SortStrings(tempHeadwords)
+		startIndexInt := 0
+		endIndexInt := 0
+		for index, word := range tempHeadwords {
+			if word == headword {
+				startIndexInt = index - 99 // We account for the added word
+				endIndexInt = index + 100
+				break
+			}
+		}
+		return c.JSON(http.StatusOK, Wordwheel{tempHeadwords[startIndexInt:endIndexInt], startIndexInt, endIndexInt})
 	} else if startIndex != "" {
 		startIndexInt, _ := strconv.Atoi(startIndex)
 		return getWordsBefore(c, startIndexInt)

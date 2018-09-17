@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div style="margin: 15px 0px;" v-if="results.totalEntries === 0">
+        <div style="margin: 15px 0px;" v-if="results.totalDicos == 0">
             Il n'existe aucune entrée pour le terme
             <b>{{ currentTerm }}</b>
             <button class="btn btn-default" style="margin-left: 10px;" type="button" @click="define()">
@@ -43,7 +43,7 @@
                         <hr v-if="!index == dico.contentObj.length-1" style="width: 50%; margin-top: 15px; margin-bottom: 5px; border-color: #ddd;">
                     </div>
                     <div class="tlfi-link" v-if="dico.name === 'tlfi'">
-                        <a :href="`http://www.cnrtl.fr/definition/{encodeURIComponent(Results.currentTerm)}`" target="_blank">=> Voir la définition complète au CNRTL</a>
+                        <a :href="`http://www.cnrtl.fr/definition/${encodeURIComponent(currentTerm)}`" target="_blank">=> Voir la définition complète au CNRTL</a>
                     </div>
                 </div>
                 <div style="margin: 10px 10px 10px 10px" v-if="dico.name === 'userSubmit'">

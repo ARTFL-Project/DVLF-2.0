@@ -72,7 +72,6 @@ export default {
     },
     methods: {
         search() {
-            console.log("hey")
             this.$router.push(`/mot/${this.queryTerm}`)
             this.atHome = false
             this.isOpen = false
