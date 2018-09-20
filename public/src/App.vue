@@ -125,4 +125,12 @@ h3 {
 h4 {
     font-size: 1.1rem !important;
 }
+
+.submit-btn > .btn:first-of-type {
+    background-color: rgba(21, 95, 131, 0.8) !important;
+    color: #fff !important;
+    font-weight: 700 !important;
+    font-size: 150%;
+    padding: 0.005rem 0.5rem;
+}
 </style>

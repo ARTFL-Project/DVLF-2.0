@@ -9,9 +9,12 @@
                 </router-link>
             </p>
             <p style="padding-left: 10px">
-                <b-button variant="primary" @click="addSynonym()">
-                    <span class="hidden-xs hidden-sm">Ajoutez un </span>synonyme
-                </b-button>
+                <b-button-group size="sm" class="submit-btn" @click="addSynonym()">
+                    <b-button variant="primary">+</b-button>
+                    <b-button variant="primary">
+                        Ajoutez un synonyme
+                    </b-button>
+                </b-button-group>
             </p>
         </b-card>
         <b-card class="shadow-sm" style="margin-top: 15px;">
@@ -23,9 +26,12 @@
                 </router-link>
             </p>
             <p style="padding-left: 10px">
-                <b-button variant="primary" @click="addAntonym()">
-                    <span class="hidden-xs hidden-sm">Ajoutez un </span>antonyme
-                </b-button>
+                <b-button-group size="sm" class="submit-btn" @click="addAntonym()">
+                    <b-button variant="primary">+</b-button>
+                    <b-button variant="primary">
+                        Ajoutez un antonyme
+                    </b-button>
+                </b-button-group>
             </p>
         </b-card>
     </div>

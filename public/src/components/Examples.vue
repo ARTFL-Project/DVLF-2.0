@@ -6,9 +6,9 @@
             </div>
             <b-card class="example" v-for="(example, index) in examples" :key="index">
                 <div class="example-score">
-                    <span class="glyphicon glyphicon-circle-arrow-up up" @click="vote(example.id, 'up')"></span>
+                    <img src="../assets/images/baseline-arrow_upward-24px.svg" class="up" @click="vote(example.id, 'up')" />
                     <span :id="example.id">{{ example.score }}</span>
-                    <span class="glyphicon glyphicon-circle-arrow-down down" @click="vote(example.id, 'down')"></span>
+                    <img src="../assets/images/baseline-arrow_downward-24px.svg" class="down" @click="vote(example.id, 'down')" />
                 </div>
                 <div class="example-content" v-html="example.content"></div>
                 <div class="example-source" v-if="example.source">Source trouvée sur:
@@ -17,10 +17,12 @@
                 </div>
                 <div class="example-source" v-if="example.date">Contribué le {{ example.date }}</div>
             </b-card>
-            <b-button variant="primary" style="margin: 0 10px 10px 10px" @click="addExample()">
-                <span class="glyphicon glyphicon-plus add-button"></span>
-                Ajoutez votre exemple
-            </b-button>
+            <b-button-group style="margin: 0 10px 10px 10px" class="submit-btn" @click="addExample()">
+                <b-button variant="primary">+</b-button>
+                <b-button variant="primary">
+                    Ajoutez votre exemple
+                </b-button>
+            </b-button-group>
         </b-card>
     </transition>
 </template>
@@ -93,18 +95,30 @@ export default {
     color: black;
 }
 
-.example-score .up {
-    padding-right: 5px;
+.up,
+.down {
+    display: inline-block;
+    transition: all 0.2s;
+}
+.up {
+    zoom: 0.8;
+    margin-right: 5px;
 }
 
-.example-score .down {
-    padding-left: 5px;
+.down {
+    zoom: 0.8;
+    margin-left: 5px;
 }
 
 .example-content {
     display: inline;
     padding-left: 5px;
     text-align: justify;
+}
+
+.up:hover,
+.down:hover {
+    background-color: #eee;
 }
 
 .example-source {

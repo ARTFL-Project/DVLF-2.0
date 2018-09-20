@@ -15,11 +15,8 @@
                                 <b-btn variant="primary">Rechercher</b-btn>
                             </b-input-group-append>
                         </b-input-group>
-                        <ul id="autocomplete-results" v-show="isOpen" class="autocomplete-results">
-                            <li class="loading" v-if="isLoading">
-                                Loading results...
-                            </li>
-                            <li v-else v-for="(result, i) in autoCompleteResults" :key="i" @click="setResult(result.headword)" class="autocomplete-result" :class="{ 'is-active': i === arrowCounter }" v-html="result.headword">
+                        <ul id="autocomplete-results" v-if="isOpen" class="autocomplete-results">
+                            <li v-for="(result, i) in autoCompleteResults" :key="i" @click="setResult(result.headword)" class="autocomplete-result" :class="{ 'is-active': i === arrowCounter }" v-html="result.headword">
                             </li>
                         </ul>
                     </form>
@@ -46,7 +43,7 @@ export default {
             wordOfTheDay: "tradition",
             aPropos: false,
             isOpen: false,
-            autoCompleteResults: ["amour", "gloire", "beauté"],
+            autoCompleteResults: [],
             isLoading: false,
             arrowCounter: 0
         }
@@ -82,7 +79,10 @@ export default {
             // Let's warn the parent that a change was made
             this.isLoading = true
             this.typed = this.queryTerm
-            if (this.typed.length > 1) {
+            if (
+                this.typed.length > 1 &&
+                this.typed != this.$route.params.queryTerm
+            ) {
                 var vm = this
                 this.$http
                     .get(
@@ -94,18 +94,9 @@ export default {
                         vm.autoCompleteResults = response.data.headwords
                         vm.isOpen = true
                         vm.isLoading = false
+                        vm.typed = ""
                     })
             }
-        },
-
-        filterResults() {
-            // first uncapitalize all the things
-            this.autoCompleteResults = this.items.filter(item => {
-                return (
-                    item.toLowerCase().indexOf(this.queryTerm.toLowerCase()) >
-                    -1
-                )
-            })
         },
         setResult(result) {
             this.queryTerm = result.replace(/<[^>]+>/g, "")
@@ -126,6 +117,8 @@ export default {
                 this.arrowCounter
             ].headword.replace(/<[^>]+>/g, "")
             this.arrowCounter = -1
+            this.isOpen = false
+            this.autoCompleteResults = []
         },
         handleClickOutside(evt) {
             if (!this.$el.contains(evt.target)) {
@@ -148,6 +141,11 @@ export default {
 .container-fluid {
     font-size: 90%;
 }
+
+.form-control:focus {
+    border-color: transparent !important;
+}
+
 .lead {
     margin-top: 15px;
 }
@@ -157,16 +155,18 @@ export default {
 
 .autocomplete-results {
     padding: 0;
-    margin: 0;
+    margin: 3px 0 0 15px;
     border: 1px solid #eeeeee;
+    border-top-width: 0px;
     max-height: 200px;
     overflow: auto;
-    width: 266px;
+    width: 267px;
     position: absolute;
     left: 0;
     background-color: #fff;
     z-index: 100;
     top: 34px;
+    font-size: 120%;
 }
 
 .autocomplete-result {

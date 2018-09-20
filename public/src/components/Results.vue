@@ -13,19 +13,20 @@
             </b-col>
             <b-col sm="12" md="3">
                 <div class="float-right d-none d-sm-inline shadow-sm">
-                    <b-button-group>
+                    <b-button-group class="submit-btn" size="sm">
+                        <b-button variant="primary">+</b-button>
                         <b-dropdown variant="primary" right text="Contribuer au DVLF">
                             <b-dropdown-item>
-                                <router-link to="/definition" style="font-variant: small-caps; font-weight: 700">Ajouter une définition</router-link>
+                                <router-link to="/definition">Ajouter une définition</router-link>
                             </b-dropdown-item>
                             <b-dropdown-item>
-                                <router-link to="/exemple" style="font-variant: small-caps; font-weight: 700">Ajouter un exemple</router-link>
+                                <router-link to="/exemple">Ajouter un exemple</router-link>
                             </b-dropdown-item>
                             <b-dropdown-item>
-                                <router-link to="/synonyme" style="font-variant: small-caps; font-weight: 700">Ajouter un synonyme</router-link>
+                                <router-link to="/synonyme">Ajouter un synonyme</router-link>
                             </b-dropdown-item>
                             <b-dropdown-item>
-                                <router-link to="/antonyme" style="font-variant: small-caps; font-weight: 700">Ajouter un antonyme</router-link>
+                                <router-link to="/antonyme">Ajouter un antonyme</router-link>
                             </b-dropdown-item>
                         </b-dropdown>
                     </b-button-group>
@@ -131,5 +132,9 @@ export default {
 <style scoped>
 .hide-results {
     visibility: hidden;
+}
+/deep/ .dropdown-menu {
+    -webkit-box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
 }
 </style>
