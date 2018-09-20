@@ -1,10 +1,10 @@
 <template>
     <transition appear name="fade">
-        <div id="examples" class="panel panel-default" style="animation-duration: 0.4s">
+        <b-card id="examples" class="shadow-sm" style="margin-top: 15px; animation-duration: 0.4s">
             <div id="examples-title">
                 Exemples d'utilisation
             </div>
-            <div class="panel panel-default example" v-for="(example, index) in examples" :key="index">
+            <b-card class="example" v-for="(example, index) in examples" :key="index">
                 <div class="example-score">
                     <span class="glyphicon glyphicon-circle-arrow-up up" @click="vote(example.id, 'up')"></span>
                     <span :id="example.id">{{ example.score }}</span>
@@ -12,16 +12,16 @@
                 </div>
                 <div class="example-content" v-html="example.content"></div>
                 <div class="example-source" v-if="example.source">Source trouvée sur:
-                    <a :href="example.link" target="_blank" v-if="example.link != 'http://'">{{ example.source }}</a>
+                    <a :href="example.link" target="_blank" rel="noreferrer" v-if="example.link != 'http://'">{{example.source}}</a>
                     <span v-if="example.link == 'http://'">{{ example.source }}</span>
                 </div>
                 <div class="example-source" v-if="example.date">Contribué le {{ example.date }}</div>
-            </div>
-            <button class="btn btn-default" style="margin: 0 10px 10px 10px" type="button" @click="addExample()">
+            </b-card>
+            <b-button variant="primary" style="margin: 0 10px 10px 10px" @click="addExample()">
                 <span class="glyphicon glyphicon-plus add-button"></span>
                 Ajoutez votre exemple
-            </button>
-        </div>
+            </b-button>
+        </b-card>
     </transition>
 </template>
 

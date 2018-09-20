@@ -1,18 +1,20 @@
 <template>
     <div class="container-fluid">
-        <div style="text-align: center;">
+        <div style="text-align: center; margin-top: 30px;">
             <p class="lead">Découvrez...explorez...définissez...votre langue</p>
         </div>
 
         <div style="text-align: center">
             <img style="max-height: 150px;" alt="Brand" src="../assets/images/dvlf_logo_medium_no_beta_transparent.png" v-if="atHome">
-            <div class="row" style="margin-top: 30px;">
-                <form class="col-xs-12 col-sm-offset-3 col-md-offset-4 col-sm-6 col-md-4" @submit.prevent @keyup.enter="search()">
-                    <div class="input-group autocomplete">
-                        <input type="text" class="form-control" autocomplete="off" :name="queryTerm" placeholder="Tapez un mot..." aria-describedby="search" v-model="queryTerm" @input="onChange" @keyup.down="onArrowDown" @keyup.up="onArrowUp" @keyup.enter="onEnter">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="submit" @click="search">Rechercher</button>
-                        </span>
+            <b-row>
+                <b-col sm="8" offset-sm="2" md="6" offset-md="3" lg="4" offset-lg="4" align-self="center">
+                    <form @submit.prevent @keyup.enter="search()">
+                        <b-input-group class="shadow-sm">
+                            <b-form-input autocomplete="off" :name="queryTerm" placeholder="Tapez un mot..." aria-describedby="search" v-model="queryTerm" @input="onChange" @keyup.down.native="onArrowDown" @keyup.up.native="onArrowUp" @keyup.enter.native="onEnter"></b-form-input>
+                            <b-input-group-append>
+                                <b-btn variant="primary">Rechercher</b-btn>
+                            </b-input-group-append>
+                        </b-input-group>
                         <ul id="autocomplete-results" v-show="isOpen" class="autocomplete-results">
                             <li class="loading" v-if="isLoading">
                                 Loading results...
@@ -20,9 +22,9 @@
                             <li v-else v-for="(result, i) in autoCompleteResults" :key="i" @click="setResult(result.headword)" class="autocomplete-result" :class="{ 'is-active': i === arrowCounter }" v-html="result.headword">
                             </li>
                         </ul>
-                    </div>
-                </form>
-            </div>
+                    </form>
+                </b-col>
+            </b-row>
         </div>
         <div style="text-align: center; margin-top: 10px;" v-if="atHome">
             <h4>Notre mot du jour :
@@ -143,11 +145,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.input-group-btn button {
-    margin-left: -2px;
+.container-fluid {
+    font-size: 90%;
 }
-.form-control {
-    font-size: 110%;
+.lead {
+    margin-top: 15px;
 }
 .autocomplete {
     position: relative;

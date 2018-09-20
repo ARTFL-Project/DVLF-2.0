@@ -1,7 +1,7 @@
 <template>
     <div style="padding: 10px; margin-top: 15px;">
-        <div class="row">
-            <div class="col-xs-12 col-sm-offset-3 col-sm-6">
+        <b-row>
+            <b-col sm="12" md="6" offset-md="3">
                 <transition name="fade">
                     <h3 :class="{'hide-results': apropos}" style="text-align: center; animation-duration: 0.4s" v-show="!loading">
                         <b>{{ currentTerm }}</b>:
@@ -10,76 +10,48 @@
                         </span>
                     </h3>
                 </transition>
-            </div>
-            <div class="col-xs-12 col-sm-3" style="margin-top: 15px">
-                <div class="pull-right hidden-xs">
-                    <div class="btn-group">
-                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="glyphicon glyphicon-plus add-button"></span>
-                            <span style="font-variant: small-caps;">Contribuer au DVLF</span>
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li>
+            </b-col>
+            <b-col sm="12" md="3">
+                <div class="float-right d-none d-sm-inline shadow-sm">
+                    <b-button-group>
+                        <b-dropdown variant="primary" right text="Contribuer au DVLF">
+                            <b-dropdown-item>
                                 <router-link to="/definition" style="font-variant: small-caps; font-weight: 700">Ajouter une définition</router-link>
-                            </li>
-                            <li>
+                            </b-dropdown-item>
+                            <b-dropdown-item>
                                 <router-link to="/exemple" style="font-variant: small-caps; font-weight: 700">Ajouter un exemple</router-link>
-                            </li>
-                            <li>
+                            </b-dropdown-item>
+                            <b-dropdown-item>
                                 <router-link to="/synonyme" style="font-variant: small-caps; font-weight: 700">Ajouter un synonyme</router-link>
-                            </li>
-                            <li>
+                            </b-dropdown-item>
+                            <b-dropdown-item>
                                 <router-link to="/antonyme" style="font-variant: small-caps; font-weight: 700">Ajouter un antonyme</router-link>
-                            </li>
-                        </ul>
-                    </div>
+                            </b-dropdown-item>
+                        </b-dropdown>
+                    </b-button-group>
                 </div>
-                <div class="hidden-sm hidden-md hidden-lg" style="text-align: center">
-                    <div class="btn-group">
-                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="glyphicon glyphicon-plus add-button"></span>
-                            <span style="font-variant: small-caps; font-weight: 700">Contribuer au DVLF</span>
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <router-link to="/definition" style="font-variant: small-caps; font-weight: 700">Ajouter une définition</router-link>
-                            </li>
-                            <li>
-                                <router-link to="/exemple" style="font-variant: small-caps; font-weight: 700">Ajouter un exemple</router-link>
-                            </li>
-                            <li>
-                                <router-link to="/synonyme" style="font-variant: small-caps; font-weight: 700">Ajouter un synonyme</router-link>
-                            </li>
-                            <li>
-                                <router-link to="/antonyme" style="font-variant: small-caps; font-weight: 700">Ajouter un antonyme</router-link>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="results" class="row">
-            <div class="hidden-xs col-sm-3 col-md-2" style="margin-top: 15px;">
+            </b-col>
+        </b-row>
+        <b-row id="results">
+            <b-col sm="3" md="2" class="d.sm.none" style="margin-top: 15px;">
                 <transition name="fade">
                     <word-wheel :headword="currentTerm" v-if="!loading" style="animation-duration: 0.4s"></word-wheel>
                 </transition>
-            </div>
-            <div class="col-xs-12 col-sm-6 col-md-7 col-lg-7" v-if="!loading">
+            </b-col>
+            <b-col sm="6" md="7" v-if="!loading">
                 <dictionary-entries :results="results.dictionaries" :fuzzy-results="results.fuzzyResults"></dictionary-entries>
-                <syn-anto-nyms class="hidden-sm hidden-md hidden-lg" :synonyms="results.synonyms" :antonyms="results.antonyms"></syn-anto-nyms>
+                <syn-anto-nyms class="d-block d-sm-none" :synonyms="results.synonyms" :antonyms="results.antonyms"></syn-anto-nyms>
                 <examples :examples="results.examples"></examples>
-            </div>
+            </b-col>
             <transition name="fade">
-                <div class="hidden-xs col-sm-3 col-md-3 col-lg-3" style="margin-top: 15px; animation-duration: 0.4s" v-if="!loading">
+                <b-col sm="3" class="d-none d-sm-block" style="margin-top: 15px; animation-duration: 0.4s" v-if="!loading">
                     <syn-anto-nyms :synonyms="results.synonyms" :antonyms="results.antonyms"></syn-anto-nyms>
                     <collocations :collocates="results.collocates" :headword="currentTerm"></collocations>
                     <nearest-neighbors :nearest-neighbors="results.nearestNeighbors" :headword="currentTerm"></nearest-neighbors>
                     <time-series :time-series="results.timeSeries" :headword="currentTerm"></time-series>
-                </div>
+                </b-col>
             </transition>
-        </div>
+        </b-row>
     </div>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
-    <div id="nyms">
-        <div class="panel panel-default">
+    <div id="nyms-boxes">
+        <b-card class="shadow-sm">
             <h4 class="nym-title">Synonymes</h4>
             <p class="synonyms" style="padding: 0 10px 10px 10px;">
                 <router-link class="synonym" :to="`/mot/${synonym.label}`" v-for="(synonym, index) in synonyms" :key="index">
@@ -9,13 +9,12 @@
                 </router-link>
             </p>
             <p style="padding-left: 10px">
-                <button class="btn btn-default" type="button" @click="addSynonym()">
-                    <span class="glyphicon glyphicon-plus add-button"></span>
+                <b-button variant="primary" @click="addSynonym()">
                     <span class="hidden-xs hidden-sm">Ajoutez un </span>synonyme
-                </button>
+                </b-button>
             </p>
-        </div>
-        <div class="panel panel-default" style="margin-top: 10px;">
+        </b-card>
+        <b-card class="shadow-sm" style="margin-top: 15px;">
             <h4 class="nym-title">Antonymes</h4>
             <p class="antomyms" style="padding: 0 10px 10px 10px">
                 <router-link class="antonym" :to="`/mot/${antonym.label}`" v-for="(antonym, index) in antonyms" :key="index">
@@ -24,12 +23,11 @@
                 </router-link>
             </p>
             <p style="padding-left: 10px">
-                <button class="btn btn-default" type="button" @click="addAntonym()">
-                    <span class="glyphicon glyphicon-plus add-button"></span>
+                <b-button variant="primary" @click="addAntonym()">
                     <span class="hidden-xs hidden-sm">Ajoutez un </span>antonyme
-                </button>
+                </b-button>
             </p>
-        </div>
+        </b-card>
     </div>
 
 </template>

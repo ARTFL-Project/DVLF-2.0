@@ -1,10 +1,10 @@
 <template>
     <div id="app">
         <Header/>
-        <div class="container-fluid">
+        <b-container fluid>
             <Search/>
             <router-view :key="$route.fullPath"></router-view>
-        </div>
+        </b-container>
     </div>
 </template>
 
@@ -27,37 +27,18 @@ export default {
 body {
     counter-reset: section;
     /* Set the section counter to 0 */
+    font-size: 85% !important;
 }
 /* Button colors */
 .btn-primary {
-    background: rgb(21, 95, 131);
-    transition: background-color 200ms;
-    border-color: transparent;
-}
-
-.btn-primary:hover,
-.btn-primary:focus {
-    background: rgba(21, 95, 131, 0.8);
-    border-color: transparent;
-    outline: 0;
-}
-
-.btn-primary.active,
-.open > .dropdown-toggle.btn-primary,
-#collocation_table th {
-    background: rgb(21, 67, 95);
-    border-color: transparent;
-    color: #fff;
-}
-
-.btn-primary[disabled] {
-    background-color: rgb(91, 150, 173);
-    border-color: transparent;
+    background-color: #fbfbfb !important;
+    color: #333 !important;
+    border-color: #ddd !important;
 }
 
 /* Links */
 a {
-    color: rgb(21, 95, 131);
+    color: rgb(21, 95, 131) !important;
     font-weight: 400;
     transition: all 200ms;
 }
@@ -65,10 +46,6 @@ a {
 a:hover {
     color: rgb(128, 0, 0) !important;
     text-decoration: none;
-}
-
-.ui-menu-item .highlight {
-    color: rgb(174, 89, 80);
 }
 
 #waiting,
@@ -91,11 +68,6 @@ a:hover {
     background-color: #fbfbfb;
 }
 
-.list-group-item.active {
-    background-color: rgb(21, 95, 131);
-    border-color: rgb(21, 95, 131);
-}
-
 .hidden {
     opacity: 0;
 }
@@ -105,9 +77,6 @@ a:hover {
     font-family: "Amiri", serif;
     font-weight: 300;
 }
-.badge {
-    padding-top: 5px;
-}
 
 .a-propos {
     text-align: justify;
@@ -115,31 +84,6 @@ a:hover {
 
 a.btn:hover {
     color: #fff !important;
-}
-
-.btn,
-.panel,
-.panel-heading,
-.list-group-item:first-child,
-.list-group-item:last-child,
-.popover,
-.progress,
-.form-control,
-.tooltip-inner,
-.modal-content {
-    border-radius: 0px !important;
-}
-
-.icon-bar {
-    border-radius: 0px !important;
-    border: 1px solid #000;
-}
-
-a.list-group-item:focus,
-a.list-group-item:hover,
-button.list-group-item:focus,
-button.list-group-item:hover {
-    background-color: #f0f0f0;
 }
 
 .hide-results {
@@ -170,5 +114,15 @@ button.list-group-item:hover {
 
 .highlight {
     color: red;
+}
+.card-body {
+    padding: 0 !important;
+}
+
+h3 {
+    font-size: 1.5rem !important;
+}
+h4 {
+    font-size: 1.1rem !important;
 }
 </style>

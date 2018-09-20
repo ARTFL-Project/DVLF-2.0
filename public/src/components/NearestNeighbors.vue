@@ -1,16 +1,16 @@
 <template>
-    <div id="nearest-neighbors" v-if="nearestNeighbors.length > 0">
-        <div class="panel panel-default">
+    <div id="nearest-neighbors" class="shadow-sm" v-if="nearestNeighbors.length > 0">
+        <b-card style="margin-top: 15px;">
             <h4 class="nym-title">Mots associés</h4>
             <span id="nn-title">Mots les plus associés à
                 <b>{{ headword }}</b> :</span>
             <p id="nn-content">
-                <router-link class="neighbor" :to="`/mot/${neighbor}`" v-for="(neighbor, index) in nearestNeighbors" :key="index">
+                <router-link class="neighbor" :to="`/mot/${neighbor}`" v-for="(neighbor, index) in nearestNeighbors" :key="index" v-if="neighbor != ''">
                     {{ neighbor }}
                     <span v-if="index != nearestNeighbors.length -1">,&nbsp;</span>
                 </router-link>
             </p>
-        </div>
+        </b-card>
     </div>
 </template>
 

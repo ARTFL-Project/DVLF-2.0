@@ -826,15 +826,53 @@ func index(c echo.Context) error {
 	return c.HTML(http.StatusOK, indexHTML)
 }
 
+func getFilesInDir(directory string) []string {
+	files, err := ioutil.ReadDir(directory)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fileNames := []string{}
+	for _, file := range files {
+		if !strings.HasSuffix(file.Name(), ".map") {
+			fileNames = append(fileNames, file.Name())
+		}
+	}
+	return fileNames
+}
+
 func main() {
 	// Echo instance
 	e := echo.New()
 
-	e.Static("/css", "public/dist/css")
-	e.Static("/js", "public/dist/js")
 	e.Static("/img", "public/dist/img")
 
-	e.File("/dvlf.ico", "public/dist/img/dvlf.ico")
+	// Grab all JS assets
+	jsFiles := getFilesInDir("public/dist/js")
+	e.GET(fmt.Sprintf("/js/%s", jsFiles[0]), func(c echo.Context) error {
+		c.Response().Header().Add("Cache-Control", "max-age=2592000")
+		c.Response().Header().Add("Content-Type", "text/javascript")
+		return c.File(fmt.Sprintf("public/dist/js/%s", jsFiles[0]))
+	})
+	e.GET(fmt.Sprintf("/js/%s", jsFiles[1]), func(c echo.Context) error {
+		c.Response().Header().Add("Cache-Control", "max-age=2592000")
+		c.Response().Header().Add("Content-Type", "text/javascript")
+		return c.File(fmt.Sprintf("public/dist/js/%s", jsFiles[1]))
+	})
+
+	// Grab all CSS assets
+	cssFiles := getFilesInDir("public/dist/css")
+	e.GET(fmt.Sprintf("/css/%s", cssFiles[0]), func(c echo.Context) error {
+		c.Response().Header().Add("Cache-Control", "max-age=2592000")
+		c.Response().Header().Add("Content-Type", "text/css; charset=utf-8")
+		return c.File(fmt.Sprintf("public/dist/css/%s", cssFiles[0]))
+	})
+	e.GET(fmt.Sprintf("/css/%s", cssFiles[1]), func(c echo.Context) error {
+		c.Response().Header().Add("Cache-Control", "max-age=2592000")
+		c.Response().Header().Add("Content-Type", "text/css; charset=utf-8")
+		return c.File(fmt.Sprintf("public/dist/css/%s", cssFiles[1]))
+	})
+
+	e.File("/favicon.ico", "public/favicon.ico")
 
 	e.Debug = webConfig.Debug
 

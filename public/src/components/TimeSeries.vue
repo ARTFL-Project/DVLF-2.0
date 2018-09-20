@@ -1,18 +1,18 @@
 <template>
-    <div id="time-series" :class="{'hidden': showTimeSeries == false}">
-        <div class="panel panel-default" style="min-height: 200px">
+    <div id="time-series" class="shadow-sm" :class="{'hidden': showTimeSeries == false}">
+        <b-card style="margin-top: 15px; min-height: 200px">
             <h4 id="time-series-title">Usage à travers le temps</h4>
             <h6 style="padding: 0 10px">Occurrences du mot
                 <b>{{ headword }}</b> pour un million de mots</h6>
             <div>
                 <canvas id="line" class="chart" height="200"></canvas>
             </div>
-        </div>
+        </b-card>
     </div>
 </template>
 
 <script>
-import Chart from "chart.js"
+import Chart from "chart.js/dist/Chart.js"
 
 export default {
     name: "TimeSeries",

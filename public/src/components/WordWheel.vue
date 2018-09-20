@@ -1,12 +1,12 @@
 <template>
-    <div id="wordwheel" class="panel panel-default">
+    <b-card id="wordwheel" class="shadow-sm">
         <h4 class="index">Index</h4>
-        <div class="list-group">
-            <router-link :to="`/mot/${word}`" :id="word" class="list-group-item wordwheel-item" :href="`/mot/${word}`" :class="{'active': word === headword}" v-for="(word, index) in wordwheel" :key="index">
+        <b-list-group>
+            <b-list-group-item :to="`/mot/${word}`" :id="word" class="list-group-item wordwheel-item" :href="`/mot/${word}`" :class="{'active': word === headword}" v-for="(word, index) in wordwheel" :key="index">
                 {{ word }}
-            </router-link>
-        </div>
-    </div>
+            </b-list-group-item>
+        </b-list-group>
+    </b-card>
 </template>
 
 <script>
@@ -159,6 +159,14 @@ export default {
     margin-top: -10px;
     max-height: 800px;
     overflow-y: scroll;
+}
+.list-group-item {
+    border-width: 1px 0px;
+}
+.list-group-item.active {
+    background-color: rgba(21, 95, 131, 0.85) !important;
+    border-color: rgba(21, 95, 131, 0.85) !important;
+    color: #fff !important;
 }
 #up {
     padding: 4px 10px 0px;

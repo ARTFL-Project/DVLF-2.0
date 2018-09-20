@@ -3,10 +3,10 @@
         <div style="margin: 15px 0px;" v-if="results.totalDicos == 0">
             Il n'existe aucune entrée pour le terme
             <b>{{ currentTerm }}</b>
-            <button class="btn btn-default" style="margin-left: 10px;" type="button" @click="define()">
+            <b-button style="margin-left: 10px;" type="button" @click="define()">
                 <span class="glyphicon glyphicon-plus add-button"></span>
                 Ajoutez votre définition
-            </button>
+            </b-button>
         </div>
         <div v-if="results.totalEntries < 2">
             <div v-if="fuzzyResults.length > 0">
@@ -20,20 +20,20 @@
             </div>
         </div>
         <transition-group appear name="fade">
-            <div class="panel panel-default dico" style="margin-top: 15px; animation-duration: 0.4s" v-for="(dico, dicoIndex) in results.data" :key="dicoIndex">
-                <div class="row dico-title">
-                    <div class="col-xs-1 arrow" @click="toggleEntry(dicoIndex)">
-                        <span class="glyphicon glyphicon-menu-down" v-show="dico.show"></span>
-                        <span class="glyphicon glyphicon-menu-right" v-show="!dico.show"></span>
+            <b-card class="dico shadow-sm" style="margin-top: 15px; animation-duration: 0.4s" v-for="(dico, dicoIndex) in results.data" :key="dicoIndex">
+                <div class="row dico-title text-center">
+                    <div class="col-1 arrow" @click="toggleEntry(dicoIndex)">
+                        <img class="down-arrow" src="../assets/images/baseline-keyboard_arrow_down-24px.svg" v-show="dico.show" />
+                        <img class="right-arrow" src="../assets/images/baseline-keyboard_arrow_right-24px.svg" v-show="!dico.show" />
                     </div>
-                    <div class="col-xs-11 dico-label" @click="toggleEntry(dicoIndex)">
-                        <span class="hidden-xs hidden-sm">
+                    <div class="col-11 dico-label" @click="toggleEntry(dicoIndex)">
+                        <span class="d-sm-none d-md-inline">
                             {{ dico.label }}
                         </span>
-                        <span class="hidden-md hidden-lg">
+                        <span class="d-none d-sm-inline d-md-none">
                             {{ dico.shortLabel }}
                         </span>
-                        <span class="badge pull-right">{{ dico.contentObj.length }}</span>
+                        <span class="badge float-right">{{ dico.contentObj.length }}</span>
                     </div>
                 </div>
                 <div class="dico-entries" :class="{showdico: dico.show}">
@@ -47,12 +47,12 @@
                     </div>
                 </div>
                 <div style="margin: 10px 10px 10px 10px" v-if="dico.name === 'userSubmit'">
-                    <button class="btn btn-default" type="button" @click="define()">
+                    <b-button variant="primary" @click="define()">
                         <span class="glyphicon glyphicon-plus add-button"></span>
                         Ajoutez votre définition
-                    </button>
+                    </b-button>
                 </div>
-            </div>
+            </b-card>
         </transition-group>
     </div>
 </template>
@@ -76,25 +76,26 @@ export default {
         toggleEntry(dicoIndex) {
             let targetElement = event.srcElement
             if (
-                targetElement.classList.contains("hidden-xs") ||
-                targetElement.classList.contains("badge") ||
-                targetElement.classList.contains("glyphicon")
+                targetElement.classList.contains("d-sm-none") ||
+                targetElement.classList.contains("right-arrow") ||
+                targetElement.classList.contains("down-arrow") ||
+                targetElement.classList.contains("arrow") ||
+                targetElement.classList.contains("badge")
             ) {
-                targetElement = targetElement.parentNode
+                targetElement = targetElement.parentNode.parentNode.parentNode
+            } else if (targetElement.classList.contains("dico-label")) {
+                targetElement = targetElement.parentNode.parentNode
             }
-            let dicoNode = targetElement.parentNode.parentNode.parentNode
-            let entry = dicoNode.querySelectorAll(".dico-entries")[dicoIndex]
-            let arrows = targetElement.parentNode.parentNode.querySelectorAll(
-                ".arrow .glyphicon"
-            )
+            let entry = targetElement.querySelector(".dico-entries")
+            let arrows = targetElement.querySelector(".arrow")
             if (!entry.classList.contains("showdico")) {
                 entry.classList.add("showdico")
-                arrows[1].style.display = "none"
-                arrows[0].style.display = "initial"
+                arrows.querySelector(".right-arrow").style.display = "none"
+                arrows.querySelector(".down-arrow").style.display = "initial"
             } else {
                 entry.classList.remove("showdico")
-                arrows[0].style.display = "none"
-                arrows[1].style.display = "initial"
+                arrows.querySelector(".down-arrow").style.display = "none"
+                arrows.querySelector(".right-arrow").style.display = "initial"
             }
         }
     }
@@ -213,7 +214,7 @@ export default {
 }
 
 .entry.tlfi {
-    max-height: 145px;
+    max-height: 140px;
     overflow: hidden;
 }
 
@@ -232,8 +233,12 @@ export default {
 }
 .badge {
     background-color: #fff;
-    color: rgb(21, 95, 131);
+    color: rgba(21, 95, 131, 0.85);
     font-family: initial;
+    font-size: 90%;
+    border-radius: 90%;
+    padding: 0.2rem 0.4rem;
+    margin-top: 3px;
 }
 </style>
 
