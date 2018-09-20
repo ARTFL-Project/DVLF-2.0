@@ -7,7 +7,7 @@
             </router-link>
         </b-navbar-brand>
         <b-collapse is-nav id="nav_collapse" style="font-size: 80%;">
-            <b-navbar-nav class="ml-auto">
+            <b-navbar-nav class="ml-auto" style="font-size: 130%;">
                 <b-nav-item href="http://artfl-project.uchicago.edu">ARTFL Project</b-nav-item>
                 <b-nav-item>
                     <router-link to="/apropos">À propos du DVLF</router-link>
