@@ -15,7 +15,7 @@
                 <div class="float-right d-none d-sm-inline shadow-sm">
                     <b-button-group class="submit-btn" size="sm">
                         <b-button variant="primary">+</b-button>
-                        <b-dropdown variant="primary" right text="Contribuer au DVLF">
+                        <b-dropdown id="second-btn" variant="primary" right text="Contribuer au DVLF">
                             <b-dropdown-item>
                                 <router-link to="/definition">Ajouter une définition</router-link>
                             </b-dropdown-item>
@@ -52,6 +52,11 @@
                     <time-series :time-series="results.timeSeries" :headword="currentTerm"></time-series>
                 </b-col>
             </transition>
+            <b-modal v-if="showExplore" id="modal1" :title="`Mots associés à ${currentTerm} à travers le temps`" ref="myModalRef">
+                <p class="my-2">
+                    <word-explorer></word-explorer>
+                </p>
+            </b-modal>
         </b-row>
     </div>
 </template>
@@ -64,6 +69,7 @@ import NearestNeighbors from "./NearestNeighbors.vue"
 import TimeSeries from "./TimeSeries.vue"
 import Examples from "./Examples.vue"
 import WordWheel from "./WordWheel.vue"
+import WordExplorer from "./WordExplorer.vue"
 import { EventBus } from "../main.js"
 require("vue2-animate/dist/vue2-animate.min.css")
 
@@ -76,7 +82,8 @@ export default {
         NearestNeighbors,
         TimeSeries,
         Examples,
-        WordWheel
+        WordWheel,
+        WordExplorer
     },
     data: function() {
         return {
@@ -86,11 +93,17 @@ export default {
             totalDicos: 0,
             atHome: true,
             apropos: false,
-            loading: true
+            loading: true,
+            showExplore: false
         }
     },
     created() {
         this.fetchData()
+        var vm = this
+        EventBus.$on("wordExplorer", function(word) {
+            vm.showExplore = true
+            vm.$refs.myModalRef.show()
+        })
     },
     methods: {
         fetchData() {
@@ -136,5 +149,10 @@ export default {
 /deep/ .dropdown-menu {
     -webkit-box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
     box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+    font-size: 100%;
+    margin-left: 22px;
+}
+/deep/ #second-btn > button {
+    font-size: 100% !important;
 }
 </style>

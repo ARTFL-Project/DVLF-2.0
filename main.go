@@ -47,15 +47,15 @@ type wordOfTheDay struct {
 
 // Results to export
 type Results struct {
-	Headword         string         `json:"headword"`
-	Dictionaries     DictionaryData `json:"dictionaries"`
-	Synonyms         []Nym          `json:"synonyms"`
-	Antonyms         []Nym          `json:"antonyms"`
-	Examples         []Example      `json:"examples"`
-	TimeSeries       [][]float64    `json:"timeSeries"`
-	Collocates       []Collocates   `json:"collocates"`
-	NearestNeighbors []string       `json:"nearestNeighbors"`
-	FuzzyResults     []FuzzyResult  `json:"fuzzyResults"`
+	Headword         string             `json:"headword"`
+	Dictionaries     DictionaryData     `json:"dictionaries"`
+	Synonyms         []Nym              `json:"synonyms"`
+	Antonyms         []Nym              `json:"antonyms"`
+	Examples         []Example          `json:"examples"`
+	TimeSeries       [][]float64        `json:"timeSeries"`
+	Collocates       []Collocates       `json:"collocates"`
+	NearestNeighbors []NearestNeighbors `json:"nearestNeighbors"`
+	FuzzyResults     []FuzzyResult      `json:"fuzzyResults"`
 }
 
 // Dictionary to export
@@ -71,6 +71,12 @@ type Dictionary struct {
 type Collocates struct {
 	Key   string `json:"key"`
 	Value int    `json:"value"`
+}
+
+// NearestNeighbors Type
+type NearestNeighbors struct {
+	Word     string  `json:"word"`
+	Distance float64 `json:"distance"`
 }
 
 // DictionaryData to export
@@ -339,9 +345,9 @@ func autoComplete(c echo.Context) error {
 	prefix, _ := url.QueryUnescape(c.Param("prefix"))
 	prefix = strings.TrimSpace(prefix)
 	prefix = strings.ToLower(prefix)
-	likePrefix := prefix + "%"
-	query := "SELECT headword FROM headwords WHERE headword LIKE $1 ORDER BY headword LIMIT 10"
-	rows, err := pool.Query(query, likePrefix)
+	pattern := "^" + prefix + ".*\\M"
+	query := "SELECT headword FROM headwords WHERE headword ~* $1 ORDER BY headword LIMIT 10"
+	rows, err := pool.Query(query, pattern)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -543,13 +549,13 @@ func query(c echo.Context) error {
 	var examples []Example
 	var timeSeries [][]float64
 	var collocations []Collocates
-	var nearestNeighbors []string
+	var nearestNeighbors []NearestNeighbors
 	fuzzyResults := []FuzzyResult{}
 	err := pool.QueryRow(query, headword).Scan(&userSubmission, &dictionaries, &synonyms, &antonyms, &examples, &timeSeries, &collocations, &nearestNeighbors)
 	if err != nil {
 		fmt.Println(err)
 		fuzzyResults = getSimilarHeadWords(headword)
-		empty := Results{headword, DictionaryData{[]Dictionary{}, 0, 0}, []Nym{}, []Nym{}, []Example{}, [][]float64{}, []Collocates{}, []string{}, fuzzyResults}
+		empty := Results{headword, DictionaryData{[]Dictionary{}, 0, 0}, []Nym{}, []Nym{}, []Example{}, [][]float64{}, []Collocates{}, []NearestNeighbors{}, fuzzyResults}
 		return c.JSON(http.StatusOK, empty)
 	}
 	highlightedExamples := highlightExamples(examples, headword)
@@ -560,6 +566,20 @@ func query(c echo.Context) error {
 	}
 	results = Results{headword, allDictionaries, synonyms, antonyms, sortedExamples, timeSeries, collocations, nearestNeighbors, fuzzyResults}
 	return c.JSON(http.StatusOK, results)
+}
+
+func exploreVectors(c echo.Context) error {
+	headword, _ := url.QueryUnescape(c.Param("headword"))
+	query := "SELECT vectors from explore_vectors where headword=$1"
+	var vectors map[string][]NearestNeighbors
+	err := pool.QueryRow(query, headword).Scan(&vectors)
+	if err != nil {
+		fmt.Println(err)
+		empty := map[string]map[string][]NearestNeighbors{}
+		return c.JSON(http.StatusOK, empty)
+	}
+	fmt.Println(vectors)
+	return c.JSON(http.StatusOK, vectors)
 }
 
 func recaptchaValidate(recaptchaResponse string) (r RecaptchaResponse) {
@@ -891,8 +911,8 @@ func main() {
 	e.AutoTLSManager.Cache = autocert.DirCache(".cache")
 	// Redirect http traffic to https
 	e.Pre(middleware.NonWWWRedirect())
-	e.Pre(middleware.HTTPSWWWRedirect())
-	e.Pre(middleware.HTTPSRedirect())
+	// e.Pre(middleware.HTTPSWWWRedirect())
+	// e.Pre(middleware.HTTPSRedirect())
 
 	e.GET("/", index)
 	e.GET("/mot/*", index)
@@ -929,7 +949,9 @@ func main() {
 		word := wordsOfTheDay[date]
 		return c.JSON(http.StatusOK, word)
 	})
+	e.GET("/api/explore/:headword", exploreVectors)
 
 	// Start server
-	e.Logger.Fatal(e.StartAutoTLS(":443"))
+	// e.Logger.Fatal(e.StartAutoTLS(":443"))
+	e.Logger.Fatal(e.Start(":8080"))
 }

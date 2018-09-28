@@ -47,10 +47,12 @@
                     </div>
                 </div>
                 <div style="margin: 10px 10px 10px 10px" v-if="dico.name === 'userSubmit'">
-                    <b-button variant="primary" @click="define()">
-                        <span class="glyphicon glyphicon-plus add-button"></span>
-                        Ajoutez votre définition
-                    </b-button>
+                    <b-button-group style="margin: 0 10px 10px 10px" class="submit-btn" @click="define()">
+                        <b-button variant="primary">+</b-button>
+                        <b-button variant="primary">
+                            Ajoutez votre définition
+                        </b-button>
+                    </b-button-group>
                 </div>
             </b-card>
         </transition-group>
@@ -214,7 +216,7 @@ export default {
 }
 
 .entry.tlfi {
-    max-height: 140px;
+    max-height: 150px;
     overflow: hidden;
 }
 

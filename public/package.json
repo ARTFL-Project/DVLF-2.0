@@ -15,7 +15,8 @@
         "vue-recaptcha": "^1.1.1",
         "vue-router": "^3.0.1",
         "vue-scrollto": "^2.11.0",
-        "vue2-animate": "^2.1.0"
+        "vue2-animate": "^2.1.0",
+        "vuewordcloud": "^18.7.11"
     },
     "devDependencies": {
         "@babel/core": "^7.0.0",

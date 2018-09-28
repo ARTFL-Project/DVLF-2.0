@@ -1,8 +1,8 @@
 <template>
     <div id="app">
-        <Header/>
+        <Header />
         <b-container fluid>
-            <Search/>
+            <Search />
             <router-view :key="$route.fullPath"></router-view>
         </b-container>
     </div>
@@ -27,7 +27,7 @@ export default {
 body {
     counter-reset: section;
     /* Set the section counter to 0 */
-    font-size: 85% !important;
+    font-size: 95% !important;
 }
 /* Button colors */
 .btn-primary {
@@ -120,7 +120,8 @@ a.btn:hover {
 }
 
 h3 {
-    font-size: 1.5rem !important;
+    font-size: 1.35rem !important;
+    margin-top: 0.3rem !important;
 }
 h4 {
     font-size: 1.1rem !important;
