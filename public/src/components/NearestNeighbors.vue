@@ -37,12 +37,6 @@ export default {
     data() {
         return {
             words: [],
-            maxWeight: this.nearestNeighbors[0].distance * 1000,
-            minWeight:
-                this.nearestNeighbors[this.nearestNeighbors.length - 1]
-                    .distance * 1000,
-            minOpacity: 0.6,
-            maxOpacity: 1.0
         }
     },
     created() {
@@ -76,7 +70,7 @@ export default {
 }
 #nn-content {
     width: 100%;
-    height: 130px;
+    height: 180px;
     padding: 0 5px 10px 5px;
     margin-bottom: 0;
 }

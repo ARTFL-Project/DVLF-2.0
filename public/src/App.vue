@@ -1,5 +1,6 @@
 <template>
     <div id="app">
+        <div id="overlay"></div>
         <Header />
         <b-container fluid>
             <Search />
@@ -28,6 +29,15 @@ body {
     counter-reset: section;
     /* Set the section counter to 0 */
     font-size: 95% !important;
+    position: relative;
+}
+#overlay {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, .6);
+    display: none;
+    z-index: 50;
 }
 /* Button colors */
 .btn-primary {

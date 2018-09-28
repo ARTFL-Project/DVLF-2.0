@@ -52,11 +52,9 @@
                     <time-series :time-series="results.timeSeries" :headword="currentTerm"></time-series>
                 </b-col>
             </transition>
-            <b-modal v-if="showExplore" id="modal1" :title="`Mots associés à ${currentTerm} à travers le temps`" ref="myModalRef">
-                <p class="my-2">
-                    <word-explorer></word-explorer>
-                </p>
-            </b-modal>
+            <transition name="fade">
+                <word-explorer :vectors="vectors" :headword="currentTerm" v-if="vectors"></word-explorer>
+            </transition>
         </b-row>
     </div>
 </template>
@@ -94,15 +92,35 @@ export default {
             atHome: true,
             apropos: false,
             loading: true,
-            showExplore: false
+            vectors: null
         }
     },
     created() {
         this.fetchData()
         var vm = this
         EventBus.$on("wordExplorer", function(word) {
-            vm.showExplore = true
-            vm.$refs.myModalRef.show()
+            let query = `${
+                vm.$globalConfig.apiServer
+            }/api/explore/${vm.$route.params.queryTerm.trim()}`
+            vm.$http
+                .get(query, {
+                    headers: {
+                        "Access-Control-Allow-Origin": "*",
+                        "Content-Type": "application/json"
+                    }
+                })
+                .then(response => {
+                    vm.vectors = response.data
+                    document.getElementById("overlay").style.display = "block"
+                })
+                .catch(error => {
+                    vm.error = error.toString()
+                    console.log(error)
+                })
+        })
+        EventBus.$on('closeWordExplorer', function() {
+            vm.vectors = null
+            document.getElementById("overlay").style.display = "none"
         })
     },
     methods: {
@@ -145,6 +163,9 @@ export default {
 <style scoped>
 .hide-results {
     visibility: hidden;
+}
+#model1 {
+    padding:0;
 }
 /deep/ .dropdown-menu {
     -webkit-box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
