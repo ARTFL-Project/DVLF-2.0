@@ -83,6 +83,7 @@ export default {
         }
     },
     created() {
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
         if ("1600" in this.vectors) {
             this.seventeenth = this.convertToArray(this.vectors["1600"])
         }
@@ -98,7 +99,6 @@ export default {
     },
     methods: {
         convertToArray(vectors) {
-            console.log(vectors)
             let words = []
             for (let wordObject of vectors) {
                 words.push([wordObject.word, wordObject.distance])

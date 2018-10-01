@@ -5,7 +5,7 @@
             <span id="nn-title">Mots les plus associés à
                 <span style="font-weight: 700">{{ headword }}</span> :</span>
             <p id="nn-content">
-                <vue-word-cloud :words="words" :animation-duration="0" :spacing="0.3" :font-size-ratio="0.3">
+                <vue-word-cloud :words="words" :animation-overlap="0.5" :spacing="0.3" :font-size-ratio="0.3">
                     <template slot-scope="{text, weight, word}">
                         <div class="word-cloud" :title="weight" style="cursor: pointer;" @click="onWordClick(word)">
                             {{ text }}
