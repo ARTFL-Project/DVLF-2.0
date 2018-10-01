@@ -47,15 +47,15 @@ type wordOfTheDay struct {
 
 // Results to export
 type Results struct {
-	Headword         string             `json:"headword"`
-	Dictionaries     DictionaryData     `json:"dictionaries"`
-	Synonyms         []Nym              `json:"synonyms"`
-	Antonyms         []Nym              `json:"antonyms"`
-	Examples         []Example          `json:"examples"`
-	TimeSeries       [][]float64        `json:"timeSeries"`
-	Collocates       []Collocates       `json:"collocates"`
-	NearestNeighbors []NearestNeighbors `json:"nearestNeighbors"`
-	FuzzyResults     []FuzzyResult      `json:"fuzzyResults"`
+	Headword         string         `json:"headword"`
+	Dictionaries     DictionaryData `json:"dictionaries"`
+	Synonyms         []Nym          `json:"synonyms"`
+	Antonyms         []Nym          `json:"antonyms"`
+	Examples         []Example      `json:"examples"`
+	TimeSeries       [][]float64    `json:"timeSeries"`
+	Collocates       []Collocates   `json:"collocates"`
+	NearestNeighbors []interface{}  `json:"nearestNeighbors"`
+	FuzzyResults     []FuzzyResult  `json:"fuzzyResults"`
 }
 
 // Dictionary to export
@@ -555,7 +555,7 @@ func query(c echo.Context) error {
 	if err != nil {
 		fmt.Println(err)
 		fuzzyResults = getSimilarHeadWords(headword)
-		empty := Results{headword, DictionaryData{[]Dictionary{}, 0, 0}, []Nym{}, []Nym{}, []Example{}, [][]float64{}, []Collocates{}, []NearestNeighbors{}, fuzzyResults}
+		empty := Results{headword, DictionaryData{[]Dictionary{}, 0, 0}, []Nym{}, []Nym{}, []Example{}, [][]float64{}, []Collocates{}, nearestNeighbors, fuzzyResults}
 		return c.JSON(http.StatusOK, empty)
 	}
 	highlightedExamples := highlightExamples(examples, headword)
@@ -575,7 +575,7 @@ func exploreVectors(c echo.Context) error {
 	err := pool.QueryRow(query, headword).Scan(&vectors)
 	if err != nil {
 		fmt.Println(err)
-		empty := map[string]map[string][]interface{}
+		var empty map[string]map[string][]interface{}
 		return c.JSON(http.StatusOK, empty)
 	}
 	fmt.Println(vectors)
