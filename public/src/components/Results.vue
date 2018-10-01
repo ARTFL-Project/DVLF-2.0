@@ -47,8 +47,8 @@
             <transition name="fade">
                 <b-col sm="3" class="d-none d-sm-block" style="margin-top: 15px; animation-duration: 0.4s" v-if="!loading">
                     <syn-anto-nyms :synonyms="results.synonyms" :antonyms="results.antonyms"></syn-anto-nyms>
-                    <collocations :collocates="results.collocates" :headword="currentTerm"></collocations>
                     <nearest-neighbors :nearest-neighbors="results.nearestNeighbors" :headword="currentTerm"></nearest-neighbors>
+                    <collocations :collocates="results.collocates" :headword="currentTerm"></collocations>
                     <time-series :time-series="results.timeSeries" :headword="currentTerm"></time-series>
                 </b-col>
             </transition>
@@ -118,7 +118,7 @@ export default {
                     console.log(error)
                 })
         })
-        EventBus.$on('closeWordExplorer', function() {
+        EventBus.$on("closeWordExplorer", function() {
             vm.vectors = null
             document.getElementById("overlay").style.display = "none"
         })
@@ -165,7 +165,7 @@ export default {
     visibility: hidden;
 }
 #model1 {
-    padding:0;
+    padding: 0;
 }
 /deep/ .dropdown-menu {
     -webkit-box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;

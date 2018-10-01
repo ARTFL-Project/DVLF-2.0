@@ -8,9 +8,9 @@
         </div>
         <div id="explorer-body">
             <b-row align-h="center">
-                <b-col cols="6" v-if="seventeenth" style="margin-bottom: 20px;">
+                <b-col cols="6" v-if="vectors['1600']" style="margin-bottom: 20px;">
                     <b-card style="height: 400px;" header="Entre 1600 et 1700">
-                        <vue-word-cloud :words="seventeenth" :animation-overlap="0.2" :spacing="0.4" :font-size-ratio="0.3">
+                        <vue-word-cloud :words="vectors['1600']" :animation-overlap="0.2" :spacing="0.4" :font-size-ratio="0.3">
                             <template slot-scope="{text, weight, word}">
                                 <div class="word-cloud" :title="weight" style="cursor: pointer;" @click="onWordClick(word)">
                                     {{ text }}
@@ -19,9 +19,9 @@
                         </vue-word-cloud>
                     </b-card>
                 </b-col>
-                <b-col cols="6" v-if="eighteenth" style="margin-bottom: 20px;">
+                <b-col cols="6" v-if="vectors['1700']" style="margin-bottom: 20px;">
                     <b-card style="height: 400px;" header="Entre 1700 et 1800">
-                        <vue-word-cloud v-if="eighteenth" :words="eighteenth" :animation-overlap="0.2" :spacing="0.4" :font-size-ratio="0.3">
+                        <vue-word-cloud :words="vectors['1700']" :animation-overlap="0.2" :spacing="0.4" :font-size-ratio="0.3">
                             <template slot-scope="{text, weight, word}">
                                 <div class="word-cloud" :title="weight" style="cursor: pointer;" @click="onWordClick(word)">
                                     {{ text }}
@@ -30,9 +30,9 @@
                         </vue-word-cloud>
                     </b-card>
                 </b-col>
-                <b-col cols="6" v-if="nineteenth" style="margin-bottom: 20px;">
+                <b-col cols="6" v-if="vectors['1800']" style="margin-bottom: 20px;">
                     <b-card style="height: 400px; min-width:40%" header="Entre 1800 et 1900">
-                        <vue-word-cloud :words="nineteenth" :animation-overlap="0.2" :spacing="0.4" :font-size-ratio="0.3">
+                        <vue-word-cloud :words="vectors['1800']" :animation-overlap="0.2" :spacing="0.4" :font-size-ratio="0.3">
                             <template slot-scope="{text, weight, word}">
                                 <div class="word-cloud" :title="weight" style="cursor: pointer;" @click="onWordClick(word)">
                                     {{ text }}
@@ -41,9 +41,9 @@
                         </vue-word-cloud>
                     </b-card>
                 </b-col>
-                <b-col cols="6" v-if="twenteenth">
+                <b-col cols="6" v-if="vectors['1900']">
                     <b-card style="height: 400px; min-width: 40%" header="Entre 1900 et 2000">
-                        <vue-word-cloud :words="twenteenth" :animation-overlap="0.2" :spacing="0.4" :font-size-ratio="0.3">
+                        <vue-word-cloud :words="vectors['1900']" :animation-overlap="0.2" :spacing="0.4" :font-size-ratio="0.3">
                             <template slot-scope="{text, weight, word}">
                                 <div class="word-cloud" :title="weight" style="cursor: pointer;" @click="onWordClick(word)">
                                     {{ text }}
@@ -74,37 +74,10 @@ export default {
         vectors: Object,
         headword: String
     },
-    data() {
-        return {
-            seventeenth: null,
-            eighteenth: null,
-            nineteenth: null,
-            twenteenth: null
-        }
-    },
     created() {
         window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
-        if ("1600" in this.vectors) {
-            this.seventeenth = this.convertToArray(this.vectors["1600"])
-        }
-        if ("1700" in this.vectors) {
-            this.eighteenth = this.convertToArray(this.vectors["1700"])
-        }
-        if ("1800" in this.vectors) {
-            this.nineteenth = this.convertToArray(this.vectors["1800"])
-        }
-        if ("1900" in this.vectors) {
-            this.twenteenth = this.convertToArray(this.vectors["1900"])
-        }
     },
     methods: {
-        convertToArray(vectors) {
-            let words = []
-            for (let wordObject of vectors) {
-                words.push([wordObject.word, wordObject.distance])
-            }
-            return words
-        },
         onWordClick(word) {
             this.$router.push(`/mot/${word[0]}`)
             this.close()

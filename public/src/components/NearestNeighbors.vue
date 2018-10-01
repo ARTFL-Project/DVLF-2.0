@@ -5,7 +5,7 @@
             <span id="nn-title">Mots les plus associés à
                 <span style="font-weight: 700">{{ headword }}</span> :</span>
             <p id="nn-content">
-                <vue-word-cloud :words="words" :animation-overlap="0.5" :spacing="0.3" :font-size-ratio="0.3">
+                <vue-word-cloud :words="nearestNeighbors" :animation-overlap="0.5" :spacing="0.3" :font-size-ratio="0.3">
                     <template slot-scope="{text, weight, word}">
                         <div class="word-cloud" :title="weight" style="cursor: pointer;" @click="onWordClick(word)">
                             {{ text }}
@@ -33,16 +33,6 @@ export default {
     name: "NearestNeighbors",
     components: {
         [VueWordCloud.name]: VueWordCloud
-    },
-    data() {
-        return {
-            words: []
-        }
-    },
-    created() {
-        for (let wordObject of this.nearestNeighbors) {
-            this.words.push([wordObject.word, wordObject.distance])
-        }
     },
     props: {
         nearestNeighbors: Array,

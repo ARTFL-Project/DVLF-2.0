@@ -74,10 +74,10 @@ type Collocates struct {
 }
 
 // NearestNeighbors Type
-type NearestNeighbors struct {
-	Word     string  `json:"word"`
-	Distance float64 `json:"distance"`
-}
+// type NearestNeighbors struct {
+// 	Word     string  `json:"word"`
+// 	Distance float64 `json:"distance"`
+// }
 
 // DictionaryData to export
 type DictionaryData struct {
@@ -549,7 +549,7 @@ func query(c echo.Context) error {
 	var examples []Example
 	var timeSeries [][]float64
 	var collocations []Collocates
-	var nearestNeighbors []NearestNeighbors
+	var nearestNeighbors []interface{}
 	fuzzyResults := []FuzzyResult{}
 	err := pool.QueryRow(query, headword).Scan(&userSubmission, &dictionaries, &synonyms, &antonyms, &examples, &timeSeries, &collocations, &nearestNeighbors)
 	if err != nil {
@@ -571,11 +571,11 @@ func query(c echo.Context) error {
 func exploreVectors(c echo.Context) error {
 	headword, _ := url.QueryUnescape(c.Param("headword"))
 	query := "SELECT vectors from explore_vectors where headword=$1"
-	var vectors map[string][]NearestNeighbors
+	var vectors map[string][]interface{}
 	err := pool.QueryRow(query, headword).Scan(&vectors)
 	if err != nil {
 		fmt.Println(err)
-		empty := map[string]map[string][]NearestNeighbors{}
+		empty := map[string]map[string][]interface{}
 		return c.JSON(http.StatusOK, empty)
 	}
 	fmt.Println(vectors)
