@@ -1,7 +1,7 @@
 <template>
     <div style="padding: 10px; margin-top: 15px;">
         <b-row>
-            <b-col sm="12" md="6" offset-md="3">
+            <b-col sm="12" md="8" lg="6" xl="7" offset-lg="2" order-sm="2" order-md="1">
                 <transition name="fade">
                     <h3 :class="{'hide-results': apropos}" style="text-align: center; animation-duration: 0.4s" v-show="!loading">
                         <b>{{ currentTerm }}</b>:
@@ -11,9 +11,28 @@
                     </h3>
                 </transition>
             </b-col>
-            <b-col sm="12" md="3">
-                <div class="float-right d-none d-sm-inline shadow-sm">
+            <b-col sm="12" md="4" xl="3" order-sm="1" order-md="2">
+                <div class="float-right d-none d-md-inline shadow-sm">
                     <b-button-group class="submit-btn" size="sm">
+                        <b-button variant="primary">+</b-button>
+                        <b-dropdown id="second-btn" variant="primary" right text="Contribuer au DVLF">
+                            <b-dropdown-item>
+                                <router-link to="/definition">Ajouter une définition</router-link>
+                            </b-dropdown-item>
+                            <b-dropdown-item>
+                                <router-link to="/exemple">Ajouter un exemple</router-link>
+                            </b-dropdown-item>
+                            <b-dropdown-item>
+                                <router-link to="/synonyme">Ajouter un synonyme</router-link>
+                            </b-dropdown-item>
+                            <b-dropdown-item>
+                                <router-link to="/antonyme">Ajouter un antonyme</router-link>
+                            </b-dropdown-item>
+                        </b-dropdown>
+                    </b-button-group>
+                </div>
+                <div class="d-none d-sm-inline-block d-md-none mb-3" style="text-align: center; width: 100%;">
+                    <b-button-group class="submit-btn shadow-sm" size="sm">
                         <b-button variant="primary">+</b-button>
                         <b-dropdown id="second-btn" variant="primary" right text="Contribuer au DVLF">
                             <b-dropdown-item>
@@ -34,22 +53,26 @@
             </b-col>
         </b-row>
         <b-row id="results">
-            <b-col sm="3" md="2" class="d.sm.none" style="margin-top: 15px;">
+            <b-col md="2" class="d-none d-lg-block" style="margin-top: 15px;">
                 <transition name="fade">
                     <word-wheel :headword="currentTerm" v-if="!loading" style="animation-duration: 0.4s"></word-wheel>
                 </transition>
             </b-col>
-            <b-col sm="6" md="7" v-if="!loading">
+            <b-col sm="12" md="8" lg="6" xl="7" v-if="!loading">
                 <dictionary-entries :results="results.dictionaries" :fuzzy-results="results.fuzzyResults"></dictionary-entries>
-                <syn-anto-nyms class="d-block d-sm-none" :synonyms="results.synonyms" :antonyms="results.antonyms"></syn-anto-nyms>
-                <examples :examples="results.examples"></examples>
+                <examples class="d-none d-md-block" :examples="results.examples"></examples>
             </b-col>
             <transition name="fade">
-                <b-col sm="3" class="d-none d-sm-block" style="margin-top: 15px; animation-duration: 0.4s" v-if="!loading">
+                <b-col class="mt-3" sm="12" md="4" xl="3" v-if="!loading">
                     <syn-anto-nyms :synonyms="results.synonyms" :antonyms="results.antonyms"></syn-anto-nyms>
-                    <nearest-neighbors :nearest-neighbors="results.nearestNeighbors" :headword="currentTerm"></nearest-neighbors>
+                    <nearest-neighbors :nearest-neighbors="results.nearestNeighbors" :headword="currentTerm" v-if="results.nearestNeighbors"></nearest-neighbors>
                     <collocations :collocates="results.collocates" :headword="currentTerm"></collocations>
                     <time-series :time-series="results.timeSeries" :headword="currentTerm"></time-series>
+                </b-col>
+            </transition>
+            <transition name="fade">
+                <b-col class="d-md-none" sm="12" v-if="!loading">
+                    <examples :examples="results.examples"></examples>
                 </b-col>
             </transition>
             <transition name="fade">

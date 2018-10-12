@@ -1,11 +1,11 @@
 <template>
     <div class="container-fluid">
-        <div style="text-align: center; margin-top: 30px;">
+        <div style="text-align: center; margin-top: 30px;" v-if="atHome">
             <p class="lead">Découvrez...explorez...définissez...votre langue</p>
         </div>
 
-        <div style="text-align: center">
-            <img style="max-height: 150px; margin-bottom: 20px;" alt="Brand" src="../assets/images/dvlf_logo_medium_no_beta_transparent.png" v-if="atHome">
+        <div style="text-align: center" :class="{'mt-4': !atHome}">
+            <img style="max-height: 150px; max-width: 100%; margin-bottom: 20px;" alt="Brand" src="../assets/images/dvlf_logo_medium_no_beta_transparent.png" v-if="atHome">
             <b-row>
                 <b-col sm="8" offset-sm="2" md="6" offset-md="3" lg="4" offset-lg="4" align-self="center">
                     <form @submit.prevent @keyup.enter="search()">

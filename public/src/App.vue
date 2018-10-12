@@ -35,7 +35,7 @@ body {
     position: absolute;
     height: 100%;
     width: 100%;
-    background-color: rgba(0, 0, 0, .6);
+    background-color: rgba(0, 0, 0, 0.6);
     display: none;
     z-index: 50;
 }
@@ -86,6 +86,7 @@ a:hover {
     margin: 0 auto;
     font-family: "Amiri", serif;
     font-weight: 300;
+    position: relative;
 }
 
 .a-propos {

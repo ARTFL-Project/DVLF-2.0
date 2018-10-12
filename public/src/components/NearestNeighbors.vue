@@ -1,11 +1,11 @@
 <template>
     <div id="nearest-neighbors" class="shadow-sm" v-if="nearestNeighbors.length > 0">
-        <b-card style="margin-top: 15px;">
+        <b-card class="mt-3">
             <h4 class="nym-title">Mots associés</h4>
             <span id="nn-title">Mots les plus associés à
                 <span style="font-weight: 700">{{ headword }}</span> :</span>
             <p id="nn-content">
-                <vue-word-cloud :words="nearestNeighbors" :animation-overlap="0.5" :spacing="0.3" :font-size-ratio="0.3">
+                <vue-word-cloud :words="nearestNeighbors.slice(0,35)" :animation-overlap="0.5" :spacing="0.3" :font-size-ratio="0.3">
                     <template slot-scope="{text, weight, word}">
                         <div class="word-cloud" :title="weight" style="cursor: pointer;" @click="onWordClick(word)">
                             {{ text }}
@@ -15,11 +15,12 @@
             </p>
             <b-button-group size="sm" style="margin: 10px 0 10px 10px;" class="submit-btn" @click="exploreWord()">
                 <b-button variant="primary">
-                    <img style="height: 20px" src="../assets/images/baseline-search-24px.svg"/>
-                    </b-button>
-                    <b-button variant="primary">
-                        Associations à travers le temps
-                    </b-button>
+                    <img style="height: 20px" src="../assets/images/baseline-search-24px.svg" />
+                </b-button>
+                <b-button variant="primary">
+                    <span class="d-none d-lg-inline">Associations à travers le temps</span>
+                    <span class="d-inline d-lg-none">À travers le temps</span>
+                </b-button>
             </b-button-group>
         </b-card>
     </div>
@@ -60,8 +61,8 @@ export default {
 }
 #nn-content {
     width: 100%;
-    height: 200px;
-    padding: 0 5px 10px 5px;
+    height: 230px;
+    padding: 0 5px;
     margin-bottom: 0;
 }
 .neighbor {

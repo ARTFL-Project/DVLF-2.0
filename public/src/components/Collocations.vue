@@ -1,6 +1,6 @@
 <template>
     <div id="collocations" v-if="collocates.length > 0">
-        <b-card class="shadow-sm" style="margin-top: 15px;">
+        <b-card class="shadow-sm mt-3">
             <h4 class="nym-title">Collocations</h4>
             <span id="collocation-title">Mots utilisés à proximité de
                 <b>{{ headword }}</b> :</span>

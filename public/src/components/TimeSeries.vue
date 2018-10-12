@@ -1,6 +1,6 @@
 <template>
     <div id="time-series" class="shadow-sm" :class="{'hidden': showTimeSeries == false}">
-        <b-card style="margin-top: 15px; min-height: 200px">
+        <b-card class="mt-3" style="min-height: 200px">
             <h4 id="time-series-title">Usage à travers le temps</h4>
             <h6 style="padding: 0 10px">Occurrences du mot
                 <b>{{ headword }}</b> pour un million de mots</h6>
@@ -48,6 +48,7 @@ export default {
                 Chart.defaults.global.tooltipCornerRadius = 0
                 Chart.defaults.global.maintainAspectRatio = false
                 Chart.defaults.bar.scales.xAxes[0].gridLines.display = false
+                console.log(dateList, counts)
                 this.$nextTick(function() {
                     let chart = document.getElementById("line")
                     let vm = this
@@ -93,6 +94,7 @@ export default {
                             }
                         }
                     })
+                    console.log(vm.chart)
                 })
                 // this.showTimeSeries = true
             } else {

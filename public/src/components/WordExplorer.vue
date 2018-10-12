@@ -4,12 +4,12 @@
             <div id="title-close" @click="close">
                 &times;
             </div>
-            Exploration des usages de <span style="font-variant: small-caps">{{ headword }}</span> à travers le temps
+            Exploration des usages de &laquo;<span id="headword">{{ headword }}</span>&raquo; à travers le temps
         </div>
         <div id="explorer-body">
             <b-row align-h="center">
-                <b-col cols="6" v-if="vectors['1600']" style="margin-bottom: 20px;">
-                    <b-card style="height: 400px;" header="Entre 1600 et 1700">
+                <b-col cols="12" md="6" v-if="vectors['1600']" style="margin-bottom: 20px;">
+                    <b-card class="shadow-sm" style="height: 300px;" header="Entre 1600 et 1700">
                         <vue-word-cloud :words="vectors['1600']" :animation-overlap="0.2" :spacing="0.4" :font-size-ratio="0.3">
                             <template slot-scope="{text, weight, word}">
                                 <div class="word-cloud" :title="weight" style="cursor: pointer;" @click="onWordClick(word)">
@@ -19,8 +19,8 @@
                         </vue-word-cloud>
                     </b-card>
                 </b-col>
-                <b-col cols="6" v-if="vectors['1700']" style="margin-bottom: 20px;">
-                    <b-card style="height: 400px;" header="Entre 1700 et 1800">
+                <b-col cols="12" md="6" v-if="vectors['1700']" style="margin-bottom: 20px;">
+                    <b-card class="shadow-sm" style="height: 300px;" header="Entre 1700 et 1800">
                         <vue-word-cloud :words="vectors['1700']" :animation-overlap="0.2" :spacing="0.4" :font-size-ratio="0.3">
                             <template slot-scope="{text, weight, word}">
                                 <div class="word-cloud" :title="weight" style="cursor: pointer;" @click="onWordClick(word)">
@@ -30,8 +30,8 @@
                         </vue-word-cloud>
                     </b-card>
                 </b-col>
-                <b-col cols="6" v-if="vectors['1800']" style="margin-bottom: 20px;">
-                    <b-card style="height: 400px; min-width:40%" header="Entre 1800 et 1900">
+                <b-col cols="12" md="6" v-if="vectors['1800']" style="margin-bottom: 20px;">
+                    <b-card class="shadow-sm" style="height: 300px; min-width:40%" header="Entre 1800 et 1900">
                         <vue-word-cloud :words="vectors['1800']" :animation-overlap="0.2" :spacing="0.4" :font-size-ratio="0.3">
                             <template slot-scope="{text, weight, word}">
                                 <div class="word-cloud" :title="weight" style="cursor: pointer;" @click="onWordClick(word)">
@@ -41,8 +41,8 @@
                         </vue-word-cloud>
                     </b-card>
                 </b-col>
-                <b-col cols="6" v-if="vectors['1900']">
-                    <b-card style="height: 400px; min-width: 40%" header="Entre 1900 et 2000">
+                <b-col cols="12" md="6" v-if="vectors['1900']">
+                    <b-card class="shadow-sm" style="height: 300px; min-width: 40%" header="Entre 1900 et 2000">
                         <vue-word-cloud :words="vectors['1900']" :animation-overlap="0.2" :spacing="0.4" :font-size-ratio="0.3">
                             <template slot-scope="{text, weight, word}">
                                 <div class="word-cloud" :title="weight" style="cursor: pointer;" @click="onWordClick(word)">
@@ -53,7 +53,10 @@
                     </b-card>
                 </b-col>
             </b-row>
-            <b-button style="margin:20px 0" variant="primary" @click="close()">
+            <div class="mt-2" style="text-align: center;">
+                Données extraites à partir de la base de données <a href="https://artfl-project.uchicago.edu/content/artfl-frantext">ARTFL-Frantext</a>.
+            </div>
+            <b-button style="margin: 0 0 10px" variant="primary" @click="close()">
                 Fermer
             </b-button>
         </div>
@@ -75,7 +78,20 @@ export default {
         headword: String
     },
     created() {
-        window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+        let yOffset = window.pageYOffset
+        if (yOffset > 0) {
+            this.$nextTick(function() {
+                document.getElementById(
+                    "word-explorer"
+                ).style.top = `${yOffset + 20}px`
+            })
+        } else {
+            window.scrollTo({
+                top: 0,
+                left: 0,
+                behavior: "smooth"
+            })
+        }
     },
     methods: {
         onWordClick(word) {
@@ -93,7 +109,7 @@ export default {
 #word-explorer {
     position: absolute;
     z-index: 100;
-    width: 98%;
+    width: 95%;
     left: 0;
     right: 0;
     margin: auto;
@@ -112,10 +128,15 @@ export default {
     font-weight: 700;
     font-size: 130%;
 }
+#headword {
+    font-variant: small-caps;
+    padding: 0 5px;
+}
 #title-close {
     position: absolute;
-    right: 0;
-    top: 0;
+    right: -1px;
+    top: -1px;
+    border-radius: 0 4px 0 4px;
     background-color: rgba(21, 95, 131, 0.8) !important;
     color: #fff !important;
     padding: 0px 5px;
@@ -130,7 +151,7 @@ export default {
     font-weight: 700;
 }
 .card-body {
-    height: 90%;
+    height: 250px;
     width: 100%;
     padding: 10px !important;
 }

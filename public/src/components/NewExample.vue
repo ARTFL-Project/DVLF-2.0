@@ -44,11 +44,11 @@
 
         <vue-recaptcha :sitekey="recaptchaKey" @verify="onVerify" style="margin-top: 10px;"></vue-recaptcha>
         <br>
-        <button type="button" class="btn btn-default" disabled="disabled" v-if="!recaptchaDone">Soumettre</button>
-        <button type="button" class="btn btn-default" @click="submit()" v-if="recaptchaDone">
+        <b-button variant="primary" disabled="disabled" v-if="!recaptchaDone">Soumettre</b-button>
+        <b-button variant="primary" @click="submit()" v-if="recaptchaDone">
             Soumettre
             <span class="glyphicon glyphicon-repeat spinning" v-show="submitting"></span>
-        </button>
+        </b-button>
     </div>
 
 </template>

@@ -20,22 +20,19 @@
             </div>
         </div>
         <transition-group appear name="fade">
-            <b-card class="dico shadow-sm" style="margin-top: 15px; animation-duration: 0.4s" v-for="(dico, dicoIndex) in results.data" :key="dicoIndex">
-                <div class="row dico-title text-center">
-                    <div class="col-1 arrow" @click="toggleEntry(dicoIndex)">
+            <b-card class="dico shadow-sm mt-3" style="animation-duration: 0.4s" v-for="(dico, dicoIndex) in results.data" :key="dicoIndex">
+                <b-row class="dico-title text-center">
+                    <b-col cols="1" class="arrow" @click="toggleEntry(dicoIndex)">
                         <img class="down-arrow" src="../assets/images/baseline-keyboard_arrow_down-24px.svg" v-show="dico.show" />
                         <img class="right-arrow" src="../assets/images/baseline-keyboard_arrow_right-24px.svg" v-show="!dico.show" />
-                    </div>
-                    <div class="col-11 dico-label" @click="toggleEntry(dicoIndex)">
-                        <span class="d-sm-none d-md-inline">
-                            {{ dico.label }}
-                        </span>
-                        <span class="d-none d-sm-inline d-md-none">
-                            {{ dico.shortLabel }}
-                        </span>
-                        <span class="badge float-right">{{ dico.contentObj.length }}</span>
-                    </div>
-                </div>
+                    </b-col>
+                    <b-col cols="9" sm="10" class="dico-label" @click="toggleEntry(dicoIndex)">
+                        {{ dico.label }}
+                    </b-col>
+                    <b-col cols="1">
+                        <span class="badge">{{ dico.contentObj.length }}</span>
+                    </b-col>
+                </b-row>
                 <div class="dico-entries" :class="{showdico: dico.show}">
                     <div class="entry" style="padding-right: 10px" v-for="(entry, index) in dico.contentObj" :key="index" :class="{'tlfi': dico.name === 'tlfi'}">
                         <div v-html="entry.content"></div>
@@ -46,8 +43,8 @@
                         <a :href="`http://www.cnrtl.fr/definition/${encodeURIComponent(currentTerm)}`" target="_blank">=> Voir la définition complète au CNRTL</a>
                     </div>
                 </div>
-                <div style="margin: 10px 10px 10px 10px" v-if="dico.name === 'userSubmit'">
-                    <b-button-group style="margin: 0 10px 10px 10px" class="submit-btn" @click="define()">
+                <div class="m-2" v-if="dico.name === 'userSubmit'">
+                    <b-button-group class="submit-btn" @click="define()">
                         <b-button variant="primary">+</b-button>
                         <b-button variant="primary">
                             Ajoutez votre définition
