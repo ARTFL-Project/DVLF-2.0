@@ -238,6 +238,17 @@ export default {
     border-radius: 90%;
     padding: 0.2rem 0.4rem;
     margin-top: 3px;
+    display: inline-block;
+}
+@media only screen and (max-width: 1200px) {
+    .badge {
+        margin-left: -10px;
+    }
+}
+@media only screen and (max-width: 768px) {
+    .badge {
+        margin-left: 0;
+    }
 }
 </style>
 

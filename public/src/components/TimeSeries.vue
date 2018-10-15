@@ -48,7 +48,6 @@ export default {
                 Chart.defaults.global.tooltipCornerRadius = 0
                 Chart.defaults.global.maintainAspectRatio = false
                 Chart.defaults.bar.scales.xAxes[0].gridLines.display = false
-                console.log(dateList, counts)
                 this.$nextTick(function() {
                     let chart = document.getElementById("line")
                     let vm = this
@@ -94,11 +93,7 @@ export default {
                             }
                         }
                     })
-                    console.log(vm.chart)
                 })
-                // this.showTimeSeries = true
-            } else {
-                // this.showTimeSeries = false
             }
         }
     }

@@ -17,16 +17,16 @@
                         <b-button variant="primary">+</b-button>
                         <b-dropdown id="second-btn" variant="primary" right text="Contribuer au DVLF">
                             <b-dropdown-item>
-                                <router-link to="/definition">Ajouter une définition</router-link>
+                                <router-link :to="`/definition/${currentTerm}`">Ajouter une définition</router-link>
                             </b-dropdown-item>
                             <b-dropdown-item>
-                                <router-link to="/exemple">Ajouter un exemple</router-link>
+                                <router-link :to="`/exemple/${currentTerm}`">Ajouter un exemple</router-link>
                             </b-dropdown-item>
                             <b-dropdown-item>
-                                <router-link to="/synonyme">Ajouter un synonyme</router-link>
+                                <router-link :to="`/synonyme/${currentTerm}`">Ajouter un synonyme</router-link>
                             </b-dropdown-item>
                             <b-dropdown-item>
-                                <router-link to="/antonyme">Ajouter un antonyme</router-link>
+                                <router-link :to="`/antonyme/${currentTerm}`">Ajouter un antonyme</router-link>
                             </b-dropdown-item>
                         </b-dropdown>
                     </b-button-group>

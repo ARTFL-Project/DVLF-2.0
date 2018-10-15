@@ -12,7 +12,7 @@
                         <b-input-group class="shadow-sm">
                             <b-form-input autocomplete="off" :name="queryTerm" placeholder="Tapez un mot..." aria-describedby="search" v-model="queryTerm" @input="onChange" @keyup.down.native="onArrowDown" @keyup.up.native="onArrowUp" @keyup.enter.native="onEnter"></b-form-input>
                             <b-input-group-append>
-                                <b-btn variant="primary">Rechercher</b-btn>
+                                <b-btn variant="primary" @click="search">Rechercher</b-btn>
                             </b-input-group-append>
                         </b-input-group>
                         <ul id="autocomplete-results" v-if="isOpen" class="autocomplete-results">
@@ -53,6 +53,7 @@ export default {
             if (to.path === "/") {
                 this.atHome = true
             }
+            this.queryTerm = ""
         }
     },
     created() {
