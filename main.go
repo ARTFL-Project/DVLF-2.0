@@ -354,13 +354,14 @@ func autoComplete(c echo.Context) error {
 	defer rows.Close()
 
 	var headwords AutoCompleteList
+	prefixRegex := regexp.MustCompile("(?i)" + prefix)
 	for rows.Next() {
 		var headword string
 		err := rows.Scan(&headword)
 		if err != nil {
 			fmt.Println(err)
 		}
-		remainder := strings.Replace(headword, prefix, "", 1)
+		remainder := prefixRegex.Replace(headword, prefix, "", 1)
 		headword = fmt.Sprintf("<span class=\"highlight\">%s</span>%s", prefix, remainder)
 		headwords = append(headwords, AutoCompleteHeadword{headword})
 	}
