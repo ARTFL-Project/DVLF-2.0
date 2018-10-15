@@ -361,7 +361,7 @@ func autoComplete(c echo.Context) error {
 		if err != nil {
 			fmt.Println(err)
 		}
-		remainder := prefixRegex.ReplaceAllString(headword, prefix, "", 1)
+		remainder := prefixRegex.ReplaceAllString(headword, prefix, "")
 		headword = fmt.Sprintf("<span class=\"highlight\">%s</span>%s", prefix, remainder)
 		headwords = append(headwords, AutoCompleteHeadword{headword})
 	}
