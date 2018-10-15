@@ -7,16 +7,16 @@
         <div style="text-align: center" :class="{'mt-4': !atHome}">
             <img style="max-height: 150px; max-width: 100%; margin-bottom: 20px;" alt="Brand" src="../assets/images/dvlf_logo_medium_no_beta_transparent.png" v-if="atHome">
             <b-row>
-                <b-col sm="8" offset-sm="2" md="6" offset-md="3" lg="4" offset-lg="4" align-self="center">
+                <b-col sm="8" offset-sm="2" md="6" offset-md="3" lg="5" xl="4" align-self="center">
                     <form @submit.prevent @keyup.enter="search()">
                         <b-input-group class="shadow-sm">
-                            <b-form-input autocomplete="off" :name="queryTerm" placeholder="Tapez un mot..." aria-describedby="search" v-model="queryTerm" @input="onChange" @keyup.down.native="onArrowDown" @keyup.up.native="onArrowUp" @keyup.enter.native="onEnter"></b-form-input>
+                            <b-form-input id="search-input" autocomplete="off" :name="queryTerm" placeholder="Tapez un mot..." aria-describedby="search" v-model="queryTerm" @input="onChange" @keyup.down.native="onArrowDown" @keyup.up.native="onArrowUp" @keyup.enter.native="onEnter"></b-form-input>
                             <b-input-group-append>
                                 <b-btn variant="primary" @click="search">Rechercher</b-btn>
                             </b-input-group-append>
                         </b-input-group>
-                        <ul id="autocomplete-results" v-if="isOpen" class="autocomplete-results">
-                            <li v-for="(result, i) in autoCompleteResults" :key="i" @click="setResult(result.headword)" class="autocomplete-result" :class="{ 'is-active': i === arrowCounter }" v-html="result.headword">
+                        <ul id="autocomplete-results" class="shadow-sm" v-if="isOpen">
+                            <li tabIndex="-1" v-for="(result, i) in autoCompleteResults" :key="i" @click="setResult(result.headword)" class="autocomplete-result" :class="{ 'is-active': i === arrowCounter }" v-html="result.headword">
                             </li>
                         </ul>
                     </form>
@@ -107,11 +107,17 @@ export default {
             if (this.arrowCounter < this.autoCompleteResults.length) {
                 this.arrowCounter = this.arrowCounter + 1
             }
+            let container = document.getElementById("autocomplete-results")
+            let topOffset = container.scrollTop
+            container.scrollTop = topOffset + 36
         },
         onArrowUp() {
             if (this.arrowCounter > 0) {
                 this.arrowCounter = this.arrowCounter - 1
             }
+            let container = document.getElementById("autocomplete-results")
+            let topOffset = container.scrollTop
+            container.scrollTop = topOffset - 36
         },
         onEnter() {
             this.queryTerm = this.autoCompleteResults[
@@ -150,24 +156,27 @@ export default {
 .lead {
     margin-top: 15px;
 }
+#search-input {
+    font-size: 1.2rem;
+}
 .autocomplete {
     position: relative;
 }
 
-.autocomplete-results {
+#autocomplete-results {
     padding: 0;
     margin: 3px 0 0 15px;
     border: 1px solid #eeeeee;
     border-top-width: 0px;
-    max-height: 200px;
-    overflow: auto;
+    max-height: 216px;
+    overflow-y: scroll;
     width: 267px;
     position: absolute;
     left: 0;
     background-color: #fff;
     z-index: 100;
     top: 34px;
-    font-size: 120%;
+    font-size: 1.2rem;
 }
 
 .autocomplete-result {
@@ -175,7 +184,7 @@ export default {
     text-align: left;
     padding: 4px 12px;
     cursor: pointer;
-    font-size: 110%;
+    font-size: 1.2rem;
 }
 
 .autocomplete-result:hover,
