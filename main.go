@@ -344,8 +344,7 @@ func getAllHeadwords() ([]string, map[string]int) {
 func autoComplete(c echo.Context) error {
 	prefix, _ := url.QueryUnescape(c.Param("prefix"))
 	prefix = strings.TrimSpace(prefix)
-	prefix = strings.ToLower(prefix)
-	pattern := "^" + prefix + ".*\\M"
+	pattern := "^" + strings.ToLower(prefix) + ".*\\M"
 	query := "SELECT headword FROM headwords WHERE headword ~* $1 ORDER BY headword LIMIT 10"
 	rows, err := pool.Query(query, pattern)
 	if err != nil {
