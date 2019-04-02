@@ -11,9 +11,9 @@
                     <img src="../assets/images/baseline-arrow_downward-24px.svg" class="down" @click="vote(example.id, 'down')" />
                 </div>
                 <div class="example-content" v-html="example.content"></div>
-                <div class="example-source" v-if="example.source">Source trouvée sur:
-                    <a :href="example.link" target="_blank" rel="noreferrer" v-if="example.link != 'http://'">{{example.source}}</a>
-                    <span v-if="example.link == 'http://'">{{ example.source }}</span>
+                <div class="example-source" v-if="example.source">Source :
+                    <a :href="example.link" target="_blank" rel="noreferrer" v-if="example.link && example.link != 'http://'">{{example.source}}</a>
+                    <span v-if="!example.link || example.link == 'http://'">{{ example.source }}</span>
                 </div>
                 <div class="example-source" v-if="example.date">Contribué le {{ example.date }}</div>
             </b-card>

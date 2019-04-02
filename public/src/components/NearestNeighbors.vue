@@ -41,7 +41,7 @@ export default {
     },
     methods: {
         onWordClick(word) {
-            this.$router.push(`/mot/${word[0]}`)
+            this.$router.push(`/mot/${word}`)
         },
         exploreWord() {
             EventBus.$emit("wordExplorer", this.headword)

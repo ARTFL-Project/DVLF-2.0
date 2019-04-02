@@ -145,4 +145,7 @@ h4 {
     font-size: 150%;
     padding: 0.005rem 0.5rem;
 }
+textarea {
+    width: 100%;
+}
 </style>

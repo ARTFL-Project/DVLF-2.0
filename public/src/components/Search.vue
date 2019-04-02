@@ -7,7 +7,7 @@
         <div style="text-align: center" :class="{'mt-4': !atHome}">
             <img style="max-height: 150px; max-width: 100%; margin-bottom: 20px;" alt="Brand" src="../assets/images/dvlf_logo_medium_no_beta_transparent.png" v-if="atHome">
             <b-row>
-                <b-col sm="8" offset-sm="2" md="6" offset-md="3" lg="5" xl="4" align-self="center">
+                <b-col sm="8" offset-sm="2" md="6" offset-md="3" offset-lg="3" lg="6" offset-xl="4" xl="4" align-self="center">
                     <form @submit.prevent @keyup.enter="search()">
                         <b-input-group class="shadow-sm">
                             <b-form-input id="search-input" autocomplete="off" :name="queryTerm" placeholder="Tapez un mot..." aria-describedby="search" v-model="queryTerm" @input="onChange" @keyup.down.native="onArrowDown" @keyup.up.native="onArrowUp" @keyup.enter.native="onEnter"></b-form-input>
