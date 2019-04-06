@@ -20,8 +20,8 @@ import (
 	"golang.org/x/text/language"
 	"golang.org/x/text/unicode/norm"
 
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 
 	"github.com/agext/levenshtein"
 	"github.com/jackc/pgx"
@@ -909,9 +909,9 @@ func main() {
 	// Enable TLS
 	e.AutoTLSManager.Cache = autocert.DirCache(".cache")
 	// Redirect http traffic to https
-	e.Pre(middleware.NonWWWRedirect())
-	// e.Pre(middleware.HTTPSWWWRedirect())
-	// e.Pre(middleware.HTTPSRedirect())
+	//	e.Pre(middleware.NonWWWRedirect())
+	e.Pre(middleware.HTTPSWWWRedirect())
+	e.Pre(middleware.HTTPSRedirect())
 
 	e.GET("/", index)
 	e.GET("/mot/*", index)
@@ -951,6 +951,6 @@ func main() {
 	e.GET("/api/explore/:headword", exploreVectors)
 
 	// Start server
-	// e.Logger.Fatal(e.StartAutoTLS(":443"))
-	e.Logger.Fatal(e.Start(":8080"))
+	e.Logger.Fatal(e.StartAutoTLS(":8443"))
+	//e.Logger.Fatal(e.Start(":8080"))
 }
