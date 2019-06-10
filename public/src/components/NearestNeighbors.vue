@@ -7,7 +7,7 @@
             <p id="nn-content">
                 <vue-word-cloud :words="nearestNeighbors.slice(0,35)" :animation-overlap="0.5" :spacing="0.3" :font-size-ratio="0.3">
                     <template slot-scope="{text, weight, word}">
-                        <div class="word-cloud" :title="weight" style="cursor: pointer;" @click="onWordClick(word)">
+                        <div class="word-cloud" :title="weight" style="cursor: pointer;" @click="onWordClick(text)">
                             {{ text }}
                         </div>
                     </template>
